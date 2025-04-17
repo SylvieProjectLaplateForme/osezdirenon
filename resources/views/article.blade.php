@@ -44,9 +44,12 @@
 
 
         <!-- CATEGORIE centrée -->
-        <p class="text-gray-500 mb-6 text-center">
-            Catégorie : {{ $article->category->name }}
+        <p class="text-center mb-6">
+            <span class="px-3 py-1 rounded-full text-sm font-semibold {{ $article->category->color_class }}">
+                {{ $article->category->name }}
+            </span>
         </p>
+        
 
         <!-- CONTENU de l'article -->
         {{-- <div class="mb-8">

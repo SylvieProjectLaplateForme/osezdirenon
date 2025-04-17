@@ -15,7 +15,7 @@
             <div class="container mx-auto flex items-center justify-between p-4">
                 {{-- 🔵 Logo à gauche --}}
                 <a href="{{ url('/') }}">
-                    <img src="{{ asset('images/logo-odn.png') }}" alt="Logo Osez Dire Non" class="h-12 w-auto">
+                    <img src="{{ asset('images/logo-odn.png') }}" alt="Logo Osez Dire Non" class="h-20 w-auto">
                 </a>
         
                 {{-- 🔵 Bande de navigation à droite --}}

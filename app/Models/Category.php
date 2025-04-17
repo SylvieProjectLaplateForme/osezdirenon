@@ -15,15 +15,19 @@ class Category extends Model
     ];
 
 
-    public function getColorClassAttribute()
-    {
-        return match (strtolower($this->name)) {
-            'santé' => 'text-green-600',
-            'international' => 'text-blue-600',
-            'lifestyle' => 'text-pink-500',
-            'technologie' => 'text-red-500',
-            'actualité' => 'text-purple-500',
-            default => 'text-black-600', // fallback
-        };
-    }
+   
+        public function getColorClassAttribute()
+{
+    return match ($this->name) {
+        'Travail' => 'bg-yellow-500 text-white',
+        'École' => 'bg-blue-500 text-white',
+        'Famille' => 'bg-pink-500 text-white',
+        'Couple' => 'bg-red-500 text-white',
+        'Société' => 'bg-green-500 text-white',
+        'Développement Personnel' => 'bg-purple-600 text-white',
+        default => 'bg-gray-400 text-white',
+    };
 }
+
+    }
+
