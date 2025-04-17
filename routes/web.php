@@ -24,14 +24,38 @@ Route::post('/contact', [ContactController::class, 'submit'])->name('contact.sub
 Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
 
 // 🔐 Dashboards sécurisés selon rôle
-Route::get('/admin', function () {
-    return view('admin.dashboard');
-})->middleware(['auth', 'role:admin']);
+Route::get('/admin/dashboard/{filter?}', [App\Http\Controllers\AdminController::class, 'dashboard'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.dashboard');
 
-Route::get('/editeur', function () {
-    return view('editeur.dashboard');
-})->middleware(['auth', 'role:editeur']);
+Route::put('/admin/articles/{id}/validate', [App\Http\Controllers\AdminController::class, 'validateArticle'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.articles.validate');
 
-Route::get('/moderateur', function () {
-    return view('moderateur.dashboard');
-})->middleware(['auth', 'role:moderateur']);
+Route::delete('/admin/articles/{id}', [App\Http\Controllers\AdminController::class, 'destroy'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.articles.destroy');
+
+
+
+Route::get('/admin/dashboard/{filter?}', [App\Http\Controllers\AdminController::class, 'dashboard'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.dashboard');
+
+
+// Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth', 'role:admin'])->name('admin.dashboard');
+Route::put('/admin/articles/{id}/validate', [App\Http\Controllers\AdminController::class, 'validateArticle'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.articles.validate');
+
+    Route::delete('/admin/articles/{id}', [App\Http\Controllers\AdminController::class, 'destroy'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.articles.destroy');
+
+    // // ROUTE POUR EDITEUR
+    // Route::middleware(['auth', 'role:editeur'])->group(function () {
+    //     Route::get('/editeur/article/create', [App\Http\Controllers\ArticleController::class, 'create'])->name('articles.create');
+    //     Route::post('/editeur/article', [App\Http\Controllers\ArticleController::class, 'store'])->name('articles.store');
+    // });
+    
+

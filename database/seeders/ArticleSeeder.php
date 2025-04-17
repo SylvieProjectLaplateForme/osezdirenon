@@ -44,7 +44,7 @@ class ArticleSeeder extends Seeder
             ",
             'category_id' => 3,
             'keywords' => 'famille, pression, autonomie',
-            'image' => 'famille-non.jpg',
+            'image' => 'famille-non.webp',
         ]);
 
         // Article Couple (ID 4)

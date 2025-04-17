@@ -23,10 +23,13 @@ use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\CheckRole; // ✅ On importe bien ton middleware personnalisé
 
 class Kernel extends HttpKernel
 {
+    /**
+     * Middleware global (toutes les requêtes).
+     */
     protected $middleware = [
         TrustProxies::class,
         HandleCors::class,
@@ -35,6 +38,9 @@ class Kernel extends HttpKernel
         ConvertEmptyStringsToNull::class,
     ];
 
+    /**
+     * Groupes de middleware (web et api).
+     */
     protected $middlewareGroups = [
         'web' => [
             EncryptCookies::class,
@@ -53,11 +59,14 @@ class Kernel extends HttpKernel
         ],
     ];
 
+    /**
+     * Middlewares disponibles dans les routes.
+     */
     protected $routeMiddleware = [
         'auth' => Authenticate::class,
         'auth.basic' => AuthenticateWithBasicAuth::class,
         'guest' => RedirectIfAuthenticated::class,
         'verified' => EnsureEmailIsVerified::class,
-        'role' => CheckRole::class,
+        'role' => CheckRole::class, // ✅ alias "role" bien défini ici !
     ];
 }

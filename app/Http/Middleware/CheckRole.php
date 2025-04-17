@@ -6,24 +6,28 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class CheckRole
 {
-    /**
-     * Gère la vérification du rôle de l'utilisateur.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  mixed  ...$roles
-     */
-    public function handle(Request $request, Closure $next, ...$roles): Response
+    public function handle(Request $request, Closure $next, string $role): Response
     {
         $user = Auth::user();
 
-        if (!$user || !in_array($user->role, $roles)) {
-            abort(403, 'Accès interdit');
+        if (!$user) {
+            abort(403, 'Non authentifié.');
         }
 
+        // Gestion des rôles
+        if ($role === 'admin' && $user->role != User::ROLE_ADMIN) {
+            abort(403, 'Accès refusé. Rôle admin requis.');
+        }
+
+        if ($role === 'editeur' && $user->role != User::ROLE_EDITEUR) {
+            abort(403, 'Accès refusé. Rôle éditeur requis.');
+        }
+
+        // Si tout est ok, on continue la requête
         return $next($request);
     }
 }
