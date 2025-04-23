@@ -30,17 +30,13 @@
         <!-- TITRE centré -->
         <h1 class="text-4xl font-bold mb-6 text-center">{{ $article->title }}</h1>
 
-        <!-- IMAGE centrée -->
-        {{-- @if ($article->image)
-            <img src="{{ asset('images/' . $article->image) }}" alt="{{ $article->title }}" class="rounded shadow-md my-6 mx-auto">
-        @endif --}}
-        <!-- IMAGE centrée -->
-{{-- Image d’en-tête principale --}}
+        
     @if ($article->image)
-        <img src="{{ asset('images/' . $article->image) }}"
-             alt="{{ $article->title }}"
-             class="w-full h-auto rounded-lg shadow-md mb-6 object-cover">
-    @endif
+    <img src="{{ asset('storage/' . $article->image) }}"
+         alt="{{ $article->title }}"
+         class="w-full h-auto rounded-lg shadow-md">
+@endif
+
 
 
         <!-- CATEGORIE centrée -->

@@ -47,7 +47,14 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach ($articles as $article)
             <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-                <img src="{{ asset('images/' . $article->image) }}" alt="{{ $article->title }}" class="w-full h-48 object-cover">
+                {{-- <img src="{{ asset('images/' . $article->image) }}" alt="{{ $article->title }}" class="w-full h-48 object-cover"> --}}
+                {{-- <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="w-full h-48 object-cover"> --}}
+                <img 
+    src="{{ asset($article->image ? 'storage/' . $article->image : 'storage/articles/default.jpg') }}" 
+    alt="{{ $article->title }}" 
+    class="w-full h-48 object-cover">
+
+
 
                 <div class="p-6 flex flex-col justify-between flex-1">
                     <h3 class="text-xl font-semibold text-blue-700 mb-2">

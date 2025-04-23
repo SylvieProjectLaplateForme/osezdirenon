@@ -14,12 +14,15 @@ class Article extends Model
 
     protected $fillable = [
         'title',
-        'content',
-        'slug',
-        'category_id',
-        'keywords',
-        'image',
-    ];
+    'slug',
+    'content',
+    'category_id',
+    'user_id',
+    'is_approved',
+    'keywords',
+    'image',
+];
+    
 
     public function category()
     {
@@ -31,6 +34,14 @@ class Article extends Model
 {
     return $this->hasMany(Comment::class);
 }
-
+/**
+     * Relation : un article appartient à un utilisateur (éditeur)
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
+
+
 

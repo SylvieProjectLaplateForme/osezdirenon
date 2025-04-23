@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -8,14 +9,17 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('role')->default(0); // 0 = utilisateur, 1 = modérateur, 2 = admin par exemple
+            // On ajoute role_id comme clé étrangère vers la table roles
+            $table->unsignedBigInteger('role_id')->nullable()->after('id');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+            $table->dropForeign(['role_id']);
+            $table->dropColumn('role_id');
         });
     }
 };

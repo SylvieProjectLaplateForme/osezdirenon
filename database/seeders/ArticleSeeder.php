@@ -4,12 +4,22 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Article;
+use App\Models\User;
+use App\Models\Category;
 use Illuminate\Support\Str;
 
 class ArticleSeeder extends Seeder
 {
     public function run(): void
     {
+        $user = User::first();
+        $categories = Category::all();
+
+        if (!$user || $categories->isEmpty()) {
+            echo "⚠️ Aucun utilisateur ou aucune catégorie trouvée. Seeder annulé.\n";
+            return;
+        }
+
         // Article Travail (ID 1)
         Article::create([
             'title' => "Dire non au surmenage au travail",
@@ -19,6 +29,8 @@ class ArticleSeeder extends Seeder
                 <p>Refuser une tâche supplémentaire, ce n’est pas être paresseux, c’est savoir poser ses limites.</p>
             ",
             'category_id' => 1,
+            'user_id' => $user->id,
+            'is_approved' => 1,
             'keywords' => 'travail, limites, santé mentale',
             'image' => 'non-travail.jpg',
         ]);
@@ -31,6 +43,8 @@ class ArticleSeeder extends Seeder
                 <p>Refuser d’être complice, c’est déjà agir. Les élèves doivent être éduqués à dire non à la violence et à la discrimination à l’école.</p>
             ",
             'category_id' => 2,
+            'user_id' => $user->id,
+            'is_approved' => 1,
             'keywords' => 'école, harcèlement, respect',
             'image' => 'ecole-non.jpg',
         ]);
@@ -43,6 +57,8 @@ class ArticleSeeder extends Seeder
                 <p>Les choix de vie doivent appartenir à chacun. Dire non à certaines attentes de la famille est un acte d’émancipation.</p>
             ",
             'category_id' => 3,
+            'user_id' => $user->id,
+            'is_approved' => 1,
             'keywords' => 'famille, pression, autonomie',
             'image' => 'famille-non.webp',
         ]);
@@ -55,6 +71,8 @@ class ArticleSeeder extends Seeder
                 <p>Une relation saine repose sur le respect mutuel. Il faut oser dire non quand les limites sont franchies.</p>
             ",
             'category_id' => 4,
+            'user_id' => $user->id,
+            'is_approved' => 1,
             'keywords' => 'couple, respect, relation toxique',
             'image' => 'couple-non.png',
         ]);
@@ -67,6 +85,8 @@ class ArticleSeeder extends Seeder
                 <p>Face aux discriminations, dire non devient un acte citoyen. Chacun peut agir à son échelle pour une société plus juste.</p>
             ",
             'category_id' => 5,
+            'user_id' => $user->id,
+            'is_approved' => 1,
             'keywords' => 'société, justice, citoyenneté',
             'image' => 'societe-non.jpg',
         ]);
@@ -79,25 +99,26 @@ class ArticleSeeder extends Seeder
                 <p>Dire non, c’est se dire oui à soi-même. Apprendre à s’écouter et à se respecter est la clé d’un épanouissement durable.</p>
             ",
             'category_id' => 6,
+            'user_id' => $user->id,
+            'is_approved' => 1,
             'keywords' => 'développement personnel, confiance, estime de soi',
             'image' => 'soi-meme-non.png',
         ]);
-    
-
-
 
         // ===== 10 articles d'exemple =====
-        foreach (range(1, 10) as $i) {
-            Article::create([
-                'title' => "Article d'exemple $i",
-                'content' => "
-                    <p>Ceci est le contenu de l'article numéro $i. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                ",
-                'slug' => Str::slug("article-exemple-$i") . '-' . uniqid(), // Slug unique automatique
-                'category_id' => $categories->random()->id,
-                'keywords' => 'exemple, blog, article',
-                'image' => 'default.jpg', // Tu peux créer une image "default.jpg" si tu veux
-            ]);
-        }
+        // foreach (range(1, 10) as $i) {
+        //     Article::create([
+        //         'title' => "Article d'exemple $i",
+        //         'slug' => Str::slug("article-exemple-$i") . '-' . uniqid(),
+        //         'content' => "
+        //             <p>Ceci est le contenu de l'article numéro $i. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        //         ",
+        //         'category_id' => $categories->random()->id,
+        //         'user_id' => $user->id,
+        //         'is_approved' => 0,
+        //         'keywords' => 'exemple, blog, article',
+        //         'image' => 'default.jpg',
+        //     ]);
+        // }
     }
 }

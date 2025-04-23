@@ -1,61 +1,53 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EditeurController;
 
-// 🌟 Authentification Breeze
+// Auth Breeze
 require __DIR__.'/auth.php';
 
-// 🌍 Page d'accueil
+// Pages publiques
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// 📰 Affichage d’un article
 Route::get('/article/{slug}', [ArticleController::class, 'show'])->name('article.show');
-
-// 📬 Page de contact (affichage + traitement)
 Route::view('/contact', 'contact')->name('contact');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
-
-// 💬 Commentaire
 Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
 
-// 🔐 Dashboards sécurisés selon rôle
-Route::get('/admin/dashboard/{filter?}', [App\Http\Controllers\AdminController::class, 'dashboard'])
-    ->middleware(['auth', 'role:admin'])
-    ->name('admin.dashboard');
+// Pages statiques
+Route::view('/apropos', 'apropos')->name('apropos');
+Route::view('/cgu', 'cgu')->name('cgu');
+Route::view('/confidentialite', 'confidentialite')->name('confidentialite');
 
-Route::put('/admin/articles/{id}/validate', [App\Http\Controllers\AdminController::class, 'validateArticle'])
-    ->middleware(['auth', 'role:admin'])
-    ->name('admin.articles.validate');
+// Dashboard Admin
+// Route::middleware(['auth', 'role:admin'])->group(function () {
+//     Route::get('/admin/dashboard/{filter?}', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-Route::delete('/admin/articles/{id}', [App\Http\Controllers\AdminController::class, 'destroy'])
-    ->middleware(['auth', 'role:admin'])
-    ->name('admin.articles.destroy');
+//     Route::get('/admin/articles-en-attente', [AdminController::class, 'articlesEnAttente'])->name('admin.articles.pending');
+//     Route::get('/admin/articles/{id}', [AdminController::class, 'showArticle'])->name('admin.article.show');
 
-
-
-Route::get('/admin/dashboard/{filter?}', [App\Http\Controllers\AdminController::class, 'dashboard'])
-    ->middleware(['auth', 'role:admin'])
-    ->name('admin.dashboard');
+//     Route::put('/admin/articles/{id}/valider', [AdminController::class, 'validerArticle'])->name('admin.article.validate');
+//     Route::delete('/admin/articles/{id}', [AdminController::class, 'deleteArticle'])->name('admin.articles.destroy');
+// });
 
 
-// Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth', 'role:admin'])->name('admin.dashboard');
-Route::put('/admin/articles/{id}/validate', [App\Http\Controllers\AdminController::class, 'validateArticle'])
-    ->middleware(['auth', 'role:admin'])
-    ->name('admin.articles.validate');
 
-    Route::delete('/admin/articles/{id}', [App\Http\Controllers\AdminController::class, 'destroy'])
-    ->middleware(['auth', 'role:admin'])
-    ->name('admin.articles.destroy');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard/{filter?}', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/articles-en-attente', [AdminController::class, 'articlesEnAttente'])->name('admin.articles.pending');
+    Route::get('/admin/articles/{id}', [AdminController::class, 'showArticle'])->name('admin.article.show');
+    Route::put('/admin/articles/{id}/valider', [AdminController::class, 'validerArticle'])->name('admin.article.validate');
+    Route::delete('/admin/articles/{id}', [AdminController::class, 'deleteArticle'])->name('admin.article.destroy');
+});
 
-    // // ROUTE POUR EDITEUR
-    // Route::middleware(['auth', 'role:editeur'])->group(function () {
-    //     Route::get('/editeur/article/create', [App\Http\Controllers\ArticleController::class, 'create'])->name('articles.create');
-    //     Route::post('/editeur/article', [App\Http\Controllers\ArticleController::class, 'store'])->name('articles.store');
-    // });
-    
 
+// Dashboard Éditeur
+Route::middleware(['auth', 'role:editeur'])->group(function () {
+    Route::get('/editeur/dashboard', [EditeurController::class, 'dashboard'])->name('editeur.dashboard');
+    Route::get('/editeur/article/create', [ArticleController::class, 'create'])->name('articles.create');
+    Route::post('/editeur/article', [ArticleController::class, 'store'])->name('articles.store');
+});

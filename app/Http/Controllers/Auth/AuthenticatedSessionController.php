@@ -28,26 +28,28 @@ class AuthenticatedSessionController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
+    
         if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             return back()->withErrors([
                 'email' => 'Identifiants incorrects.',
             ])->onlyInput('email');
         }
-
+    
         $request->session()->regenerate();
-
+    
         $user = Auth::user();
-
-        // 🎯 Redirection personnalisée selon le rôle
-        if ($user->role == 1) {
+    
+        
+        if ($user->role->name === 'admin') {
             return redirect()->route('admin.dashboard');
-        } elseif ($user->role == 0) {
+        } elseif ($user->role->name === 'user') {
             return redirect()->route('editeur.dashboard');
         }
+    
+        //  Sinon, redirection par défaut
+        // return redirect()->intended(RouteServiceProvider::HOME); erreur breeze defaut donc il faut changer
+        return redirect('/'); // ou '/admin/dashboard' si tu veux forcer une destination
 
-        // Sinon, redirection par défaut
-        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**
