@@ -7,6 +7,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EditeurController;
+use App\Http\Controllers\PubliciteController;
 
 // Auth Breeze
 require __DIR__.'/auth.php';
@@ -51,3 +52,13 @@ Route::middleware(['auth', 'role:editeur'])->group(function () {
     Route::get('/editeur/article/create', [ArticleController::class, 'create'])->name('articles.create');
     Route::post('/editeur/article', [ArticleController::class, 'store'])->name('articles.store');
 });
+Route::get('/admin/commentaires-en-attente', [AdminController::class, 'commentairesEnAttente'])->name('admin.comments.pending');
+Route::put('/admin/commentaires/{id}/valider', [AdminController::class, 'validateComment'])->name('admin.comment.validate');
+
+//pour publicité
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/publicites', [PubliciteController::class, 'index'])->name('publicite.index');
+    Route::post('/admin/publicites/{id}/toggle', [PubliciteController::class, 'toggle'])->name('publicite.toggle');
+    Route::delete('/admin/publicites/{id}', [PubliciteController::class, 'destroy'])->name('publicite.destroy');
+});
+Route::get('/publicites/creer', [PubliciteController::class, 'create'])->name('createPub');

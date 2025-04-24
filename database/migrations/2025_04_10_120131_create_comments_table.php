@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('author');
             $table->text('content');
             $table->timestamps();
+            // $table->boolean('is_approved')->default(false);
     
         });
     }

@@ -32,7 +32,7 @@ class ArticleSeeder extends Seeder
             'user_id' => $user->id,
             'is_approved' => 1,
             'keywords' => 'travail, limites, santé mentale',
-            'image' => 'non-travail.jpg',
+            'image' => 'articles/non-travail.jpg',
         ]);
 
         // Article École (ID 2)
@@ -46,7 +46,7 @@ class ArticleSeeder extends Seeder
             'user_id' => $user->id,
             'is_approved' => 1,
             'keywords' => 'école, harcèlement, respect',
-            'image' => 'ecole-non.jpg',
+            'image' => 'articles/ecole-non.jpg',
         ]);
 
         // Article Famille (ID 3)
@@ -60,7 +60,7 @@ class ArticleSeeder extends Seeder
             'user_id' => $user->id,
             'is_approved' => 1,
             'keywords' => 'famille, pression, autonomie',
-            'image' => 'famille-non.webp',
+            'image' => 'articles/famille-non.webp',
         ]);
 
         // Article Couple (ID 4)
@@ -74,7 +74,7 @@ class ArticleSeeder extends Seeder
             'user_id' => $user->id,
             'is_approved' => 1,
             'keywords' => 'couple, respect, relation toxique',
-            'image' => 'couple-non.png',
+            'image' => 'articles/couple-non.png',
         ]);
 
         // Article Société (ID 5)
@@ -88,7 +88,7 @@ class ArticleSeeder extends Seeder
             'user_id' => $user->id,
             'is_approved' => 1,
             'keywords' => 'société, justice, citoyenneté',
-            'image' => 'societe-non.jpg',
+            'image' => 'articles/societe-non.jpg',
         ]);
 
         // Article Développement Personnel (ID 6)
@@ -102,7 +102,7 @@ class ArticleSeeder extends Seeder
             'user_id' => $user->id,
             'is_approved' => 1,
             'keywords' => 'développement personnel, confiance, estime de soi',
-            'image' => 'soi-meme-non.png',
+            'image' => 'articles/soi-meme-non.png',
         ]);
 
         // ===== 10 articles d'exemple =====

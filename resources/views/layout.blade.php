@@ -21,7 +21,7 @@
 </head>
 
 <body class="flex flex-col min-h-screen bg-white text-gray-800">
-
+    
     {{-- 🔵 En-tête avec logo + navigation alignée --}}
     <header class="bg-white shadow mb-6">
         <div class="container mx-auto flex items-center justify-between p-4">

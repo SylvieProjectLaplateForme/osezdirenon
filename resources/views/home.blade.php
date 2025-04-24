@@ -3,16 +3,81 @@
 @section('title', 'Accueil')
 
 @section('content')
+<div class="container mt-4">
+    <div class="flex justify-center items-center mt-2">
+        <div class="relative group flex items-center space-x-2 text-sm text-gray-700">
+            <span>Publicités sponsorisées</span>
+    
+            <!-- Icône info -->
+            <div class="relative">
+                <svg class="w-4 h-4 text-blue-500 cursor-pointer" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 7h2v2H9V7zm1-5a9 9 0 100 18A9 9 0 0010 2zm0 16a7 7 0 110-14 7 7 0 010 14z"/>
+                </svg>
+    
+                <!-- Tooltip au survol -->
+                <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-52 px-3 py-2 
+                            text-white bg-gray-800 text-xs rounded shadow-md opacity-0 group-hover:opacity-100 
+                            transition-opacity duration-300 z-50 text-center">
+                    Ces publicités sont fournies par nos partenaires. <br>
+                    <a href="{{ route('createPub') }}" class="underline text-blue-400 hover:text-blue-300">Proposer la vôtre</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{-- Carrousel des publicités --}}
+    @php
+    $publicites = \App\Models\Publicite::where('is_active', true)
+        ->where(function($q){
+            $q->whereNull('date_debut')->orWhere('date_debut', '<=', now());
+        })
+        ->where(function($q){
+            $q->whereNull('date_fin')->orWhere('date_fin', '>=', now());
+        })
+        ->latest()
+        ->take(6)
+        ->get()
+        ->chunk(3); // ⬅️ Groupe de 3 pubs par slide
+    @endphp
+    
+    @if($publicites->count())
+<div id="carouselPub" class="relative w-full overflow-hidden mb-6">
+    <div class="flex transition-transform duration-700 ease-in-out" id="carouselItems">
+        @foreach($publicites as $group)
+            <div class="min-w-full flex justify-around items-center bg-yellow-100 p-6 gap-4">
+                @foreach($group as $pub)
+                    <div class="flex flex-col items-center w-1/3 text-center bg-white rounded shadow p-3">
+                        <a href="{{ $pub->lien }}" target="_blank">
+                            @if($pub->image)
+                                <img src="{{ asset('storage/' . $pub->image) }}" alt="{{ $pub->titre }}" class="h-24 object-contain mx-auto mb-2">
+                            @endif
+                            <p class="font-semibold text-gray-800">{{ $pub->titre }}</p>
+                        </a>
+                        <a href="{{ $pub->lien }}" target="_blank"
+                           class="mt-2 inline-block bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 text-sm">
+                            Voir
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        @endforeach
+    </div>
+</div>
 
-{{-- 🔍 Champ de recherche --}}
-{{-- <form method="GET" action="{{ route('home') }}" class="mb-8 text-center">
-    <input type="text" name="search" placeholder="Rechercher un article..."
-           value="{{ request('search') }}"
-           class="border border-blue-400 px-4 py-2 rounded w-1/2 focus:outline-none focus:ring focus:border-blue-500">
-    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-        Rechercher
-    </button>
-</form> --}}
+<script>
+    const carousel = document.getElementById('carouselItems');
+    let index = 0;
+    const total = {{ $publicites->count() }};
+
+    setInterval(() => {
+        index = (index + 1) % total;
+        carousel.style.transform = `translateX(-${index * 100}%)`;
+    }, 5000);
+</script>
+@endif
+
+
+
 
 {{-- 🟡 Filtre par Catégorie --}}
 @php

@@ -13,6 +13,7 @@ class Comment extends Model
         'article_id',
         'author', // Ton champ s'appelle "author" dans ta base
         'content',
+        'is_approved',
     ];
 
     public function article()

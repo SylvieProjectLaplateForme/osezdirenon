@@ -41,6 +41,12 @@ class Article extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function getFormattedContentAttribute()
+{
+    return nl2br(e(strip_tags($this->content, '<p><br><strong><em><ul><ol><li><a>')));
+}
+
+
 }
 
 
