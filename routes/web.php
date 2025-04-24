@@ -61,4 +61,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/publicites/{id}/toggle', [PubliciteController::class, 'toggle'])->name('publicite.toggle');
     Route::delete('/admin/publicites/{id}', [PubliciteController::class, 'destroy'])->name('publicite.destroy');
 });
+
+Route::post('/publicites', [PubliciteController::class, 'store'])->name('publicite.store');
 Route::get('/publicites/creer', [PubliciteController::class, 'create'])->name('createPub');

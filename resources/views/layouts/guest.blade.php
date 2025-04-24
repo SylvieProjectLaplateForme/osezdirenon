@@ -18,7 +18,8 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
             <div>
                 <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <img src="{{ asset('images/logo-odn.png') }}" alt="Logo Osez Dire Non" class="h-20 w-auto mx-auto">
+
                 </a>
             </div>
 

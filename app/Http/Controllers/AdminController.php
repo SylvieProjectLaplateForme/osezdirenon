@@ -48,7 +48,8 @@ $commentsEnAttente = Comment::where('is_approved', false)->count();
         'commentsEnAttente' => $commentsEnAttente,
         'months' => ['Janv', 'Fév', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'],
         'articlesPerMonth' => $monthlyCounts,
-        'articles' => Article::with('user')->latest()->take(10)->get(),
+        // 'articles' => Article::with('user')->latest()->take(10)->get(),
+        'articles' => $articles->take(10)->get(),
     ]);
 }
 

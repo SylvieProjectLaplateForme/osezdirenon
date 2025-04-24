@@ -21,10 +21,14 @@ class CheckRole
             abort(403, 'Accès refusé. Rôle admin requis.');
         }
 
-        if ($role === 'editeur' && $user->role->name !== 'user') { // ou 'editeur'
+        // if ($role === 'editeur' && $user->role->name !== 'user') { // ou 'editeur'
+        //     abort(403, 'Accès refusé. Rôle éditeur requis.');
+        // }
+
+        if ($role === 'editeur' && !in_array($user->role->name, ['user', 'editeur'])) {
             abort(403, 'Accès refusé. Rôle éditeur requis.');
         }
-
+        
         // ✅ Important : retourne toujours la requête si tout est OK
         return $next($request);
     }

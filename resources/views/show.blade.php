@@ -28,9 +28,29 @@
 </p>
 
 
-<div class="prose lg:prose-lg max-w-none text-justify text-gray-800 leading-relaxed">
+{{-- <div class="prose lg:prose-lg max-w-none text-justify text-gray-800 leading-relaxed">
     {!! nl2br(e($article->content)) !!}
+</div> --}}
+{{-- ✅ CONTENU FORMATÉ --}}
+<div class="prose max-w-none mb-12 bg-white p-6 rounded shadow">
+    @foreach (explode("\n", $article->content) as $paragraph)
+        @if (trim($paragraph) !== '')
+            <p>{{ $paragraph }}</p>
+        @endif
+    @endforeach
 </div>
+
+
+
+@if (!$article->is_approved)
+    <form action="{{ route('admin.article.validate', $article->id) }}" method="POST" class="mt-6 text-center">
+        @csrf
+        @method('PUT')
+        <button type="submit" class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">
+            ✅ Valider cet article
+        </button>
+    </form>
+@endif
 
 
     <div class="mt-10 text-center">

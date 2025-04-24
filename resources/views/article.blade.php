@@ -21,7 +21,15 @@
 
     {{-- CONTENU DE L’ARTICLE --}}
     <div class="prose max-w-none mb-12 bg-white p-6 rounded shadow">
-        {!! $article->content !!}
+        {{-- {!! $article->content !!} --}}
+       
+            @foreach (explode("\n", $article->content) as $paragraph)
+                @if (trim($paragraph) !== '')
+                    <p>{{ $paragraph }}</p>
+                @endif
+            @endforeach
+        </div>
+        
 
     </div>
 
