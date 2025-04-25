@@ -2,8 +2,13 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">Bienvenue dans votre espace {{ Auth::user()->name }} !</h1>
-
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Bienvenue dans votre Espace {{ Auth::user()->name }} !</h1>
+    <div class="mb-6">
+        <a href="{{ route('articles.create') }}"
+           class="inline-block bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200">
+            ✍️ Créer un nouvel article
+        </a>
+    </div>
     <h2 class="text-xl font-semibold mb-2 flex items-center gap-2">🗂️ Mes Articles</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         
