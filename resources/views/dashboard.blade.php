@@ -32,6 +32,8 @@
         <p class="text-2xl font-semibold">{{ $commentsEnAttente }}</p>
         <a href="{{ route('admin.comments.pending') }}" class="text-blue-500 hover:underline">Voir</a>
     </div>
+    <a href="{{ route('admin.publicites.attente') }}" class="text-blue-500 hover:underline">Voir les pubs</a>
+
 </div>
 
 {{-- Bloc graphique - Cards plus petites --}}

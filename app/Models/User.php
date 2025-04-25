@@ -46,5 +46,11 @@ class User extends Authenticatable
 {
     return $this->role && $this->role->name === $roleName;
 }
+//lien pub
+public function publicites()
+{
+    return $this->hasMany(Publicite::class);
+}
+
 
 }

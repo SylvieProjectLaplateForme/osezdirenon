@@ -39,5 +39,10 @@ return [
 //     'key' => env('MEDIASTACK_API_KEY'),
 // ],
 
+'stripe' => [
+    'key' => env('STRIPE_KEY'),
+    'secret' => env('STRIPE_SECRET'),
+],
+
 
 ];

@@ -74,9 +74,11 @@ class ArticleController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $articles = $query->latest()->get();
+        $articles = $query->latest()->paginate(6); // ou 10, selon ce que tu veux
 
-        return view('home', compact('articles'));
+        $categories = Category::all(); // ✅ ligne ajoutée
+
+        return view('home', compact('articles','categories' ));
     }
 
     /**
