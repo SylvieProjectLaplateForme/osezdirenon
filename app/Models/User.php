@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
+use App\Models\Publicite; // ✅ Ajouté
 
 class User extends Authenticatable
 {
@@ -15,7 +16,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id', // ✅ Remplacé 'role' par 'role_id'
+        'role_id', // ✅ clé étrangère vers roles
     ];
 
     protected $hidden = [
@@ -31,26 +32,27 @@ class User extends Authenticatable
         ];
     }
 
-    // ✅ Lien avec les articles
+    // ✅ Relation avec les articles créés par l'utilisateur
     public function articles()
     {
-        return $this->hasMany(\App\Models\Article::class);
+        return $this->hasMany(Article::class);
     }
 
-    // ✅ Lien avec le rôle
+    // ✅ Relation avec le rôle de l'utilisateur
     public function role()
     {
-        return $this->belongsTo(\App\Models\Role::class);
+        return $this->belongsTo(Role::class);
     }
+
+    // ✅ Vérification du rôle de l'utilisateur
     public function hasRole($roleName)
-{
-    return $this->role && $this->role->name === $roleName;
-}
-//lien pub
-public function publicites()
-{
-    return $this->hasMany(Publicite::class);
-}
+    {
+        return $this->role && $this->role->name === $roleName;
+    }
 
-
+    // ✅ Relation avec les publicités créées par l'utilisateur
+    public function publicites()
+    {
+        return $this->hasMany(Publicite::class);
+    }
 }

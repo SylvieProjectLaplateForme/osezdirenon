@@ -1,38 +1,60 @@
-@extends('layout')
+@extends('admin.layout')
 
 @section('title', 'Dashboard Admin')
 
 @section('content')
 <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">Bonjour, {{ Auth::user()->name }}</h1>
-    <span class="bg-red-600 text-white px-2 py-1 rounded text-sm">Admin</span>
+   
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
     <div class="bg-white rounded shadow p-4 text-center">
         <h2 class="text-lg font-semibold">Tous les articles</h2>
         <p class="text-2xl font-semibold">{{ $total }}</p>
-        <a href="{{ route('admin.dashboard') }}" class="text-blue-500 hover:underline">Voir</a>
+        <a href="{{ route('admin.articles.index') }}" class="text-blue-500 hover:underline">Voir</a>
     </div>
+<!-- Articles validés -->
+<div class="bg-white rounded shadow p-4 text-center">
+    <h2 class="text-lg font-semibold">Validés</h2>
+    <p class="text-2xl font-semibold">{{ $valides }}</p>
+    <a href="{{ route('admin.articles.valides') }}" class="text-blue-500 hover:underline">Voir</a>
+</div>
 
-    <div class="bg-white rounded shadow p-4 text-center">
-        <h2 class="text-lg font-semibold">Validés</h2>
-        <p class="text-2xl font-semibold">{{ $valides }}</p>
-        <a href="{{ route('admin.dashboard', ['filter' => 'valide']) }}" class="text-blue-500 hover:underline">Voir</a>
-    </div>
-
+   
     <div class="bg-white rounded shadow p-4 text-center">
         <h2 class="text-lg font-semibold">En attente</h2>
         <p class="text-2xl font-semibold">{{ $attente }}</p>
-        <a href="{{ route('admin.dashboard', ['filter' => 'attente']) }}" class="text-blue-500 hover:underline">Voir</a>
+        <a href="{{ route('admin.articles.attente', ['filter' => 'attente']) }}" class="text-blue-500 hover:underline">Voir</a>
     </div>
+<!-- Carte toutes les publicités -->
+<div class="bg-white shadow rounded p-4">
+    <div class="text-center">
+        <h3 class="text-lg font-semibold">Toutes les publicités</h3>
+        <div class="text-3xl font-bold mt-2">
+            {{ $totalPublicites }}
+        </div>
+        <a href="{{ route('admin.publicites.index') }}" class="text-blue-500 hover:underline mt-2 block">Voir</a>
+    </div>
+</div>
+
+<!-- Carte publicités en attente -->
+<div class="bg-white shadow rounded p-4">
+    <div class="text-center">
+        <h3 class="text-lg font-semibold">Publicités en attente</h3>
+        <div class="text-3xl font-bold mt-2">
+            {{ $publicitesEnAttente }}
+        </div>
+        <a href="{{ route('admin.publicites.attente') }}" class="text-blue-500 hover:underline mt-2 block">Voir</a>
+    </div>
+</div>
 
     <div class="bg-white rounded shadow p-4 text-center">
         <h2 class="text-lg font-semibold">Commentaires en attente</h2>
         <p class="text-2xl font-semibold">{{ $commentsEnAttente }}</p>
         <a href="{{ route('admin.comments.pending') }}" class="text-blue-500 hover:underline">Voir</a>
     </div>
-    <a href="{{ route('admin.publicites.attente') }}" class="text-blue-500 hover:underline">Voir les pubs</a>
+    {{-- <a href="{{ route('admin.publicites.attente') }}" class="text-blue-500 hover:underline">Voir les pubs en attente</a> --}}
 
 </div>
 

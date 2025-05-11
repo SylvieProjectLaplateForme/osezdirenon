@@ -7,91 +7,89 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+
 class ArticleController extends Controller
 {
     /**
-     * Affiche le formulaire de création d'article
+     * Liste des articles publics (Accueil)
+     */
+    public function index(Request $request)
+    {
+        $query = Article::query()->where('is_approved', true); // seulement approuvés
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $articles = $query->latest()->paginate(6);
+
+        $categories = Category::all();
+
+        return view('home', compact('articles', 'categories'));
+    }
+
+    /**
+     * Voir un article en public
+     */
+    public function show($slug)
+    {
+        $article = Article::where('slug', $slug)->firstOrFail();
+
+        return view('article', compact('article'));
+    }
+
+    /**
+     * 📌 Espace éditeur : formulaire de création
      */
     public function create()
     {
         $categories = Category::all();
-        return view('editeur.create', compact('categories'));
+
+        // 👇 Attention ici c'est important (ERREUR corrigée ici)
+        return view('editeur.articles.create', compact('categories'));
     }
-    
 
     /**
-     * Enregistre un nouvel article envoyé par un éditeur
+     * 📌 Espace éditeur : enregistrement de l'article
      */
     public function store(Request $request)
     {
-        // ✅ Validation des champs y compris image
+        // Validation
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|max:2048',
-
         ]);
 
-        // ✅ Gestion du fichier image s’il est présent
+        // Image
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('articles', 'public');
         }
+
+        // Slug unique
         $slug = Str::slug($request->title);
-    
-    // Vérifie si ce slug existe déjà
-    $slugExists = Article::where('slug', $slug)->exists();
+        if (Article::where('slug', $slug)->exists()) {
+            $slug .= '-' . uniqid();
+        }
 
-    // Si oui, ajoute une fin unique
-    if ($slugExists) {
-        $slug .= '-' . uniqid();
-    }
-
-        // ✅ Création de l'article
+        // Création
         Article::create([
             'title' => $validated['title'],
-    'content' => $validated['content'],
-    'slug' => $slug, // ✅ ici le slug est bien envoyé
-    'category_id' => $validated['category_id'],
-    'user_id' => Auth::id(),
-    'is_approved' => false,
-    'image' => $imagePath,
-
+            'content' => $validated['content'],
+            'slug' => $slug,
+            'category_id' => $validated['category_id'],
+            'user_id' => Auth::id(),
+            'is_approved' => false, // Par défaut en attente
+            'image' => $imagePath,
         ]);
 
         return redirect()->route('editeur.dashboard')->with('success', 'Article envoyé pour validation.');
     }
 
     /**
-     * Liste des articles avec recherche
-     */
-    public function index(Request $request)
-    {
-        $query = Article::query();
-
-        if ($request->has('search') && !empty($request->search)) {
-            $query->where('title', 'like', '%' . $request->search . '%');
-        }
-
-        $articles = $query->latest()->paginate(6); // ou 10, selon ce que tu veux
-
-        $categories = Category::all(); // ✅ ligne ajoutée
-
-        return view('home', compact('articles','categories' ));
-    }
-
-    /**
-     * Affiche un article en détail
-     */
-    public function show($slug)
-{
-    $article = Article::where('slug', $slug)->firstOrFail();
-    return view('article', compact('article'));
-}
-
-    /**
-     * Ajoute un commentaire à un article
+     * 📌 Ajouter un commentaire à un article
      */
     public function storeComment(Request $request, Article $article)
     {
@@ -107,7 +105,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Supprime un article (réservé à l'admin)
+     * ✅ Supprimer un article (ADMIN uniquement)
      */
     public function delete($id)
     {

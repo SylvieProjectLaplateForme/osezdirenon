@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold mb-4">Mes publicités</h1>
 
     {{-- Bouton de création --}}
-    <a href="{{ route('publicites.create') }}" class="inline-block mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+    <a href="{{ route('editeur.publicites.create') }}" class="inline-block mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
         ➕ Créer une publicité
     </a>
 

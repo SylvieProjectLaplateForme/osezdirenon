@@ -19,7 +19,9 @@
                             text-white bg-gray-800 text-xs rounded shadow-md opacity-0 group-hover:opacity-100 
                             transition-opacity duration-300 z-50 text-center">
                     Ces publicités sont fournies par nos partenaires. <br>
-                    <a href="{{ route('createPub') }}" class="underline text-blue-400 hover:text-blue-300">Proposer la vôtre</a>
+                    <a href="{{ route('editeur.publicites.create') }}" class="underline text-blue-400 hover:text-blue-300">
+                        Proposer la vôtre
+                    </a>
                 </div>
             </div>
         </div>
@@ -27,18 +29,20 @@
     
     {{-- Carrousel des publicités --}}
     @php
-    $publicites = \App\Models\Publicite::where('is_active', true)
-        ->where(function($q){
-            $q->whereNull('date_debut')->orWhere('date_debut', '<=', now());
-        })
-        ->where(function($q){
-            $q->whereNull('date_fin')->orWhere('date_fin', '>=', now());
-        })
-        ->latest()
-        ->take(6)
-        ->get()
-        ->chunk(3); // ⬅️ Groupe de 3 pubs par slide
-    @endphp
+$publicites = \App\Models\Publicite::where('is_approved', true)
+    ->where('paid', true)
+    ->where(function($q){
+        $q->whereNull('date_debut')->orWhere('date_debut', '<=', now());
+    })
+    ->where(function($q){
+        $q->whereNull('date_fin')->orWhere('date_fin', '>=', now());
+    })
+    ->latest()
+    ->take(6)
+    ->get()
+    ->chunk(3);
+@endphp
+
     
     @if($publicites->count())
 <div id="carouselPub" class="relative w-full overflow-hidden mb-6">

@@ -8,19 +8,17 @@ use Illuminate\Support\Facades\Storage;
 
 class PubliciteController extends Controller
 {
-    // ✅ Affiche le formulaire de soumission
+    // ✅ Affiche le formulaire de création (éditeur)
     public function create()
     {
         return view('createPub');
     }
 
-    // ✅ Enregistre une nouvelle publicité
+    // ✅ Enregistre une publicité (éditeur)
     public function store(Request $request)
     {
-        if (!auth()->check()) {
-            abort(403, 'Vous devez être connecté pour soumettre une publicité.');
-        }
-    
+        if (!auth()->check()) abort(403);
+
         $validated = $request->validate([
             'titre' => 'required|string|max:255',
             'lien' => 'required|url',
@@ -28,7 +26,6 @@ class PubliciteController extends Controller
             'date_debut' => 'nullable|date',
             'date_fin' => 'nullable|date|after_or_equal:date_debut',
         ]);
-        
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('publicites', 'public');
@@ -36,57 +33,45 @@ class PubliciteController extends Controller
 
         $validated['is_approved'] = false;
         $validated['paid'] = false;
-        // ✅ Lie à l'utilisateur connecté
         $validated['user_id'] = auth()->id();
-
 
         Publicite::create($validated);
 
-        return redirect()->back()->with('success', 'Publicité créée avec succès. Elle sera validée par un administrateur.');
+        return redirect()->back()->with('success', 'Publicité créée !');
     }
 
-    // ✅ Affiche la liste des publicités (admin)
-    public function index()
-    {
-        $publicites = Publicite::latest()->paginate(10);
-        return view('admin.publicites.index', compact('publicites'));
-    }
-
-    public function enAttente()
-{
-    $publicites = Publicite::where('is_approved', false)->latest()->get();
-    return view('admin.publicites.attente', compact('publicites'));
-}
-
-    // ✅ Valider une publicité
-    public function valider($id)
-    {
-        $pub = Publicite::findOrFail($id);
-        $pub->is_approved = true;
-        $pub->save();
-
-        return redirect()->back()->with('success', 'Publicité validée avec succès.');
-    }
-
-    // ✅ Supprimer une publicité
-    public function destroy($id)
-    {
-        $pub = Publicite::findOrFail($id);
-
-        if ($pub->image) {
-            Storage::disk('public')->delete($pub->image);
-        }
-
-        $pub->delete();
-
-        return redirect()->back()->with('success', 'Publicité supprimée.');
-    }
-
+    // ✅ Liste des publicités de l’éditeur
     public function mesPublicites()
-{
-    $publicites = Publicite::where('user_id', auth()->id())->latest()->get();
+    {
+        $publicites = Publicite::where('user_id', auth()->id())->latest()->get();
+        return view('editeur.pubCreate', compact('publicites'));
+    }
 
-    return view('editeur.publicites', compact('publicites'));
-}
-}
+    // ✅ Liste des pubs de l’éditeur en attente
+    public function enAttenteEditeur()
+    {
+        $publicites = Publicite::where('user_id', auth()->id())
+            ->where('is_approved', false)
+            ->latest()
+            ->get();
 
+        return view('pubsEnAttente', compact('publicites'));
+    }
+
+    // ✅ Publicités publiques pour tout le monde (accès non connecté possible)
+    public function afficherPubliques()
+    {
+        $publicites = Publicite::where('is_approved', true)
+            ->where('paid', true)
+            ->where(function($q){
+                $q->whereNull('date_debut')->orWhere('date_debut', '<=', now());
+            })
+            ->where(function($q){
+                $q->whereNull('date_fin')->orWhere('date_fin', '>=', now());
+            })
+            ->latest()
+            ->get();
+
+        return view('publicites.publiques', compact('publicites'));
+    }
+}

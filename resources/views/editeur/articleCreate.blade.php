@@ -17,7 +17,7 @@
     @endif
 
     {{-- Formulaire --}}
-    <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('editeur.articles.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
         <div>
