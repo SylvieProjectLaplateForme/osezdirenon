@@ -14,7 +14,7 @@
     <div class="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
         <h2 class="text-2xl font-bold text-center mb-6">Contactez-nous</h2>
 
-        <form action="{{ route('contact.submit') }}" method="POST" class="space-y-6">
+        <form action="{{ route('contact.envoyer') }}" method="POST" class="space-y-6">
             @csrf
 
             <div>

@@ -3,6 +3,11 @@
 @section('title', 'Accueil')
 
 @section('content')
+@if (session('success'))
+    <div class="...">
+        {{ session('success') }}
+    </div>
+@endif
 <div class="container mt-4">
     <div class="flex justify-center items-center mt-2">
         <div class="relative group flex items-center space-x-2 text-sm text-gray-700">

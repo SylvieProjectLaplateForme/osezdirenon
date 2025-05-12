@@ -18,15 +18,30 @@ use App\Http\Controllers\ProfilController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/article/{slug}', [ArticleController::class, 'show'])->name('article.show');
 
-Route::view('/contact', 'contact')->name('contact');
-Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+// Route::view('/contact', 'contact')->name('contact');
+// Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
 
 Route::view('/apropos', 'apropos')->name('apropos');
 Route::view('/cgu', 'cgu')->name('cgu');
 Route::view('/confidentialite', 'confidentialite')->name('confidentialite');
+//route test email
+// Route::get('/test-mail', function () {
+//     Mail::raw('Test simple Mailtrap OK', function ($message) {
+//         $message->to('sosylvie1@gmail.com')
+//                 ->subject('Test simple');
+//     });
 
+//     return 'Email envoyé !';
+// });
+// Route::get('/contact', function () {
+//     return view('contact');
+// })->name('contact');
+
+// Route::post('/contact', [ContactController::class, 'envoyer'])->name('contact.envoyer');
+Route::get('/contact', [ContactController::class, 'afficher'])->name('contact');
+Route::post('/contact', [ContactController::class, 'envoyer'])->name('contact.envoyer');
 // =====================
 // 🔐 2. Authentification Breeze
 // =====================
