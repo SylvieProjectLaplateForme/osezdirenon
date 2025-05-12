@@ -76,26 +76,27 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 // ✍️ 4. Routes ÉDITEUR
 // =====================
 Route::middleware(['auth', 'role:editeur'])->prefix('editeur')->name('editeur.')->group(function () {
-
-    // Dashboard
     Route::get('/dashboard', [EditeurController::class, 'dashboard'])->name('dashboard');
 
-    // Profil
+    // ✅ PROFIL
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // ARTICLES
+    // ✅ ARTICLES
     Route::get('/articles', [EditeurController::class, 'mesArticles'])->name('articles.index');
     Route::get('/articles/create', [EditeurController::class, 'create'])->name('articles.create');
-    Route::get('/articles/en-attente', [EditeurController::class, 'articlesEnAttente'])->name('articles.attente');
     Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
+    Route::get('/articles/en-attente', [EditeurController::class, 'articlesEnAttente'])->name('articles.enAttente');
+    Route::get('/articles/{id}', [EditeurController::class, 'showArticle'])->name('articles.show');
 
-    // PUBLICITES
+    // ✅ PUBLICITÉS
     Route::get('/publicites', [PubliciteController::class, 'mesPublicites'])->name('publicites.index');
     Route::get('/publicites/create', [PubliciteController::class, 'create'])->name('publicites.create');
-    Route::get('/publicites/attente', [PubliciteController::class, 'enAttenteEditeur'])->name('publicites.attente');
+    Route::get('/publicites/attente', [PubliciteController::class, 'enAttenteEditeur'])->name('publicites.enAttente');
     Route::get('/publicites/payees', [EditeurController::class, 'publicitesPayees'])->name('publicites.payees');
+    Route::get('/paiements', [EditeurController::class, 'mesPaiements'])->name('paiements.index');
+
 });
 
 // =====================

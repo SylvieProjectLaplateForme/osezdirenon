@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('editeur.layout')
 
 @section('title', 'Créer un article')
 

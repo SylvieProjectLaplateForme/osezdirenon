@@ -71,7 +71,9 @@ class AdminController extends Controller
     // ✅ LISTE - Articles en attente
     public function articlesEnAttente()
     {
-        $articles = Article::where('is_approved', false)->latest()->get();
+        // $articles = Article::where('is_approved', false)->latest()->get();
+        // return view('admin.articlesIndex', compact('articles'));
+        $articles = Article::where('is_approved', false)->latest()->paginate(15);
         return view('admin.articlesIndex', compact('articles'));
     }
 

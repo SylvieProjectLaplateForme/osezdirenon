@@ -1,10 +1,10 @@
-@extends('layout')
+@extends('admin.layout')
 
 @section('title', 'Liste des articles')
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">📄 Tous les articles</h1>
+    <h1 class="text-3xl font-bold mb-6">📄 Tous les articles en attente</h1>
 
     @if($articles->isEmpty())
         <p class="text-gray-500">Aucun article trouvé.</p>

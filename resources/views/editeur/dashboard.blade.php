@@ -1,58 +1,71 @@
-@extends('layout')
+@extends('editeur.layout')
+
+@section('title', 'Dashboard Éditeur')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">Bienvenue dans votre Espace {{ Auth::user()->name }} !</h1>
-    <div class="mb-6">
-        <a href="{{ route('editeur.articles.create') }}"
-           class="inline-block bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200">
-            ✍️ Créer un nouvel article
-        </a>
-        
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">Bienvenue, {{ Auth::user()->name }}</h1>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white rounded shadow p-4 text-center">
+        <h2 class="text-lg font-semibold">Mes articles</h2>
+        <p class="text-2xl font-bold">{{ $totalArticles ?? 0 }}</p>
+        <a href="{{ route('editeur.articles.index') }}" class="text-blue-500 hover:underline">Voir </a>
     </div>
-    <h2 class="text-xl font-semibold mb-2 flex items-center gap-2">🗂️ Mes Articles</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        
-                <!-- Articles validés -->
-                <div class="card border-l-4 border-green-500 shadow p-4 bg-white rounded">
-                    <h3 class="text-sm text-gray-500 font-semibold uppercase">Articles validés</h3>
-                    <p class="text-2xl font-bold text-green-600 mt-2">{{ $articlesValides->count() }}</p>
-                    <a href="{{ route('editeur.articles.index') }}" class="text-sm text-blue-600 hover:underline mt-1 block">Voir</a>
-                </div>
-        
-                <!-- Articles en attente -->
-                <div class="card border-l-4 border-yellow-500 shadow p-4 bg-white rounded">
-                    <h3 class="text-sm text-gray-500 font-semibold uppercase">Articles en attente</h3>
-                    <p class="text-2xl font-bold text-yellow-600 mt-2">{{ $articlesEnAttente->count() }}</p>
-                    <a href="{{ route('editeur.articles.attente') }}" class="text-sm text-blue-600 hover:underline mt-1 block">Voir</a>
-                </div>
-            </div>
-        
-            <h2 class="text-xl font-bold mb-4">📢 Mes Publicités</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Pubs validées -->
-                <div class="card border-l-4 border-green-500 shadow p-4 bg-white rounded">
-                    <h3 class="text-sm text-gray-500 font-semibold uppercase">Pubs validées</h3>
-                    <p class="text-2xl font-bold text-green-600 mt-2">{{ $pubsValidees->count() }}</p>
-                    <a href="{{ route('editeur.publicites.index') }}" class="text-sm text-blue-600 hover:underline mt-1 block">Voir</a>
-                </div>
-        
-                <!-- Pubs en attente -->
-                <div class="card border-l-4 border-yellow-500 shadow p-4 bg-white rounded">
-                    <h3 class="text-sm text-gray-500 font-semibold uppercase">Pubs en attente</h3>
-                    <p class="text-2xl font-bold text-yellow-600 mt-2">{{ $pubsAttente->count() }}</p>
-                    <a href="{{ route('editeur.publicites.index') }}" class="text-sm text-blue-600 hover:underline mt-1 block">Voir</a>
-                </div>
-        
-                <!-- Pubs payées -->
-                <div class="card border-l-4 border-indigo-500 shadow p-4 bg-white rounded">
-                    <h3 class="text-sm text-gray-500 font-semibold uppercase">Pubs payées</h3>
-                    <p class="text-2xl font-bold text-indigo-600 mt-2">{{ $pubsPayees->count() }}</p>
-                    <a href="{{ route('editeur.publicites.payees') }}" class="text-sm text-blue-600 hover:underline mt-1 block">Voir</a>
-                </div>
-            </div>
-        </div>
-        
+
+    <div class="bg-white rounded shadow p-4 text-center">
+        <h2 class="text-lg font-semibold">Articles en attente</h2>
+        <p class="text-2xl font-bold">{{ $attenteArticles ?? 0 }}</p>
+        <a href="{{ route('editeur.articles.enAttente') }}" class="text-blue-500 hover:underline">Voir </a>
     </div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded shadow p-4 text-center">
+        <h2 class="text-lg font-semibold">Mes Publicités </h2>
+        <p class="text-2xl font-bold">{{ $totalPublicites ?? 0 }}</p>
+        <a href="{{ route('editeur.publicites.index') }}" class="text-blue-500 hover:underline">Voir </a>
+    </div>
+    
+    <div class="bg-white rounded shadow p-4 text-center">
+        <h2 class="text-lg font-semibold">Mes paiements</h2>
+        <p class="text-2xl font-bold">{{ $paiements ?? 0 }}</p>
+        <a href="{{ route('editeur.paiements.index') }}" class="text-blue-500 hover:underline">Voir </a>
+    </div>
+</div>
+
+{{-- Tableau de derniers articles --}}
+<div class="bg-white rounded shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Derniers articles</h2>
+    <table class="min-w-full">
+        <thead>
+            <tr>
+                <th class="text-left px-4 py-2 border-b">Titre</th>
+                <th class="text-left px-4 py-2 border-b">Statut</th>
+                <th class="text-left px-4 py-2 border-b">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($articles as $article)
+                <tr>
+                    <td class="px-4 py-2 border-t">{{ $article->title }}</td>
+                    <td class="px-4 py-2 border-t">
+                        @if ($article->is_approved)
+                            <span class="text-green-600">✔ Validé</span>
+                        @else
+                            <span class="text-yellow-600">⏳ En attente</span>
+                        @endif
+                    </td>
+                    <td class="px-4 py-2 border-t">
+                        <a href="{{ route('article.show', $article->slug) }}" class="text-blue-600 hover:underline">Voir</a>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3" class="text-center text-gray-500 py-4">Aucun article pour le moment.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 </div>
 @endsection

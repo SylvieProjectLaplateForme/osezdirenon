@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('editeur.layout')
 
 @section('title', 'Soumettre une publicité')
 
@@ -42,23 +42,52 @@
             @enderror
         </div>
 
-        <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+        @php
+    use Carbon\Carbon;
+
+    Carbon::setLocale('fr');
+
+    $defaultDateDebut = old('date_debut', now()->format('Y-m-d'));
+    $dateFin = Carbon::parse($defaultDateDebut)->addMonth();
+    $defaultDateFin = $dateFin->translatedFormat('d F Y'); // ex : 11 juin 2025
+@endphp
+
+<div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+        <label for="date_debut" class="block font-semibold mb-1">Date de début</label>
+        <input type="date" name="date_debut" id="date_debut"
+               class="w-full border border-gray-300 rounded px-4 py-2"
+               value="{{ $defaultDateDebut }}">
+        @error('date_debut')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
+        <label class="block font-semibold mb-1">Date de fin (automatique)</label>
+        <input type="text"
+               class="w-full border border-gray-300 rounded px-4 py-2 bg-gray-100"
+               value="{{ $defaultDateFin }}" readonly>
+    </div>
+</div>
+
+    
+            {{-- <div>
                 <label for="date_debut" class="block font-semibold mb-1">Date de début</label>
                 <input type="date" name="date_debut" id="date_debut"
                     class="w-full border border-gray-300 rounded px-4 py-2">
                 @error('date_debut')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
-            </div>
-            <div>
+            </div> --}}
+            {{-- <div>
                 <label for="date_fin" class="block font-semibold mb-1">Date de fin</label>
                 <input type="date" name="date_fin" id="date_fin"
                     class="w-full border border-gray-300 rounded px-4 py-2">
                 @error('date_fin')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
-            </div>
+            </div> --}}
         </div>
 
         <div class="mt-6">

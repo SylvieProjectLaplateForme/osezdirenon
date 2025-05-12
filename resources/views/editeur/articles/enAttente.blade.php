@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('editeur.layout')
 
 @section('title', 'Mes articles en attente')
 
@@ -14,7 +14,7 @@
                 <li class="border p-4 rounded shadow bg-yellow-100">
                     <h2 class="font-semibold">{{ $article->title }}</h2>
                     <p class="text-sm text-gray-600">Créé le : {{ $article->created_at->format('d/m/Y') }}</p>
-                    <a href="{{ route('articles.show', $article->id) }}" class="text-blue-600 hover:underline">Voir l’article</a>
+                    <a href="{{ route('editeur.articles.show', $article->id) }}" class="text-blue-600 hover:underline">Voir l’article</a>
                 </li>
             @endforeach
         </ul>

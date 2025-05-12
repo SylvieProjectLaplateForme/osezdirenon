@@ -7,62 +7,38 @@ use App\Models\Article;
 use App\Models\Publicite;
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Paiement;
+
 
 class EditeurController extends Controller
 {
     // Dashboard
     public function dashboard()
-    {
-        $userId = auth()->id();
+{
+    $userId = auth()->id();
 
-        // Articles
-        $articles = Article::with('user', 'category')
-            ->where('user_id', $userId)
-            ->latest()
-            ->get();
+    // Articles récents
+    $articles = Article::where('user_id', $userId)->latest()->take(5)->get();
 
-        $articlesValides = $articles->where('is_approved', true);
-        $articlesEnAttente = $articles->where('is_approved', false);
+    // Statistiques
+    $totalArticles = Article::where('user_id', $userId)->count();
+    $attenteArticles = Article::where('user_id', $userId)->where('is_approved', false)->count();
+    $totalPublicites = Publicite::where('user_id', $userId)->count();
+    $publicites = Publicite::where('user_id', $userId)->where('is_approved', false)->get();
+    return view('editeur.dashboard', compact(
+        'articles',
+        'totalArticles',
+        'attenteArticles',
+        'totalPublicites',
+        'publicites'
+    ));
+}
 
-        // Publicités
-        $pubsValidees = Publicite::where('user_id', $userId)->where('approved', 1)->get();
-        $pubsAttente = Publicite::where('user_id', $userId)->where('approved', 0)->get();
-        $pubsPayees = Publicite::where('user_id', $userId)->where('paid', 1)->get();
-
-        // Commentaires en attente
-        $commentsEnAttente = Comment::whereHas('article', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->where('is_approved', 0)->count();
-
-        // Graphique
-        $months = ['Janv', 'Fév', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'];
-        $articlesPerMonth = collect(range(1, 12))->map(function ($month) use ($userId) {
-            return Article::where('user_id', $userId)
-                ->whereYear('created_at', date('Y'))
-                ->whereMonth('created_at', $month)
-                ->count();
-        });
-
-        return view('editeur.dashboard', compact(
-            'articles',
-            'articlesValides',
-            'articlesEnAttente',
-            'pubsValidees',
-            'pubsAttente',
-            'pubsPayees',
-            'commentsEnAttente',
-            'months',
-            'articlesPerMonth'
-        ));
-    }
-    // Afficher MES ARTICLES pour l'éditeur connecté
 public function mesArticles()
 {
-    $articles = Article::where('user_id', auth()->id())
-        ->latest()
-        ->get();
+    $articles = Article::where('user_id', auth()->id())->latest()->paginate(10); // ✅
 
-    return view('editeur.mesArticles', compact('articles'));
+    return view('editeur.articles.index', compact('articles'));
 }
 
 
@@ -74,8 +50,18 @@ public function mesArticles()
             ->latest()
             ->get();
 
-        return view('editeur.articlesEnAttente', compact('articlesEnAttente'));
+        return view('editeur.articles.enAttente', compact('articlesEnAttente'));
     }
+    //pour voir article en attente de validation
+    public function showArticle($id)
+{
+    $article = Article::where('id', $id)
+        ->where('user_id', auth()->id())
+        ->firstOrFail();
+
+    return view('editeur.articles.show', compact('article'));
+}
+
 
     // Créer un article
     public function create()
@@ -94,4 +80,18 @@ public function mesArticles()
 
     return view('editeur.publicitesPayees', compact('publicites'));
 }
+//paiement stripe
+// public function paiements()
+// {
+//     $paiements = paiement::where('user_id', auth()->id())->latest()->get();
+
+//     return view('editeur.paiements', compact('paiements'));
+// }
+
+public function mesPaiements()
+{
+    $paiements = Paiement::where('user_id', auth()->id())->latest()->get();
+    return view('editeur.paiements.index', compact('paiements'));
+}
+
 }

@@ -24,7 +24,8 @@ class PubliciteController extends Controller
             'lien' => 'required|url',
             'image' => 'nullable|image|max:2048',
             'date_debut' => 'nullable|date',
-            'date_fin' => 'nullable|date|after_or_equal:date_debut',
+            // 'date_fin' => 'nullable|date|after_or_equal:date_debut', car obligatoire 1 mois
+            
         ]);
 
         if ($request->hasFile('image')) {
@@ -44,7 +45,7 @@ class PubliciteController extends Controller
     public function mesPublicites()
     {
         $publicites = Publicite::where('user_id', auth()->id())->latest()->get();
-        return view('editeur.pubCreate', compact('publicites'));
+        return view('editeur.publicites.pubCreate', compact('publicites'));
     }
 
     // ✅ Liste des pubs de l’éditeur en attente
@@ -55,7 +56,7 @@ class PubliciteController extends Controller
             ->latest()
             ->get();
 
-        return view('pubsEnAttente', compact('publicites'));
+        return view('editeur.publicites.enAttente', compact('publicites'));
     }
 
     // ✅ Publicités publiques pour tout le monde (accès non connecté possible)

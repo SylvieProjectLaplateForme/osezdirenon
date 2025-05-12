@@ -27,6 +27,7 @@
         <p class="text-2xl font-semibold">{{ $attente }}</p>
         <a href="{{ route('admin.articles.attente', ['filter' => 'attente']) }}" class="text-blue-500 hover:underline">Voir</a>
     </div>
+    
 <!-- Carte toutes les publicités -->
 <div class="bg-white shadow rounded p-4">
     <div class="text-center">
