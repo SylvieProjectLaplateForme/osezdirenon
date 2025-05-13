@@ -4,138 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Osez Dire Non')</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
-    <style>
-        @keyframes marquee {
-            0%   { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-            display: inline-block;
-            white-space: nowrap;
-            animation: marquee 30s linear infinite;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-pink-50 text-gray-800 font-sans">
 
-<body class="flex flex-col min-h-screen bg-white text-gray-800">
-
-<header class="bg-white shadow mb-6">
-    <div class="container mx-auto flex items-center justify-between p-4">
-        <!-- Logo -->
-        <a href="{{ route('home') }}">
-            <img src="{{ asset('images/logo-odn.png') }}" alt="Logo Osez Dire Non" class="h-20 w-auto">
+<header class="bg-white shadow sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        {{-- Logo --}}
+        <a href="{{ route('home') }}" class="text-2xl font-serif font-bold text-pink-600 whitespace-nowrap">
+            Osez Dire Non
         </a>
-
-        <!-- Navigation -->
-        <div class="flex items-center space-x-6">
-            <nav class="flex space-x-4">
-                <!-- Accueil -->
-                <a href="{{ route('home') }}" class="bg-blue-600 text-white px-4 py-2 font-bold hover:bg-blue-700 rounded">Accueil</a>
-
-                <!-- Contact -->
-                <a href="{{ route('contact') }}" class="bg-red-600 text-white px-4 py-2 font-bold hover:bg-red-700 rounded">Contact</a>
-
-                <!-- Dashboard selon le rôle -->
-                @auth
-                    @php
-                        $role = Auth::user()->role->name ?? null;
-                    @endphp
-
-                    @if ($role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}" class="bg-gray-100 text-blue-600 px-4 py-2 font-bold hover:bg-gray-200 rounded">Dashboard Admin</a>
-                    @elseif ($role === 'editeur')
-                        <a href="{{ route('editeur.dashboard') }}" class="bg-gray-100 text-blue-600 px-4 py-2 font-bold hover:bg-gray-200 rounded">Dashboard Éditeur</a>
-                    @endif
-                @endauth
-            </nav>
-
-            <!-- Auth -->
-            <div class="text-sm">
-                @auth
-                    <span class="text-gray-600">Bonjour, {{ Auth::user()->name }}</span>
-
-                    @if ($role)
-                        <span class="ml-2 inline-block px-2 py-1 text-xs font-semibold rounded bg-gray-200 text-gray-800">
-                            {{ ucfirst($role) }}
-                        </span>
-                    @endif
-
-                    <form action="{{ route('logout') }}" method="POST" class="inline ml-2">
-                        @csrf
-                        <button type="submit" class="text-red-600 hover:underline">Déconnexion</button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Connexion</a>
-                    <a href="{{ route('register') }}" class="text-green-600 hover:underline ml-2">S’inscrire</a>
-                @endauth
-            </div>
+        {{-- Menu Burger Mobile --}}
+        <div class="md:hidden">
+            <button id="menu-btn" class="text-pink-600 text-3xl focus:outline-none">☰</button>
         </div>
+
+        {{-- Menu Desktop --}}
+        <nav class="hidden md:flex space-x-4 text-sm items-center font-medium">
+            <a href="{{ route('home') }}" class="hover:text-pink-600">Accueil</a>
+            <a href="{{ route('contact') }}" class="hover:text-pink-600">Contact</a>
+
+            @guest
+                <a href="{{ route('login') }}" class="hover:text-pink-600">Connexion</a>
+                <a href="{{ route('register') }}" class="hover:text-pink-600">Inscription</a>
+            @else
+                <span class="text-pink-600 font-semibold">
+                    Bonjour, {{ Auth::user()->name }}
+                    @if(Auth::user()->role)
+                        <span class="text-xs text-gray-500">({{ Auth::user()->role->name }})</span>
+                    @endif
+                </span>
+
+                @php $role = Auth::user()->role->name ?? null; @endphp
+                @if ($role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}" class="hover:text-pink-600">Dashboard Admin</a>
+                @elseif ($role === 'editeur')
+                    <a href="{{ route('editeur.dashboard') }}" class="hover:text-pink-600">Mon Espace</a>
+                @endif
+
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="text-red-600 hover:underline">Déconnexion</button>
+                </form>
+            @endguest
+        </nav>
+    </div>
+
+    {{-- Menu Mobile --}}
+    <div id="mobile-menu" class="md:hidden hidden px-4 pb-4 space-y-2 text-sm font-medium">
+        <a href="{{ route('home') }}" class="block hover:text-pink-600">Accueil</a>
+        <a href="{{ route('contact') }}" class="block hover:text-pink-600">Contact</a>
+
+        @guest
+            <a href="{{ route('login') }}" class="block hover:text-pink-600">Connexion</a>
+            <a href="{{ route('register') }}" class="block hover:text-pink-600">Inscription</a>
+        @else
+            <div class="text-pink-600 font-semibold">
+                Bonjour, {{ Auth::user()->name }}
+                @if(Auth::user()->role)
+                    <span class="text-xs text-gray-500">({{ Auth::user()->role->name }})</span>
+                @endif
+            </div>
+
+            @if ($role === 'admin')
+                <a href="{{ route('admin.dashboard') }}" class="block hover:text-pink-600">Dashboard Admin</a>
+            @elseif ($role === 'editeur')
+                <a href="{{ route('editeur.dashboard') }}" class="block hover:text-pink-600">Mon Espace</a>
+            @endif
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="text-red-600 hover:underline">Déconnexion</button>
+            </form>
+        @endguest
     </div>
 </header>
 
-<!-- Bandeau invité -->
-@guest
-<div class="relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-    <div class="animate-marquee whitespace-nowrap py-3 px-4 text-lg sm:text-xl font-medium">
-        “Les raisons de dire <span class="font-extrabold text-red-400">"non"</span> sont toujours plus mobilisatrices que celles de dire “oui”.” 👉 
-        <a href="{{ route('login') }}" class="underline font-bold ml-4">Connectez-vous</a> ou rejoignez-nous 👉 
-        <a href="{{ route('register') }}" class="underline font-bold">Inscrivez-vous</a>
-    </div>
-</div>
-@endguest
-
-<!-- Contenu principal -->
-<main class="flex-1 container mx-auto p-8">
+{{-- Contenu principal --}}
+<main class="max-w-7xl mx-auto py-10 px-4">
     @yield('content')
 </main>
 
-<!-- Bandeau RGPD -->
-<div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-300 p-4 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4 hidden">
-    <p class="text-sm text-gray-700 text-center sm:text-left">
-        En poursuivant votre navigation, vous pouvez accepter ou refuser notre 
-        <a href="{{ route('confidentialite') }}" class="text-blue-600 hover:underline">politique de confidentialité</a> et nos 
-        <a href="{{ route('cgu') }}" class="text-blue-600 hover:underline">conditions d’utilisation</a>.
-    </p>
-    <div class="flex gap-2">
-        <button id="accept-cookies" class="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">J'accepte</button>
-        <button id="refuse-cookies" class="bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded hover:bg-gray-400">Je refuse</button>
-    </div>
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const banner = document.getElementById("cookie-banner");
-    const acceptBtn = document.getElementById("accept-cookies");
-    const refuseBtn = document.getElementById("refuse-cookies");
-
-    if (!localStorage.getItem("rgpdChoice")) {
-        banner.classList.remove("hidden");
-    }
-
-    acceptBtn.addEventListener("click", () => {
-        localStorage.setItem("rgpdChoice", "accepted");
-        banner.classList.add("hidden");
-    });
-
-    refuseBtn.addEventListener("click", () => {
-        localStorage.setItem("rgpdChoice", "refused");
-        banner.classList.add("hidden");
-    });
-});
-</script>
-
-<!-- Footer -->
-<footer class="bg-gray-900 text-white p-4 text-center text-sm">
-    <p class="mb-2">© {{ date('Y') }} OSEZ dire NON – Tous droits réservés.</p>
-    <div class="flex justify-center gap-4">
-        <a href="{{ route('apropos') }}" class="hover:underline text-blue-300">À propos</a>
-        <a href="{{ route('cgu') }}" class="hover:underline text-blue-300">Conditions Générales</a>
-        <a href="{{ route('confidentialite') }}" class="hover:underline text-blue-300">Confidentialité</a>
+{{-- Footer --}}
+<footer class="bg-white border-t mt-10">
+    <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-pink-600 font-semibold">
+        © {{ date('Y') }} Osez Dire Non — Le blog qui vous donne la parole.
+        <div class="flex justify-center gap-4">
+            <a href="{{ route('apropos') }}" class="hover:text-gray-600">À propos</a>
+            <a href="{{ route('cgu') }}" class="hover:text-gray-600">Conditions Générales</a>
+            <a href="{{ route('confidentialite') }}" class="hover:text-gray-600">Confidentialité</a>
+            <a href="{{ route('plan')}}" class="hover:text-gray-600">Plan du site</a>
+        </div>
+        
     </div>
 </footer>
+
+{{-- JS menu mobile --}}
+<script>
+    document.getElementById('menu-btn').addEventListener('click', function () {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+</script>
 
 </body>
 </html>

@@ -75,4 +75,5 @@ class PubliciteController extends Controller
 
         return view('publicites.publiques', compact('publicites'));
     }
+    
 }

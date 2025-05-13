@@ -12,20 +12,21 @@ class ProfilController extends Controller
     public function index()
 {
     $user = Auth::user();
-    return view('admin.profile.index', compact('user'));
+    return view('admin.profil.index', compact('user'));
 }
+
     // 📝 Formulaire d'édition
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.profile.edit', compact('user'));
+        return view('admin.profil.edit', compact('user'));
     }
 
     // 🔍 Affiche le profil d'un admin au cas ou j'en aurai 2 dans le futur
     public function show($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.profile.show', compact('user'));
+        return view('admin.profil.show', compact('user'));
     }
 
     // 💾 Mise à jour du profil

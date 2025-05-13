@@ -11,6 +11,7 @@ use App\Http\Controllers\PubliciteController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\StripeWebhookController;
 
 // =====================
 // 🔓 1. Routes publiques (non connectées)
@@ -26,18 +27,11 @@ Route::post('/comment', [CommentController::class, 'store'])->name('comment.stor
 Route::view('/apropos', 'apropos')->name('apropos');
 Route::view('/cgu', 'cgu')->name('cgu');
 Route::view('/confidentialite', 'confidentialite')->name('confidentialite');
-//route test email
-// Route::get('/test-mail', function () {
-//     Mail::raw('Test simple Mailtrap OK', function ($message) {
-//         $message->to('sosylvie1@gmail.com')
-//                 ->subject('Test simple');
-//     });
+Route::get('/plan-du-site', function () {
+    $categories = \App\Models\Category::all();
+    return view('planSite', compact('categories'));
+})->name('plan');
 
-//     return 'Email envoyé !';
-// });
-// Route::get('/contact', function () {
-//     return view('contact');
-// })->name('contact');
 
 // Route::post('/contact', [ContactController::class, 'envoyer'])->name('contact.envoyer');
 Route::get('/contact', [ContactController::class, 'afficher'])->name('contact');
@@ -111,7 +105,7 @@ Route::middleware(['auth', 'role:editeur'])->prefix('editeur')->name('editeur.')
     Route::get('/publicites/attente', [PubliciteController::class, 'enAttenteEditeur'])->name('publicites.enAttente');
     Route::get('/publicites/payees', [EditeurController::class, 'publicitesPayees'])->name('publicites.payees');
     Route::get('/paiements', [EditeurController::class, 'mesPaiements'])->name('paiements.index');
-
+    
 });
 
 // =====================
@@ -131,3 +125,4 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/stripe/payer/{id}', [StripeController::class, 'checkout'])->name('stripe.checkout');
 Route::get('/payer-success', [StripeController::class, 'success'])->name('stripe.success');
 Route::get('/payer-cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);

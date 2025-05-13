@@ -33,9 +33,18 @@ class ArticleController extends Controller
      */
     public function show($slug)
     {
-        $article = Article::where('slug', $slug)->firstOrFail();
+        // $article = Article::where('slug', $slug)->firstOrFail();
 
-        return view('article', compact('article'));
+        // return view('article', compact('article'));
+        $article = Article::with('category', 'comments')->where('slug', $slug)->firstOrFail();
+
+$similaires = Article::where('category_id', $article->category_id)
+                    ->where('id', '!=', $article->id)
+                    ->latest()
+                    ->take(4)
+                    ->get();
+
+return view('editeur.articles.show', compact('article', 'similaires'));
     }
 
     /**

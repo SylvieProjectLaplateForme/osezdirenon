@@ -6,6 +6,7 @@ use App\Models\Publicite;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use App\Models\Paiement;
 
 class StripeController extends Controller
 {
@@ -44,13 +45,25 @@ public function success(Request $request)
     $id = $request->id;
     $publicite = Publicite::findOrFail($id);
 
-    // ✅ Mise à jour si besoin :
     $publicite->paid = true;
     $publicite->save();
 
-    // ✅ Envoi de la variable à la vue
+    \App\Models\Paiement::create([
+        'user_id' => auth()->id(),
+        'publicite_id' => $publicite->id,
+        'amount' => 150.00,
+        'payment_method' => 'card',
+        'payment_last4' => '4242',
+        'stripe_payment_id' => 'manual_entry',
+        'paid_at' => now(),
+        'status' => 'paid',
+    ]);
+
     return view('stripe.success', compact('publicite'));
 }
+
+
+
 public function cancel()
     {
         return redirect()->route('editeur.dashboard')->with('error', 'Paiement annulé.');

@@ -10,9 +10,7 @@ class Paiement extends Model
     use HasFactory;
 
     /**
-     * Les attributs qui sont assignables en masse.
-     *
-     * @var array<int, string>
+     * Attributs assignables en masse
      */
     protected $fillable = [
         'user_id',
@@ -22,21 +20,20 @@ class Paiement extends Model
         'payment_last4',
         'stripe_payment_id',
         'paid_at',
+        'status',
     ];
 
     /**
-     * Les dates  instances Carbon (
-     *
-     * @var array
+     * Cast des champs en objets Carbon pour les dates
      */
-    protected $dates = [
-        'paid_at',
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'paid_at'    => 'datetime',
     ];
 
     /**
-     * Relation avec la publicité.
-     *
-     * Un paiement appartient à une publicité.
+     * Relation : un paiement appartient à une publicité
      */
     public function publicite()
     {
@@ -44,9 +41,7 @@ class Paiement extends Model
     }
 
     /**
-     * Relation avec l'utilisateur (facultatif mais conseillé).
-     *
-     * Un paiement appartient à un utilisateur.
+     * Relation : un paiement appartient à un utilisateur
      */
     public function user()
     {

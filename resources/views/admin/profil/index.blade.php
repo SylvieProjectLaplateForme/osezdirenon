@@ -3,8 +3,11 @@
 @section('title', 'Mon profil')
 
 @section('content')
-<div class="max-w-xl mx-auto bg-white p-6 shadow rounded">
-    <h1 class="text-2xl font-bold mb-4">Mon Profil</h1>
+<div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    
+    <h1 class="text-2xl font-bold mb-6">👤 Modifier mon profil</h1>
+        
+    </h1>
 
     @if(session('success'))
         <div class="mb-4 text-green-600 font-semibold">
@@ -20,8 +23,11 @@
         <div class="mb-4">
             <label for="name" class="block font-medium">Nom</label>
             <div class="flex items-center gap-2">
-                <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" class="input-field" disabled>
-                <button type="button" onclick="enableField('name')" class="text-gray-500 hover:text-blue-600">✏️</button>
+                <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}"
+                    class="input-field" disabled>
+                <button type="button" onclick="enableField('name')" class="text-yellow-600 hover:text-yellow-800">
+                    ✏️
+                </button>
             </div>
         </div>
 
@@ -29,12 +35,15 @@
         <div class="mb-4">
             <label for="email" class="block font-medium">Email</label>
             <div class="flex items-center gap-2">
-                <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="input-field" disabled>
-                <button type="button" onclick="enableField('email')" class="text-gray-500 hover:text-blue-600">✏️</button>
+                <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
+                    class="input-field" disabled>
+                <button type="button" onclick="enableField('email')" class="text-yellow-600 hover:text-yellow-800">
+                    ✏️
+                </button>
             </div>
         </div>
 
-        {{-- Changer mot de passe --}}
+        {{-- Mot de passe --}}
         <div class="mb-4">
             <label class="block font-medium">Mot de passe</label>
             <button type="button" onclick="togglePasswordFields()" class="text-sm text-blue-600 hover:underline">
@@ -42,25 +51,29 @@
             </button>
         </div>
 
+        {{-- Champs mot de passe --}}
         <div id="password-fields" class="hidden">
             <div class="mb-4">
                 <input type="password" name="password" placeholder="Nouveau mot de passe" class="input-field">
             </div>
             <div class="mb-4">
-                <input type="password" name="password_confirmation" placeholder="Confirmer le mot de passe" class="input-field">
+                <input type="password" name="password_confirmation" placeholder="Confirmer le mot de passe"
+                    class="input-field">
             </div>
         </div>
 
         {{-- Bouton enregistrer --}}
         <div class="text-right">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                 💾 Enregistrer
             </button>
         </div>
     </form>
 </div>
 
-{{-- JS --}}
+{{-- Script --}}
+@push('scripts')
 <script>
     function enableField(id) {
         const field = document.getElementById(id);
@@ -73,8 +86,10 @@
         section.classList.toggle('hidden');
     }
 </script>
+@endpush
 
 {{-- Styles --}}
+@push('styles')
 <style>
     .input-field {
         width: 100%;
@@ -93,4 +108,5 @@
         display: none;
     }
 </style>
+@endpush
 @endsection

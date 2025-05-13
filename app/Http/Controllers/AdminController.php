@@ -168,4 +168,11 @@ public function supprimerPublicite($id)
 
     return redirect()->back()->with('success', 'Publicité supprimée.');
 }
+
+//profil
+public function profile()
+{
+    $user = auth()->user(); // ou User::find(...)
+    return view('admin.profile.index', compact('user'));
+}
 }
