@@ -45,7 +45,7 @@ class PubliciteController extends Controller
     public function mesPublicites()
     {
         $publicites = Publicite::where('user_id', auth()->id())->latest()->get();
-        return view('editeur.publicites.pubCreate', compact('publicites'));
+        return view('editeur.publicites.index', compact('publicites'));
     }
 
     // ✅ Liste des pubs de l’éditeur en attente

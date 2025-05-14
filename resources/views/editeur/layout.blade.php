@@ -65,6 +65,10 @@
             </a>
         </div>
 
+        
+        
+
+
         {{-- Paiements --}}
         <div>
             <h3 class="uppercase text-gray-400 text-xs mb-2">Mes paiements</h3>

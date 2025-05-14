@@ -69,6 +69,13 @@ public function mesArticles()
         $categories = Category::all();
         return view('editeur.articleCreate', compact('categories'));
     }
+    
+    // ✅ Affiche le formulaire de création d’une publicité
+    public function createPub()
+{
+    return view('editeur.publicites.pubCreate'); //  bien placé
+}
+
 
     public function publicitesPayees()
 {

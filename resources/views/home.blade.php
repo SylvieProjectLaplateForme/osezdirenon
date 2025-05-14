@@ -52,9 +52,14 @@
                     <h3 class="text-xl font-semibold text-blue-700 mb-2">
                         {{ $article->title }}
                     </h3>
-                    <p class="text-sm text-gray-600 mb-2">
+                    {{-- <p class="text-sm text-gray-600 mb-2">
                         Publié le {{ \Carbon\Carbon::parse($article->created_at)->format('d/m/Y') }}
-                    </p>
+                    </p> --}}
+                    {{-- ✅ Affichage du nom de l’auteur --}}
+        <p class="text-sm text-gray-600 mb-2">
+            Par <strong>{{ $article->user->name ?? 'Auteur inconnu' }}</strong>
+            le {{ $article->created_at->format('d/m/Y') }}
+        </p>
                     <div class="flex justify-between items-center mt-2">
                         {{-- 🟣 Catégorie --}}
                         <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full {{ $article->category->color_class }}">

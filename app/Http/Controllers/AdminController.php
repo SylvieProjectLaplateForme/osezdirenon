@@ -51,6 +51,13 @@ class AdminController extends Controller
             'publicitesEnAttente'=> $publicitesEnAttente,
         ]);
     }
+    public function deleteComment($id)
+    {
+        $comment = Comment::findOrFail($id);
+        $comment->delete();
+    
+        return back()->with('success', 'Commentaire supprimé.');
+    }
 
     // ✅ LISTE - Tous les articles
     public function articlesIndex()

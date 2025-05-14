@@ -34,7 +34,7 @@
                     </td>
                     <td class="py-2 px-4">
                         <a href="{{ route('article.show', $article->slug) }}" class="text-blue-600 hover:underline">Voir</a>
-                        {{-- Ajouter modifier/supprimer si besoin --}}
+                        
                     </td>
                 </tr>
                 @endforeach

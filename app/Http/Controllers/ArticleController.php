@@ -10,9 +10,7 @@ use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
-    /**
-     * Liste des articles publics (Accueil)
-     */
+    // ✅ Liste des articles publics (Accueil)
     public function index(Request $request)
     {
         $query = Article::query()->where('is_approved', true); // seulement approuvés
@@ -22,48 +20,37 @@ class ArticleController extends Controller
         }
 
         $articles = $query->latest()->paginate(6);
-
         $categories = Category::all();
 
         return view('home', compact('articles', 'categories'));
     }
 
-    /**
-     * Voir un article en public
-     */
+    // ✅ Voir un article public
     public function show($slug)
     {
-        // $article = Article::where('slug', $slug)->firstOrFail();
+        $article = Article::with(['category', 'user', 'comments'])
+            ->where('slug', $slug)
+            ->firstOrFail();
 
-        // return view('article', compact('article'));
-        $article = Article::with('category', 'comments')->where('slug', $slug)->firstOrFail();
+        $similaires = Article::where('category_id', $article->category_id)
+            ->where('id', '!=', $article->id)
+            ->latest()
+            ->take(4)
+            ->get();
 
-$similaires = Article::where('category_id', $article->category_id)
-                    ->where('id', '!=', $article->id)
-                    ->latest()
-                    ->take(4)
-                    ->get();
-
-return view('editeur.articles.show', compact('article', 'similaires'));
+        return view('editeur.articles.show', compact('article', 'similaires'));
     }
 
-    /**
-     * 📌 Espace éditeur : formulaire de création
-     */
+    // ✅ Formulaire de création (éditeur)
     public function create()
     {
         $categories = Category::all();
-
-        // 👇 Attention ici c'est important (ERREUR corrigée ici)
         return view('editeur.articles.create', compact('categories'));
     }
 
-    /**
-     * 📌 Espace éditeur : enregistrement de l'article
-     */
+    // ✅ Enregistrement d’un article
     public function store(Request $request)
     {
-        // Validation
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
@@ -90,32 +77,14 @@ return view('editeur.articles.show', compact('article', 'similaires'));
             'slug' => $slug,
             'category_id' => $validated['category_id'],
             'user_id' => Auth::id(),
-            'is_approved' => false, // Par défaut en attente
+            'is_approved' => false,
             'image' => $imagePath,
         ]);
 
         return redirect()->route('editeur.dashboard')->with('success', 'Article envoyé pour validation.');
     }
 
-    /**
-     * 📌 Ajouter un commentaire à un article
-     */
-    public function storeComment(Request $request, Article $article)
-    {
-        $validated = $request->validate([
-            'author' => 'required|string|max:255',
-            'content' => 'required|string|min:5',
-        ]);
-
-        $article->comments()->create($validated);
-
-        return redirect()->route('article.show', $article->slug)
-                         ->with('success', 'Commentaire ajouté avec succès.');
-    }
-
-    /**
-     * ✅ Supprimer un article (ADMIN uniquement)
-     */
+    // ✅ Supprimer un article
     public function delete($id)
     {
         if (!Auth::check() || Auth::user()->role->name !== 'admin') {

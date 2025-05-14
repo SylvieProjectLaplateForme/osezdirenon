@@ -72,8 +72,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // COMMENTAIRES
     Route::get('/commentaires-en-attente', [AdminController::class, 'commentairesEnAttente'])->name('comments.pending');
     Route::put('/commentaires/{id}/valider', [AdminController::class, 'validateComment'])->name('comment.validate');
+    Route::post('/commentaires', [CommentController::class, 'store'])->name('comment.store');
+    Route::delete('/commentaires/{id}', [AdminController::class, 'deleteComment'])->name('comment.delete');
 
-    // PUBLICITES (⚠️ bien éviter le chemin `/publicites` qui est public)
+    // PUBLICITES Admin et non public 
     Route::get('/gestion-publicites', [AdminController::class, 'publicites'])->name('publicites.index');
     Route::get('/publicites/attente', [AdminController::class, 'publicitesEnAttente'])->name('publicites.attente');
     Route::get('/publicites/{id}', [AdminController::class, 'showPublicite'])->name('publicites.show');
@@ -102,10 +104,12 @@ Route::middleware(['auth', 'role:editeur'])->prefix('editeur')->name('editeur.')
     // ✅ PUBLICITÉS
     Route::get('/publicites', [PubliciteController::class, 'mesPublicites'])->name('publicites.index');
     Route::get('/publicites/create', [PubliciteController::class, 'create'])->name('publicites.create');
+    Route::post('/publicites', [PubliciteController::class, 'store'])->name('publicites.store');
     Route::get('/publicites/attente', [PubliciteController::class, 'enAttenteEditeur'])->name('publicites.enAttente');
     Route::get('/publicites/payees', [EditeurController::class, 'publicitesPayees'])->name('publicites.payees');
+
+    // ✅ PAIEMENTS
     Route::get('/paiements', [EditeurController::class, 'mesPaiements'])->name('paiements.index');
-    
 });
 
 // =====================
