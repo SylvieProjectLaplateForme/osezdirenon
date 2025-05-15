@@ -40,58 +40,54 @@
 @if ($articles->count())
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach ($articles as $article)
-            {{-- ✅ Article --}}
-            <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-                <div class="overflow-hidden rounded-t-lg">
+            <!-- 📰 CARD ARTICLE -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300">
+                <!-- Image -->
+                <div class="relative group">
                     <img 
                         src="{{ asset($article->image ? 'storage/' . $article->image : 'storage/articles/default.jpg') }}" 
                         alt="{{ $article->title }}" 
-                        class="w-full h-48 object-cover transform transition duration-500 hover:scale-110">
+                        class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
+                    >
+                    <!-- Badge catégorie -->
+                    <div class="absolute top-2 left-2 bg-white bg-opacity-80 px-3 py-1 text-xs font-semibold rounded-full {{ $article->category->color_class }}">
+                        {{ $article->category->name }}
+                    </div>
                 </div>
-                <div class="p-6 flex flex-col justify-between flex-1">
-                    <h3 class="text-xl font-semibold text-blue-700 mb-2">
+
+                <!-- Contenu -->
+                <div class="p-5 flex flex-col flex-1">
+                    <h3 class="text-xl font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
                         {{ $article->title }}
                     </h3>
-                    {{-- <p class="text-sm text-gray-600 mb-2">
-                        Publié le {{ \Carbon\Carbon::parse($article->created_at)->format('d/m/Y') }}
-                    </p> --}}
-                    {{-- ✅ Affichage du nom de l’auteur --}}
-        <p class="text-sm text-gray-600 mb-2">
-            Par <strong>{{ $article->user->name ?? 'Auteur inconnu' }}</strong>
-            le {{ $article->created_at->format('d/m/Y') }}
-        </p>
-                    <div class="flex justify-between items-center mt-2">
-                        {{-- 🟣 Catégorie --}}
-                        <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full {{ $article->category->color_class }}">
-                            {{ $article->category->name }}
-                        </span>
-                    
-                        {{-- 💬 Commentaires --}}
-                        <span class="flex items-center text-sm text-gray-600 gap-1">
-                            {{-- <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M17 8h2a2 2 0 012 2v8a2 2 0 01-2 2h-6l-4 4v-4H7a2 2 0 01-2-2v-2" />
-                            </svg> --}}
-                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+
+                    <p class="text-sm text-gray-500 mb-2">
+                        Par <strong>{{ $article->user->name ?? 'Auteur inconnu' }}</strong>
+                        le {{ $article->created_at->format('d/m/Y') }}
+                    </p>
+
+                    <div class="text-gray-700 text-sm flex-1 mb-4 line-clamp-3">
+                        {!! \Illuminate\Support\Str::limit(strip_tags($article->content), 160) !!}
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center text-gray-600 text-sm gap-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                       d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 3.866-3.582 7-8 7a8.596 8.596 0 01-3.5-.75L3 21l1.75-4.25A7.964 7.964 0 013 12c0-3.866 3.582-7 8-7s8 3.134 8 7z" />
-                              </svg>
-                              
+                            </svg>
                             <span class="font-medium">{{ $article->comments->count() }}</span>
                         </span>
+
+                        <a href="{{ route('article.show', ['slug' => $article->slug]) }}"
+                           class="text-blue-600 font-semibold hover:underline">
+                            Lire la suite →
+                        </a>
                     </div>
-                    
-                    <div class="text-gray-800 mb-4">
-                        {!! \Illuminate\Support\Str::limit($article->content, 120) !!}
-                    </div>
-                    <a href="{{ route('article.show', ['slug' => $article->slug]) }}"
-                       class="text-blue-600 hover:underline font-semibold mt-auto">
-                        Lire la suite →
-                    </a>
                 </div>
             </div>
 
-            {{-- 🎀 Publicité UNE SEULE FOIS après 3e article --}}
+            <!-- 🎀 Publicité UNE FOIS après 3 articles -->
             @if ($loop->iteration === 3)
                 <div class="col-span-full">
                     @include('carrousselPub')
@@ -100,11 +96,13 @@
         @endforeach
     </div>
 
+    <!-- ✅ PAGINATION -->
     <div class="mt-8">
         {{ $articles->links() }}
     </div>
 @else
     <p class="text-center text-gray-500">Aucun article trouvé.</p>
 @endif
+
 
 @endsection

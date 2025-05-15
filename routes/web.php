@@ -133,3 +133,9 @@ Route::post('/stripe/payer/{id}', [StripeController::class, 'checkout'])->name('
 Route::get('/payer-success', [StripeController::class, 'success'])->name('stripe.success');
 Route::get('/payer-cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
+
+//bandeau RGPD
+// Route::post('/cookie-consent', function () {
+//     session(['cookie_consent' => true]);
+//     return back();
+// })->name('cookie.consent');

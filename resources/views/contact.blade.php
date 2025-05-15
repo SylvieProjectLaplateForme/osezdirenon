@@ -10,10 +10,9 @@
     </div>
 @endif
 
-<div class="flex justify-center items-center min-h-screen">
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
     <div class="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold text-center mb-6">Contactez-nous</h2>
-
+        <h2 class="text-2xl font-bold text-center mb-6 text-pink-600">Contactez-nous</h2>
         <form action="{{ route('contact.envoyer') }}" method="POST" class="space-y-6">
             @csrf
 
@@ -37,7 +36,7 @@
 
             <div class="text-center mt-6">
                 <button type="submit"
-                        class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition">
+                        class="bg-pink-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition">
                     Envoyer
                 </button>
             </div>

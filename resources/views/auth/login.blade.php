@@ -1,4 +1,6 @@
 <x-guest-layout>
+     <!-- 🔹 Nom du site en rose -->
+     
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -40,10 +42,11 @@
             @endif
 {{-- 
             <div class="flex flex-col items-center mt-3"> --}}
-                <x-primary-button class="px-6 py-2">
-                    {{ __('Log in') }}
-                </x-primary-button>
-            </div>
+                <button type="submit"
+                class="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6 py-2 rounded transition duration-200">
+                {{ __('Log in') }}
+            </button>
+            </div> 
 
             <div class="flex flex-col items-center mt-3">
                 <p class="mt-4 text-sm text-gray-600 text-center">
