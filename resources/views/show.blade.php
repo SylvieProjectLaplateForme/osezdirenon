@@ -43,7 +43,7 @@
 
 
 @if (!$article->is_approved)
-    <form action="{{ route('admin.article.validate', $article->id) }}" method="POST" class="mt-6 text-center">
+    <form action="{{ route('admin.articles.validate', $article->id) }}" method="POST" class="mt-6 text-center">
         @csrf
         @method('PUT')
         <button type="submit" class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">

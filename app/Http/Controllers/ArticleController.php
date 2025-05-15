@@ -10,6 +10,9 @@ use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
+    
+   
+
     // ✅ Liste des articles publics (Accueil)
     public function index(Request $request)
     {
@@ -47,8 +50,9 @@ class ArticleController extends Controller
         $categories = Category::all();
         return view('editeur.articles.create', compact('categories'));
     }
+    
 
-    // ✅ Enregistrement d’un article
+    // ✅ Soumission article
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -83,17 +87,6 @@ class ArticleController extends Controller
 
         return redirect()->route('editeur.dashboard')->with('success', 'Article envoyé pour validation.');
     }
-
-    // ✅ Supprimer un article
-    public function delete($id)
-    {
-        if (!Auth::check() || Auth::user()->role->name !== 'admin') {
-            abort(403, 'Accès interdit.');
-        }
-
-        $article = Article::findOrFail($id);
-        $article->delete();
-
-        return redirect()->route('home')->with('success', 'Article supprimé avec succès.');
-    }
+    
+    
 }

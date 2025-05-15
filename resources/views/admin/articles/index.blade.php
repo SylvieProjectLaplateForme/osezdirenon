@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">📄 Tous les articles en attente</h1>
+    <h1 class="text-3xl font-bold mb-6">📄 Tous les articles </h1>
 
     @if($articles->isEmpty())
         <p class="text-gray-500">Aucun article trouvé.</p>
@@ -35,20 +35,20 @@
                             </td>
                             <td class="px-6 py-4 flex gap-2">
                                 @if(!$article->is_approved)
-                                    <form method="POST" action="{{ route('admin.article.validate', $article->id) }}">
+                                    <form method="POST" action="{{ route('admin.articles.validate', $article->id) }}">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="text-green-600 hover:underline">Valider</button>
                                     </form>
                                 @endif
 
-                                <form method="POST" action="{{ route('admin.article.destroy', $article->id) }}">
+                                <form method="POST" action="{{ route('admin.articles.destroy', $article->id) }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:underline">Supprimer</button>
                                 </form>
 
-                                <a href="{{ route('admin.article.show', $article->id) }}" class="text-blue-600 hover:underline">Voir</a>
+                                <a href="{{ route('admin.articles.show', $article->id) }}" class="text-blue-600 hover:underline">Voir</a>
                             </td>
                         </tr>
                     @endforeach

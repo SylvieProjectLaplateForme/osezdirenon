@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Comment;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Publicite;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
-    // DASHBOARD
+    // ✅ Dashboard
     public function dashboard($filter = null)
     {
         $articles = Article::with('user', 'category')->latest();
@@ -27,7 +30,6 @@ class AdminController extends Controller
         $commentsEnAttente = Comment::where('is_approved', false)->count();
         $totalPublicites = Publicite::count();
         $publicitesEnAttente = Publicite::where('is_approved', false)->count();
-
 
         $articlesPerMonth = Article::selectRaw("strftime('%m', created_at) as month, COUNT(*) as count")
             ->whereYear('created_at', date('Y'))
@@ -47,139 +49,139 @@ class AdminController extends Controller
             'months' => ['Janv', 'Fév', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'],
             'articlesPerMonth' => $monthlyCounts,
             'articles' => $articles->take(10)->get(),
-            'totalPublicites'=> $totalPublicites,
-            'publicitesEnAttente'=> $publicitesEnAttente,
+            'totalPublicites' => $totalPublicites,
+            'publicitesEnAttente' => $publicitesEnAttente,
         ]);
     }
-    public function deleteComment($id)
-    {
-        $comment = Comment::findOrFail($id);
-        $comment->delete();
-    
-        return back()->with('success', 'Commentaire supprimé.');
-    }
+    public function listeEditeurs()
+{
+    $editeurs = User::with('role')
+        ->whereHas('role', function ($query) {
+            $query->where('name', 'editeur');
+        })
+        ->get();
 
-    // ✅ LISTE - Tous les articles
+    return view('admin.editeurs.index', compact('editeurs'));
+}
+
+    // ✅ Liste articles
     public function articlesIndex()
     {
         $articles = Article::with('user', 'category')->latest()->paginate(15);
-        return view('admin.articlesIndex', compact('articles'));
+        return view('admin.articles.index', compact('articles'));
     }
 
-    // ✅ LISTE - Articles validés
     public function articlesValides()
-{
-    $articles = Article::where('is_approved', true)->latest()->paginate(15);
+    {
+        $articles = Article::where('is_approved', true)->latest()->paginate(15);
+        return view('admin.articles.index', compact('articles'));
+    }
 
-    return view('admin.articlesIndex', compact('articles'));
-}
-
-
-    // ✅ LISTE - Articles en attente
     public function articlesEnAttente()
     {
-        // $articles = Article::where('is_approved', false)->latest()->get();
-        // return view('admin.articlesIndex', compact('articles'));
         $articles = Article::where('is_approved', false)->latest()->paginate(15);
-        return view('admin.articlesIndex', compact('articles'));
+        return view('admin.articles.index', compact('articles'));
     }
 
-    // ✅ AFFICHAGE - Article
     public function showArticle($id)
     {
         $article = Article::with('user', 'category')->findOrFail($id);
-        return view('show', compact('article'));
+        return view('admin.articles.show', compact('article'));
     }
 
-    // ✅ VALIDER - Article
+    public function createArticle()
+    {
+        $categories = Category::all();
+        return view('admin.articles.create', compact('categories'));
+    }
+
+    public function storeArticle(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        $imagePath = $request->hasFile('image')
+            ? $request->file('image')->store('articles', 'public')
+            : null;
+
+        $slug = Str::slug($request->title);
+        if (Article::where('slug', $slug)->exists()) {
+            $slug .= '-' . uniqid();
+        }
+
+        Article::create([
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+            'slug' => $slug,
+            'category_id' => $validated['category_id'],
+            'user_id' => Auth::id(),
+            'is_approved' => true,
+            'image' => $imagePath,
+        ]);
+
+        return redirect()->route('admin.articles.index')->with('success', 'Article publié avec succès.');
+    }
+
     public function validerArticle($id)
     {
         $article = Article::findOrFail($id);
-        $article->is_approved = 1;
+        $article->is_approved = true;
         $article->save();
 
-        return redirect()->back()->with('success', 'Article validé avec succès.');
+        return redirect()->route('admin.articles.index')->with('success', 'Article validé.');
     }
 
-    // ✅ SUPPRIMER - Article
     public function deleteArticle($id)
     {
         $article = Article::findOrFail($id);
         $article->delete();
 
-        return redirect()->back()->with('success', 'Article supprimé avec succès.');
+        return redirect()->route('admin.articles.index')->with('success', 'Article supprimé.');
     }
 
-    // ✅ COMMENTAIRES EN ATTENTE
-    public function commentairesEnAttente()
-    {
-        $commentaires = Comment::where('is_approved', 0)->with('article')->latest()->get();
-        return view('commentPending', compact('commentaires'));
-    }
-
-    // ✅ VALIDER COMMENTAIRE
-    public function validateComment($id)
+    public function deleteComment($id)
     {
         $comment = Comment::findOrFail($id);
-        $comment->is_approved = true;
-        $comment->save();
+        $comment->delete();
 
-        return redirect()->back()->with('success', 'Commentaire validé avec succès.');
+        return back()->with('success', 'Commentaire supprimé.');
     }
-    public function listeEditeurs()
+    public function publicites()
 {
-    // Récupérer les utilisateurs dont le rôle est 'editeur'
-    $editeurs = User::whereHas('role', function($query) {
-        $query->where('name', 'editeur');
-    })->get();
-
-    return view('admin.editeurs.index', compact('editeurs'));
-}
-// ✅ Toutes les publicités
-public function publicites()
-{
-    $publicites = Publicite::latest()->get();
+    $publicites = Publicite::with('user')->latest()->paginate(15);
     return view('admin.publicites.index', compact('publicites'));
 }
-
-// ✅ Publicités en attente
 public function publicitesEnAttente()
 {
-    $publicites = Publicite::where('is_approved', false)->latest()->get();
+    $publicites = Publicite::where('is_approved', false)->latest()->paginate(15);
     return view('admin.publicites.attente', compact('publicites'));
 }
-
-// ✅ Valider une publicité
-public function validerPublicite($id)
-{
-    $pub = Publicite::findOrFail($id);
-    $pub->is_approved = true;
-    $pub->save();
-
-    return redirect()->back()->with('success', 'Publicité validée avec succès.');
-}
-public function showPublicite($id)
-{
-    $pub = \App\Models\Publicite::with('user')->findOrFail($id);
-    return view('admin.publicites.show', compact('pub'));
-}
-
-// ✅ Supprimer une publicité
 public function supprimerPublicite($id)
 {
-    $pub = Publicite::findOrFail($id);
-    if ($pub->image) {
-        Storage::disk('public')->delete($pub->image);
+    $publicite = Publicite::findOrFail($id);
+
+    // Supprimer l'image si elle existe
+    if ($publicite->image) {
+        Storage::disk('public')->delete($publicite->image);
     }
-    $pub->delete();
 
-    return redirect()->back()->with('success', 'Publicité supprimée.');
+    $publicite->delete();
+
+    return redirect()->route('admin.publicites.index')->with('success', 'Publicité supprimée avec succès.');
 }
-
-//profil
-public function profile()
+public function renouvelerPublicite($id)
 {
-    $user = auth()->user(); // ou User::find(...)
-    return view('admin.profile.index', compact('user'));
+    $pub = Publicite::findOrFail($id);
+
+    // Si la publicité est expirée ou non, on ajoute 30 jours à la date actuelle
+    $pub->valid_until = now()->addDays(30);
+    $pub->save();
+
+    return back()->with('success', 'Publicité renouvelée jusqu’au ' . $pub->valid_until->format('d/m/Y'));
 }
+
 }

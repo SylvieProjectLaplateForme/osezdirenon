@@ -42,6 +42,7 @@ Route::post('/contact', [ContactController::class, 'envoyer'])->name('contact.en
 require __DIR__.'/auth.php';
 
 // =====================
+// // =====================
 // 👩‍💼 3. Routes ADMIN
 // =====================
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -65,22 +66,24 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/articles', [AdminController::class, 'articlesIndex'])->name('articles.index');
     Route::get('/articles/valides', [AdminController::class, 'articlesValides'])->name('articles.valides');
     Route::get('/articles/en-attente', [AdminController::class, 'articlesEnAttente'])->name('articles.attente');
-    Route::get('/articles/{id}', [AdminController::class, 'showArticle'])->name('article.show');
-    Route::put('/articles/{id}/valider', [AdminController::class, 'validerArticle'])->name('article.validate');
-    Route::delete('/articles/{id}', [AdminController::class, 'deleteArticle'])->name('article.destroy');
+    Route::get('/articles/create', [AdminController::class, 'createArticle'])->name('articles.create');
+    Route::post('/articles', [AdminController::class, 'storeArticle'])->name('articles.store');
+    Route::get('/articles/{id}', [AdminController::class, 'showArticle'])->name('articles.show');
+    Route::put('/articles/{id}/valider', [AdminController::class, 'validerArticle'])->name('articles.validate');
+    Route::delete('/articles/{id}', [AdminController::class, 'deleteArticle'])->name('articles.destroy');
 
     // COMMENTAIRES
     Route::get('/commentaires-en-attente', [AdminController::class, 'commentairesEnAttente'])->name('comments.pending');
-    Route::put('/commentaires/{id}/valider', [AdminController::class, 'validateComment'])->name('comment.validate');
-    Route::post('/commentaires', [CommentController::class, 'store'])->name('comment.store');
-    Route::delete('/commentaires/{id}', [AdminController::class, 'deleteComment'])->name('comment.delete');
+    Route::put('/commentaires/{id}/valider', [AdminController::class, 'validateComment'])->name('comments.validate');
+    Route::delete('/commentaires/{id}', [AdminController::class, 'deleteComment'])->name('comments.destroy');
 
-    // PUBLICITES Admin et non public 
+    // PUBLICITES
     Route::get('/gestion-publicites', [AdminController::class, 'publicites'])->name('publicites.index');
     Route::get('/publicites/attente', [AdminController::class, 'publicitesEnAttente'])->name('publicites.attente');
     Route::get('/publicites/{id}', [AdminController::class, 'showPublicite'])->name('publicites.show');
     Route::put('/publicites/{id}/valider', [AdminController::class, 'validerPublicite'])->name('publicites.valider');
     Route::delete('/publicites/{id}', [AdminController::class, 'supprimerPublicite'])->name('publicites.destroy');
+    Route::put('/publicites/{id}/renouveler', [AdminController::class, 'renouvelerPublicite'])->name('publicites.renouveler');
 });
 
 // =====================
