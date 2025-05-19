@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Publicite;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class PubliciteController extends Controller
 {
@@ -47,6 +48,16 @@ class PubliciteController extends Controller
         $publicites = Publicite::where('user_id', auth()->id())->latest()->get();
         return view('editeur.publicites.index', compact('publicites'));
     }
+    public function publicitesPayees()
+{
+    $publicites = Publicite::with('paiement') // relation vers table paiements
+        ->where('user_id', auth()->id())
+        ->where('paid', true)
+        ->latest()
+        ->get();
+
+    return view('editeur.publicites.payees', compact('publicites'));
+}
 
     // ✅ Liste des pubs de l’éditeur en attente
     public function enAttenteEditeur()
@@ -75,5 +86,29 @@ class PubliciteController extends Controller
 
         return view('publicites.publiques', compact('publicites'));
     }
+
     
+    
+//    // ✅ Méthode de renouvellement propre
+//    public function renouveler($id)
+// {
+//     $pub = Publicite::findOrFail($id);
+
+//     // Ne pas modifier la date de création
+//     $ancienneFin = $pub->date_fin ? Carbon::parse($pub->date_fin) : now();
+
+//     // Date de référence = soit date_fin si elle est future, soit aujourd’hui
+//     $dateReference = $ancienneFin->isFuture() ? $ancienneFin : now();
+
+//     // On renouvelle pour +30 jours
+//     $pub->date_fin = $dateReference->copy()->addDays(30);
+
+//     // ❗ Ne pas toucher à created_at ! Laravel le met automatiquement mais ne le modifie pas à l’update
+
+//     $pub->save();
+
+//     return redirect()
+//         ->route('admin.publicites.index')
+//         ->with('success', '✅ Publicité renouvelée jusqu’au ' . $pub->date_fin->format('d/m/Y'));
+// }
 }

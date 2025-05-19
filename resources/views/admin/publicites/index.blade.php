@@ -3,6 +3,21 @@
 @section('title', 'Toutes les publicités')
 
 @section('content')
+
+{{--  Message de succès (renouvellement ou autre) --}}
+@if(session('success'))
+<div class="mb-4 text-green-600 font-semibold">
+     {{ session('success') }}
+</div>
+@endif
+
+@if(session('error'))
+<div class="mb-4 text-red-600 font-semibold">
+    ❌ {{ session('error') }}
+</div>
+@endif
+
+
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-6">📢 Toutes les publicités</h1>
 
@@ -17,28 +32,37 @@
                         <th class="px-6 py-3 text-left">Auteur</th>
                         <th class="px-6 py-3 text-left">Lien</th>
                         <th class="px-6 py-3 text-left">Statut</th>
+                        <th class="px-6 py-3 text-left">Créée le</th>
+                        <th class="px-6 py-3 text-left">Début</th>
                         <th class="px-6 py-3 text-left">Valide jusqu’au</th>
                         <th class="px-6 py-3 text-left">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($publicites as $pub)
-                        <tr class="border-b text-gray-700">
-                            <td class="px-6 py-4">{{ $pub->titre }}</td>
-                            <td class="px-6 py-4">{{ $pub->user->name ?? '-' }}</td>
-                            <td class="px-6 py-4">
-                                <a href="{{ $pub->lien }}" class="text-blue-600 hover:underline" target="_blank">Voir</a>
-                            </td>
-                            <td class="px-6 py-4">
-                                @if($pub->is_approved)
-                                    <span class="text-green-600 font-semibold">Validée</span>
-                                @else
-                                    <span class="text-yellow-500 font-semibold">En attente</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $pub->valid_until ? \Carbon\Carbon::parse($pub->valid_until)->format('d/m/Y') : 'Non définie' }}
-                            </td>
+                    <tr class="border-b text-gray-700">
+                        <td class="px-6 py-4">{{ $pub->titre }}</td>
+                        <td class="px-6 py-4">{{ $pub->user->name ?? '-' }}</td>
+                        <td class="px-6 py-4">
+                            <a href="{{ $pub->lien }}" class="text-blue-600 hover:underline" target="_blank">Voir</a>
+                        </td>
+                        <td class="px-6 py-4">
+                            @if($pub->is_approved)
+                                <span class="text-green-600 font-semibold">Validée</span>
+                            @else
+                                <span class="text-yellow-500 font-semibold">En attente</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $pub->created_at ? \Carbon\Carbon::parse($pub->created_at)->format('d/m/Y') : '-' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $pub->date_debut ? \Carbon\Carbon::parse($pub->date_debut)->format('d/m/Y') : '-' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ $pub->valid_until ? \Carbon\Carbon::parse($pub->valid_until)->format('d/m/Y') : 'Non définie' }}
+                        </td>
+            
                             <td class="px-6 py-4 flex gap-2 flex-wrap">
                                 @if(!$pub->is_approved)
                                     <form method="POST" action="{{ route('admin.publicites.valider', $pub->id) }}">
@@ -48,13 +72,7 @@
                                     </form>
                                 @endif
 
-                                {{-- 🔁 Bouton de renouvellement --}}
-                                <form method="POST" action="{{ route('admin.publicites.renouveler', $pub->id) }}">
-                                    @csrf
-                                    @method('PUT')
-                                    <button class="text-blue-600 hover:underline">🔁 Renouveler</button>
-                                </form>
-
+                                
                                 {{-- 🗑 Supprimer --}}
                                 <form method="POST" action="{{ route('admin.publicites.destroy', $pub->id) }}">
                                     @csrf
@@ -68,6 +86,7 @@
             </table>
         </div>
 
+        {{-- ✅ Pagination --}}
         <div class="mt-6">
             {{ $publicites->links() }}
         </div>
@@ -78,3 +97,5 @@
     </div>
 </div>
 @endsection
+
+

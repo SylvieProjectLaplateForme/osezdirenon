@@ -10,6 +10,11 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+
+
+
 
 class AdminController extends Controller
 {
@@ -160,6 +165,23 @@ public function publicitesEnAttente()
     $publicites = Publicite::where('is_approved', false)->latest()->paginate(15);
     return view('admin.publicites.attente', compact('publicites'));
 }
+public function validerPublicite($id)
+{
+    $publicite = Publicite::findOrFail($id);
+
+    $publicite->is_approved = true;
+
+    // Si aucune date de validité n’existe encore, on la crée :
+    if (!$publicite->valid_until) {
+        $debut = $publicite->date_debut ?? now();
+        $publicite->valid_until = Carbon::parse($debut)->addDays(30);
+    }
+
+    $publicite->save();
+
+    return redirect()->back()->with('success', '✅ Publicité validée avec succès jusqu’au ' . $publicite->valid_until->format('d/m/Y'));
+}
+
 public function supprimerPublicite($id)
 {
     $publicite = Publicite::findOrFail($id);
@@ -173,15 +195,7 @@ public function supprimerPublicite($id)
 
     return redirect()->route('admin.publicites.index')->with('success', 'Publicité supprimée avec succès.');
 }
-public function renouvelerPublicite($id)
-{
-    $pub = Publicite::findOrFail($id);
 
-    // Si la publicité est expirée ou non, on ajoute 30 jours à la date actuelle
-    $pub->valid_until = now()->addDays(30);
-    $pub->save();
 
-    return back()->with('success', 'Publicité renouvelée jusqu’au ' . $pub->valid_until->format('d/m/Y'));
-}
 
 }

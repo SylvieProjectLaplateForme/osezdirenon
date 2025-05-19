@@ -12,14 +12,25 @@ class HomeController extends Controller
 {
     public function index(Request $request)
 {
-    $query = Article::with('category');
+    $query = Article::with('category')->where('is_approved', true);
 
-    if ($request->has('category')) {
+    // 🔍 Mot-clé (search)
+    if ($request->filled('search')) {
+        $searchTerm = $request->input('search');
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('title', 'like', '%' . $searchTerm . '%')
+              ->orWhere('content', 'like', '%' . $searchTerm . '%');
+        });
+    }
+
+    // 📂 Catégorie
+    if ($request->filled('category')) {
         $query->where('category_id', $request->input('category'));
     }
 
     $articles = $query->latest()->paginate(6);
     $categories = Category::all();
+
     $publicites = Publicite::where('is_active', true)
         ->where(function($q){
             $q->whereNull('date_debut')->orWhere('date_debut', '<=', now());
@@ -31,6 +42,7 @@ class HomeController extends Controller
         ->take(5)
         ->get();
 
-    return view('home', compact('articles', 'categories','publicites'));
+    return view('home', compact('articles', 'categories', 'publicites'));
 }
+
 }

@@ -13,7 +13,7 @@
 @endphp
 
 @if($publicites->count())
-    <div class="bg-pink-50 py-8 px-4 rounded-lg shadow-inner mb-10">
+    <div class="bg-gray-100 py-8 px-4 rounded-lg shadow-inner mb-10">
         <h2 class="text-center text-lg font-bold text-pink-600 mb-6">
             💗 Publicités partenaires
             <span class="relative group ml-2 inline-block">
@@ -31,16 +31,26 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             @foreach($publicites as $pub)
-                <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center text-center hover:shadow-lg transition">
+                <a href="{{ $pub->lien }}" target="_blank"
+                   class="bg-white rounded-xl shadow group overflow-hidden transition transform hover:-translate-y-1 hover:shadow-xl flex flex-col text-center">
+
                     @if($pub->image)
-                        <img src="{{ asset('storage/' . $pub->image) }}" alt="{{ $pub->titre }}" class="h-32 object-contain mb-3 rounded">
+                        <div class="overflow-hidden h-32">
+                            <img src="{{ asset('storage/' . $pub->image) }}"
+                                 alt="{{ $pub->titre }}"
+                                 class="h-full w-full object-contain group-hover:scale-110 transition-transform duration-500">
+                        </div>
                     @endif
-                    <h3 class="text-pink-700 font-semibold text-sm mb-2">{{ $pub->titre }}</h3>
-                    <a href="{{ $pub->lien }}" target="_blank"
-                       class="bg-pink-600 text-white px-4 py-1 text-sm rounded-full hover:bg-pink-700 transition">
-                        Voir
-                    </a>
-                </div>
+
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <h3 class="text-pink-700 font-semibold text-sm mb-2 group-hover:underline">
+                            {{ $pub->titre }}
+                        </h3>
+                        <span class="text-pink-600 font-bold text-sm group-hover:text-pink-800">
+                            Visiter →
+                        </span>
+                    </div>
+                </a>
             @endforeach
         </div>
     </div>

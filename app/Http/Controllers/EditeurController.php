@@ -53,14 +53,28 @@ public function mesArticles()
         return view('editeur.articles.enAttente', compact('articlesEnAttente'));
     }
     //pour voir article en attente de validation
-    public function showArticle($id)
-{
-    $article = Article::where('id', $id)
-        ->where('user_id', auth()->id())
-        ->firstOrFail();
+//     public function showArticle($id)
+// {
+//     $article = Article::where('id', $id)
+//         ->where('user_id', auth()->id())
+//         ->firstOrFail();
 
-    return view('editeur.articles.show', compact('article'));
+//     return view('editeur.articles.show', compact('article'));
+// }
+public function showArticle($id)
+{
+    $article = Article::findOrFail($id);
+
+    // Chargement d'articles similaires (même catégorie, autres articles)
+    $similaires = Article::where('category_id', $article->category_id)
+                    ->where('id', '!=', $article->id)
+                    ->take(3)
+                    ->latest()
+                    ->get();
+
+    return view('editeur.articles.show', compact('article', 'similaires'));
 }
+
 
 
     // Créer un article
@@ -69,7 +83,7 @@ public function mesArticles()
         $categories = Category::all();
         return view('editeur.articleCreate', compact('categories'));
     }
-    
+
     // ✅ Affiche le formulaire de création d’une publicité
     public function createPub()
 {
@@ -77,15 +91,15 @@ public function mesArticles()
 }
 
 
-    public function publicitesPayees()
+   public function publicitesPayees()
 {
-    $userId = Auth::id();
-
-    $publicites = Publicite::where('user_id', $userId)
+    $publicites = Publicite::with('paiement') // 👈 très important
+        ->where('user_id', auth()->id())
         ->where('paid', true)
+        ->latest()
         ->get();
 
-    return view('editeur.publicitesPayees', compact('publicites'));
+    return view('editeur.publicites.payees', compact('publicites'));
 }
 //paiement stripe
 // public function paiements()

@@ -3,6 +3,11 @@
 @section('title', 'Dashboard Éditeur')
 
 @section('content')
+@if (session('success'))
+    <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded mb-6 shadow">
+        {{ session('success') }}
+    </div>
+@endif
 <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">Bienvenue, {{ Auth::user()->name }}</h1>
 </div>

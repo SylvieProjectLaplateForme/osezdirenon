@@ -31,5 +31,9 @@ class Publicite extends Model
 {
     return $this->belongsTo(User::class);
 }
+public function paiement()
+{
+    return $this->hasOne(\App\Models\Paiement::class);
+}
 
 }

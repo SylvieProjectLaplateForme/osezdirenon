@@ -14,7 +14,9 @@
 <div class="bg-white rounded-lg shadow p-4 mb-10 max-w-4xl mx-auto">
     <form method="GET" action="{{ route('home') }}" class="flex flex-col md:flex-row gap-4 items-center justify-center">
         <div class="relative w-full md:w-1/2">
-            <input type="text" name="q" value="{{ request('q') }}"
+            {{-- <input type="text" name="q" value="{{ request('q') }}" --}}
+            <input type="text" name="search" value="{{ request('search') }}"
+
                    placeholder="Rechercher un article..."
                    class="w-full border border-gray-300 rounded-full py-2 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-pink-400" />
             <span class="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400">
@@ -40,14 +42,16 @@
 @if ($articles->count())
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach ($articles as $article)
-            <!-- 📰 CARD ARTICLE -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300">
+            <!-- 📰 CARD ARTICLE CLIQUABLE -->
+            <a href="{{ route('article.show', ['slug' => $article->slug]) }}"
+               class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 group">
+                
                 <!-- Image -->
-                <div class="relative group">
+                <div class="relative overflow-hidden">
                     <img 
                         src="{{ asset($article->image ? 'storage/' . $article->image : 'storage/articles/default.jpg') }}" 
                         alt="{{ $article->title }}" 
-                        class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
+                        class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
                     >
                     <!-- Badge catégorie -->
                     <div class="absolute top-2 left-2 bg-white bg-opacity-80 px-3 py-1 text-xs font-semibold rounded-full {{ $article->category->color_class }}">
@@ -57,7 +61,7 @@
 
                 <!-- Contenu -->
                 <div class="p-5 flex flex-col flex-1">
-                    <h3 class="text-xl font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
+                    <h3 class="text-xl font-bold text-gray-800 leading-tight mb-2 line-clamp-2 group-hover:underline">
                         {{ $article->title }}
                     </h3>
 
@@ -79,13 +83,10 @@
                             <span class="font-medium">{{ $article->comments->count() }}</span>
                         </span>
 
-                        <a href="{{ route('article.show', ['slug' => $article->slug]) }}"
-                           class="text-blue-600 font-semibold hover:underline">
-                            Lire la suite →
-                        </a>
+                        <span class="text-pink-600 font-bold group-hover:underline">Lire →</span>
                     </div>
                 </div>
-            </div>
+            </a>
 
             <!-- 🎀 Publicité UNE FOIS après 3 articles -->
             @if ($loop->iteration === 3)

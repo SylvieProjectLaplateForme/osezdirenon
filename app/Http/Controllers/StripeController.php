@@ -45,10 +45,16 @@ public function success(Request $request)
     $id = $request->id;
     $publicite = Publicite::findOrFail($id);
 
+    // ✅ Marquer la pub comme payée
     $publicite->paid = true;
+
+    // ✅ Définir la date de début à aujourd’hui et date de fin à +30 jours
+    $publicite->date_debut = now();
+    $publicite->valid_until = now()->addDays(30);
     $publicite->save();
 
-    \App\Models\Paiement::create([
+    // ✅ Créer le paiement dans la table paiements
+    Paiement::create([
         'user_id' => auth()->id(),
         'publicite_id' => $publicite->id,
         'amount' => 150.00,
@@ -61,8 +67,6 @@ public function success(Request $request)
 
     return view('stripe.success', compact('publicite'));
 }
-
-
 
 public function cancel()
     {

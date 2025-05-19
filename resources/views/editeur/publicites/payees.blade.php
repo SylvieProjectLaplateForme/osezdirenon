@@ -26,7 +26,10 @@
                                 <a href="{{ $pub->lien }}" target="_blank">Voir le lien</a>
                             </td>
                             <td class="py-2 px-4">{{ $pub->date_debut ? $pub->date_debut->format('d/m/Y') : '-' }}</td>
-                            <td class="py-2 px-4">{{ $pub->date_fin ? $pub->date_fin->format('d/m/Y') : '-' }}</td>
+                            {{-- <td class="py-2 px-4">{{ $pub->date_fin ? $pub->date_fin->format('d/m/Y') : '-' }}</td> --}}
+                            <td>
+                                {{ $pub->valid_until ? \Carbon\Carbon::parse($pub->valid_until)->format('d/m/Y') : '-' }}
+                            </td>
                             <td class="py-2 px-4">
                                 <span class="text-green-600 font-semibold">✔ Payée</span>
                             </td>

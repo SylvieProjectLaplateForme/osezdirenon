@@ -39,6 +39,10 @@ class Paiement extends Model
     {
         return $this->belongsTo(Publicite::class);
     }
+    public function paiement()
+{
+    return $this->hasOne(\App\Models\Paiement::class);
+}
 
     /**
      * Relation : un paiement appartient à un utilisateur

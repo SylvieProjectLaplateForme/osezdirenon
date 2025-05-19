@@ -83,7 +83,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/publicites/{id}', [AdminController::class, 'showPublicite'])->name('publicites.show');
     Route::put('/publicites/{id}/valider', [AdminController::class, 'validerPublicite'])->name('publicites.valider');
     Route::delete('/publicites/{id}', [AdminController::class, 'supprimerPublicite'])->name('publicites.destroy');
-    Route::put('/publicites/{id}/renouveler', [AdminController::class, 'renouvelerPublicite'])->name('publicites.renouveler');
+    Route::put('/publicites/{id}/renouveler', [PubliciteController::class, 'renouveler'])->name('publicites.renouveler');
 });
 
 // =====================
@@ -103,6 +103,8 @@ Route::middleware(['auth', 'role:editeur'])->prefix('editeur')->name('editeur.')
     Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
     Route::get('/articles/en-attente', [EditeurController::class, 'articlesEnAttente'])->name('articles.enAttente');
     Route::get('/articles/{id}', [EditeurController::class, 'showArticle'])->name('articles.show');
+    Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+    Route::put('/articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
 
     // ✅ PUBLICITÉS
     Route::get('/publicites', [PubliciteController::class, 'mesPublicites'])->name('publicites.index');

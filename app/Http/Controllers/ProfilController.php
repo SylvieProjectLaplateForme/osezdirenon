@@ -32,26 +32,22 @@ class ProfilController extends Controller
     // 💾 Mise à jour du profil
     public function update(Request $request, $id)
 {
-    $user = User::findOrFail($id);
+    $user = \App\Models\User::findOrFail($id);
 
     $request->validate([
-        'name'  => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'password' => 'nullable|string|min:8|confirmed',
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:users,email,' . $user->id,
     ]);
 
     $user->name = $request->name;
     $user->email = $request->email;
-
-    if ($request->filled('password')) {
-        $user->password = Hash::make($request->password);
-    }
-
     $user->save();
 
-    return redirect()->route('admin.profil.index')->with('success', 'Profil mis à jour.');
+    return redirect()->route('admin.profil.index')->with('success', 'Profil mis à jour avec succès.');
 }
 
+
+    
     // ✅ Activation/désactivation
     public function toggleActive($id)
     {
