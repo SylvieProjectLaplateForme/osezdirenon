@@ -31,10 +31,18 @@
         <p class="text-2xl font-bold">{{ $totalPublicites ?? 0 }}</p>
         <a href="{{ route('editeur.publicites.index') }}" class="text-blue-500 hover:underline">Voir </a>
     </div>
+
+    <div class="bg-white rounded shadow p-4 text-center">
+    <h3 class="text-lg font-semibold">À Payer</h3>
+    <p class="text-2xl font-bold">{{ $pubsAPayer }}</p>
+    <a href="{{ route('editeur.publicites.a_payer') }}" class="text-blue-500 hover:underline ">
+        Voir
+    </a>
+</div>
     
     <div class="bg-white rounded shadow p-4 text-center">
         <h2 class="text-lg font-semibold">Mes paiements</h2>
-        <p class="text-2xl font-bold">{{ $paiements ?? 0 }}</p>
+        <p class="text-2xl font-bold">{{ $totalPaiements ?? 0 }}</p>
         <a href="{{ route('editeur.paiements.index') }}" class="text-blue-500 hover:underline">Voir </a>
     </div>
 </div>
@@ -73,4 +81,5 @@
         </tbody>
     </table>
 </div>
+
 @endsection

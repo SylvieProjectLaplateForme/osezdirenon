@@ -48,6 +48,18 @@ class PubliciteController extends Controller
         $publicites = Publicite::where('user_id', auth()->id())->latest()->get();
         return view('editeur.publicites.index', compact('publicites'));
     }
+    
+    public function enAttentePaiement()
+{
+    $publicites = Publicite::where('user_id', auth()->id())
+        ->where('is_approved', true)
+        ->where('paid', false)
+        ->latest()
+        ->get();
+
+    return view('editeur.publicites.aPayer', compact('publicites'));
+}
+
     public function publicitesPayees()
 {
     $publicites = Publicite::with('paiement') // relation vers table paiements

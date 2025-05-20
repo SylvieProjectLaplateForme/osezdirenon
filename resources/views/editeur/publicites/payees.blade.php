@@ -13,6 +13,8 @@
                     <tr class="bg-gray-100 text-left text-sm font-semibold text-gray-700">
                         <th class="py-3 px-4">Titre</th>
                         <th class="py-3 px-4">Lien</th>
+                        <th class="py-3 px-4">Payée le</th>
+                        <th class="px-4 py-3 text-left">Montant (€)</th>
                         <th class="py-3 px-4">Date début</th>
                         <th class="py-3 px-4">Date fin</th>
                         <th class="py-3 px-4">Statut</th>
@@ -25,18 +27,28 @@
                             <td class="py-2 px-4 text-blue-600 underline">
                                 <a href="{{ $pub->lien }}" target="_blank">Voir le lien</a>
                             </td>
+                                                         <td class="px-4 py-2">
+                            {{ optional($pub->paiement?->paid_at)->format('d/m/Y') ?? '-' }}
+                            </td>
+                            <td class="px-4 py-2">
+                            {{ $pub->paiement ? number_format($pub->paiement->amount, 2, ',', ' ') : '-' }}
+                            </td>
                             <td class="py-2 px-4">{{ $pub->date_debut ? $pub->date_debut->format('d/m/Y') : '-' }}</td>
                             {{-- <td class="py-2 px-4">{{ $pub->date_fin ? $pub->date_fin->format('d/m/Y') : '-' }}</td> --}}
                             <td>
-                                {{ $pub->valid_until ? \Carbon\Carbon::parse($pub->valid_until)->format('d/m/Y') : '-' }}
+                            {{ $pub->valid_until ? \Carbon\Carbon::parse($pub->valid_until)->format('d/m/Y') : '-' }}
                             </td>
                             <td class="py-2 px-4">
                                 <span class="text-green-600 font-semibold">✔ Payée</span>
                             </td>
                         </tr>
+                        
                     @endforeach
                 </tbody>
             </table>
+            <div class="text-right mt-4 text-lg font-semibold text-gray-700">
+    💶 Total payé : <span class="text-green-600">{{ number_format($totalMontant, 2, ',', ' ') }} €</span>
+</div>
         </div>
     @endif
 

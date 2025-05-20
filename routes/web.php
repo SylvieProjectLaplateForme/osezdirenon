@@ -84,9 +84,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/publicites/{id}/valider', [AdminController::class, 'validerPublicite'])->name('publicites.valider');
     Route::delete('/publicites/{id}', [AdminController::class, 'supprimerPublicite'])->name('publicites.destroy');
     Route::put('/publicites/{id}/renouveler', [PubliciteController::class, 'renouveler'])->name('publicites.renouveler');
+
+    // Statistiques Paiements
+    Route::get('/admin/statistiques/paiements', [AdminController::class, 'statistiquesPaiements'])->name('paiements.stats');
 });
 
-// =====================
+/// =====================
 // ✍️ 4. Routes ÉDITEUR
 // =====================
 Route::middleware(['auth', 'role:editeur'])->prefix('editeur')->name('editeur.')->group(function () {
@@ -112,6 +115,7 @@ Route::middleware(['auth', 'role:editeur'])->prefix('editeur')->name('editeur.')
     Route::post('/publicites', [PubliciteController::class, 'store'])->name('publicites.store');
     Route::get('/publicites/attente', [PubliciteController::class, 'enAttenteEditeur'])->name('publicites.enAttente');
     Route::get('/publicites/payees', [EditeurController::class, 'publicitesPayees'])->name('publicites.payees');
+    Route::get('/publicites/a-payer', [PubliciteController::class, 'enAttentePaiement'])->name('publicites.a_payer');
 
     // ✅ PAIEMENTS
     Route::get('/paiements', [EditeurController::class, 'mesPaiements'])->name('paiements.index');

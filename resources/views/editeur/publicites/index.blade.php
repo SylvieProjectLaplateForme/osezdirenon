@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="container mx-auto py-8 px-4">
-    <h1 class="text-2xl font-bold mb-6">📢 Publicités Payées</h1>
+    <h1 class="text-2xl font-bold mb-6">📢 Toutes mes Publicités </h1>
 
     @if($publicites->isEmpty())
-        <p class="text-gray-600">Aucune publicité payée.</p>
+        <p class="text-gray-600">Aucune publicité .</p>
     @else
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white border shadow rounded-lg">

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Models\Paiement;
 
 
 
@@ -165,21 +166,29 @@ public function publicitesEnAttente()
     $publicites = Publicite::where('is_approved', false)->latest()->paginate(15);
     return view('admin.publicites.attente', compact('publicites'));
 }
+// public function validerPublicite($id)
+// {
+//     $publicite = Publicite::findOrFail($id);
+
+//     $publicite->is_approved = true;
+
+//     // Si aucune date de validité n’existe encore, on la crée :
+//     if (!$publicite->valid_until) {
+//         $debut = $publicite->date_debut ?? now();
+//         $publicite->valid_until = Carbon::parse($debut)->addDays(30);
+//     }
+
+//     $publicite->save();
+
+//     return redirect()->back()->with('success', '✅ Publicité validée avec succès jusqu’au ' . $publicite->valid_until->format('d/m/Y'));
+// }
 public function validerPublicite($id)
 {
     $publicite = Publicite::findOrFail($id);
-
     $publicite->is_approved = true;
-
-    // Si aucune date de validité n’existe encore, on la crée :
-    if (!$publicite->valid_until) {
-        $debut = $publicite->date_debut ?? now();
-        $publicite->valid_until = Carbon::parse($debut)->addDays(30);
-    }
-
     $publicite->save();
 
-    return redirect()->back()->with('success', '✅ Publicité validée avec succès jusqu’au ' . $publicite->valid_until->format('d/m/Y'));
+    return redirect()->back()->with('success', 'Publicité validée avec succès. Paiement en attente.');
 }
 
 public function supprimerPublicite($id)
@@ -194,6 +203,21 @@ public function supprimerPublicite($id)
     $publicite->delete();
 
     return redirect()->route('admin.publicites.index')->with('success', 'Publicité supprimée avec succès.');
+}
+public function statistiquesPaiements(Request $request)
+{
+    $query = Paiement::where('status', 'paid');
+
+    // 🎯 Filtres
+    if ($request->filled('mois') && $request->filled('annee')) {
+        $query->whereMonth('paid_at', $request->mois)
+              ->whereYear('paid_at', $request->annee);
+    }
+
+    $paiements = $query->latest()->get();
+    $total = $paiements->sum('amount');
+
+    return view('admin.stats.paiements', compact('paiements', 'total'));
 }
 
 

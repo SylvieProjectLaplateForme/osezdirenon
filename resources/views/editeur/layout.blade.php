@@ -22,7 +22,9 @@
     <aside id="sidebar" class="bg-gray-900 text-white w-64 p-6 space-y-4 fixed md:relative md:block hidden z-50 h-full">
 
         <div class="flex justify-between items-center md:block">
-            <h2 class="text-xl font-bold mb-6 hidden md:block">Dashboard de  {{ Auth::user()->name }}</h2>
+            <a href="{{ route('editeur.dashboard') }}" class="text-xl font-bold mb-6 hidden md:block hover:underline">
+    🏠Tableau de bord de {{ Auth::user()->name }}
+</a>
             <button class="md:hidden text-white" onclick="document.getElementById('sidebar').classList.add('hidden')">✕</button>
         </div>
 
@@ -55,10 +57,14 @@
                 ✔ Toutes mes publicités
             </a>
             <a href="{{ route('editeur.publicites.enAttente') }}" class="{{ request()->routeIs('editeur.publicites.enAttente') ? 'bg-gray-800' : '' }} block py-2 pl-8 hover:bg-gray-800 rounded">
-                ⏳ En attente
+                ⏳ En attente de validation
             </a>
+            <a href="{{ route('editeur.publicites.a_payer') }}" class="{{ request()->routeIs('editeur.publicites.a_payer') ? 'bg-gray-800' : '' }} block py-2 pl-8 hover:bg-gray-800 rounded">
+               💰 À payer
+    </a>
+           
             <a href="{{ route('editeur.publicites.payees') }}" class="{{ request()->routeIs('editeur.publicites.payees') ? 'bg-gray-800' : '' }} block py-2 pl-8 hover:bg-gray-800 rounded">
-                💳 Payées
+                 💳 Payées
             </a>
             <a href="{{ route('editeur.publicites.create') }}" class="block py-2 pl-8 hover:bg-gray-800 rounded">
                 ➕ Créer une publicité
@@ -84,6 +90,7 @@
                 ⬅ Retour à l’accueil
             </a>
         </div>
+        
     </aside>
 
     {{-- 🔸 Contenu principal --}}

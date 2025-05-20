@@ -43,4 +43,7 @@
 @else
     <p>Aucune publicité en attente pour le moment.</p>
 @endif
+<div class="mt-8">
+        <a href="{{ route('admin.dashboard') }}" class="text-blue-600 hover:underline">← Retour au dashboard</a>
+    </div>
 @endsection

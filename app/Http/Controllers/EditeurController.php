@@ -20,17 +20,27 @@ class EditeurController extends Controller
     // Articles récents
     $articles = Article::where('user_id', $userId)->latest()->take(5)->get();
 
-    // Statistiques
+    // ✅ Statistiques
     $totalArticles = Article::where('user_id', $userId)->count();
     $attenteArticles = Article::where('user_id', $userId)->where('is_approved', false)->count();
     $totalPublicites = Publicite::where('user_id', $userId)->count();
     $publicites = Publicite::where('user_id', $userId)->where('is_approved', false)->get();
+
+    $pubsAPayer = Publicite::where('user_id', $userId)
+        ->where('is_approved', true)
+        ->where('paid', false)
+        ->count();
+
+    $totalPaiements = Paiement::where('user_id', $userId)->count();
+
     return view('editeur.dashboard', compact(
         'articles',
         'totalArticles',
         'attenteArticles',
         'totalPublicites',
-        'publicites'
+        'publicites',
+        'pubsAPayer',
+        'totalPaiements'
     ));
 }
 
@@ -93,13 +103,17 @@ public function showArticle($id)
 
    public function publicitesPayees()
 {
-    $publicites = Publicite::with('paiement') // 👈 très important
+    $publicites = Publicite::with('paiement') 
         ->where('user_id', auth()->id())
         ->where('paid', true)
         ->latest()
         ->get();
+        // Calcul du total payé
+    $totalMontant = $publicites->sum(fn($pub) => $pub->paiement->amount ?? 0);
 
-    return view('editeur.publicites.payees', compact('publicites'));
+    return view('editeur.publicites.payees', compact('publicites', 'totalMontant'));
+
+    
 }
 //paiement stripe
 // public function paiements()
@@ -114,5 +128,6 @@ public function mesPaiements()
     $paiements = Paiement::where('user_id', auth()->id())->latest()->get();
     return view('editeur.paiements.index', compact('paiements'));
 }
+
 
 }

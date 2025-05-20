@@ -12,7 +12,7 @@
 
     {{-- 🔹 Bouton burger sur mobile --}}
     <div class="md:hidden p-4 bg-white shadow flex justify-between items-center">
-        <span class="text-lg font-bold">Dashboard {{ Auth::user()->name }}</span>
+        <span class="text-lg font-bold">Tableau de bord {{ Auth::user()->name }}</span>
         <button id="burgerBtn" aria-label="Ouvrir le menu" class="text-gray-700 focus:outline-none">
             ☰
         </button>
@@ -25,7 +25,8 @@
         <aside id="sidebar" class="bg-gray-900 text-white w-64 p-6 space-y-4 fixed md:relative md:block hidden z-50 h-full">
 
             <div class="flex justify-between items-center md:block">
-                <h2 class="text-xl font-bold mb-6 hidden md:block">Dashboard {{ Auth::user()->name }}</h2>
+                <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold mb-6 hidden md:block hover:underline">
+    🏠Tableau de bord de {{ Auth::user()->name }}
                 <button class="md:hidden text-white" onclick="document.getElementById('sidebar').classList.add('hidden')">✕</button>
             </div>
 
@@ -48,6 +49,17 @@
                 <a href="{{ route('admin.publicites.attente') }}" class="{{ request()->routeIs('admin.publicites.attente') ? 'bg-gray-800' : '' }} block py-2 pl-8 hover:bg-gray-800 rounded">⏳ En attente</a>
             </div>
 
+            {{-- Paiements --}}
+<div>
+    <h3 class="uppercase text-gray-400 text-xs mb-2">Paiements</h3>
+    <a href="{{ route('admin.paiements.stats') }}"
+       class="{{ request()->routeIs('admin.paiements.stats') ? 'bg-gray-800' : '' }} block py-2 pl-4 hover:bg-gray-800 rounded">
+        💶 Statistiques des paiements
+    </a>
+</div>
+
+
+
             {{-- Éditeurs --}}
             <div>
                 <h3 class="uppercase text-gray-400 text-xs mb-2">Éditeurs</h3>
@@ -57,7 +69,7 @@
             {{-- Retour accueil --}}
             <div class="pt-6 space-y-2">
                 <a href="{{ route('home') }}" class="block text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition">
-                    ⬅ Accueil public
+                    ⬅ Retour à l'accueil 
                 </a>
                 <form method="POST" action="{{ route('logout') }}" class="text-center">
                     @csrf

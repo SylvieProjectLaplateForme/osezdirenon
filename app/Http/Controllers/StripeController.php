@@ -12,7 +12,7 @@ class StripeController extends Controller
 {
     public function checkout($id)
 {
-    $publicite = \App\Models\Publicite::findOrFail($id);
+    $publicite = Publicite::findOrFail($id);
 
     if (!$publicite->is_approved || $publicite->paid) {
         return redirect()->back()->with('error', 'Publicité déjà payée ou non validée.');

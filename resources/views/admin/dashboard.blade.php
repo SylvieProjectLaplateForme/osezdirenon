@@ -8,7 +8,7 @@
    
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     <div class="bg-white rounded shadow p-4 text-center">
         <h2 class="text-lg font-semibold">Tous les articles</h2>
         <p class="text-2xl font-semibold">{{ $total }}</p>
@@ -49,7 +49,7 @@
         <a href="{{ route('admin.publicites.attente') }}" class="text-blue-500 hover:underline mt-2 block">Voir</a>
     </div>
 </div>
-
+<!-- commentaires -->
     <div class="bg-white rounded shadow p-4 text-center">
         <h2 class="text-lg font-semibold">Commentaires en attente</h2>
         <p class="text-2xl font-semibold">{{ $commentsEnAttente }}</p>
@@ -79,7 +79,7 @@
     </div>
 </div>
 
-<table class="min-w-full bg-white shadow-md rounded">
+{{-- <table class="min-w-full bg-white shadow-md rounded">
     <thead>
         <tr>
             <th class="px-6 py-3 border-b text-left">Titre</th>
@@ -118,7 +118,7 @@
             </tr>
         @endforeach
     </tbody>
-</table>
+</table> --}}
 
 {{-- ChartJS --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

@@ -20,5 +20,10 @@
             @endforeach
         </ul>
     @endif
+    <div class="mt-6">
+        <a href="{{ route('editeur.dashboard') }}" class="inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded">
+            ← Retour au tableau de bord
+        </a>
+    </div>
 </div>
 @endsection
