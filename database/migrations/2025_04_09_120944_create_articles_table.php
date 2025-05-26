@@ -22,6 +22,7 @@ return new class extends Migration
         $table->string('keywords')->nullable();
         $table->string('image')->nullable();
         $table->timestamps();
+        
     });
 }
 

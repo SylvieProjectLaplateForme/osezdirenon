@@ -63,6 +63,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/editeurs', [AdminController::class, 'listeEditeurs'])->name('editeurs.index');
 
     // ARTICLES
+    Route::get('/mes-articles', [AdminController::class, 'mesArticles'])->name('articles.mes');
+    Route::get('/articles/{id}/edit', [AdminController::class, 'editArticle'])->name('articles.edit');
+    Route::put('/articles/{id}', [AdminController::class, 'updateArticle'])->name('articles.update');
     Route::get('/articles', [AdminController::class, 'articlesIndex'])->name('articles.index');
     Route::get('/articles/valides', [AdminController::class, 'articlesValides'])->name('articles.valides');
     Route::get('/articles/en-attente', [AdminController::class, 'articlesEnAttente'])->name('articles.attente');
@@ -101,6 +104,8 @@ Route::middleware(['auth', 'role:editeur'])->prefix('editeur')->name('editeur.')
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // ✅ ARTICLES
+    Route::delete('/articles/{id}', [EditeurController::class, 'destroyArticle'])->name('articles.destroy');
+    Route::get('/mes-articles', [EditeurController::class, 'mesArticles'])->name('articles.mes');
     Route::get('/articles', [EditeurController::class, 'mesArticles'])->name('articles.index');
     Route::get('/articles/create', [EditeurController::class, 'create'])->name('articles.create');
     Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');

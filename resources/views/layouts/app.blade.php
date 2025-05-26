@@ -3,18 +3,24 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
     <title>{{ config('app.name', 'OSEZ DIRE NON') }}</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="font-sans antialiased bg-gray-100 text-gray-800">
 
+    {{-- ✅ Tailwind CSS + Alpine + JS via Vite --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- ✅ SwiperJS --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+</head>
+<body class="font-sans antialiased bg-gray-100 text-gray-800" x-data>
     <!-- Contenu de la page -->
     <div class="min-h-screen">
         @include('layouts.navigation')
 
         <main class="py-10">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                @yield('content')  {{-- ✅ Corrigé ici --}}
+                @yield('content') 
             </div>
         </main>
     </div>

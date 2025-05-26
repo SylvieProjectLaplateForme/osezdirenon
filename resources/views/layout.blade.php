@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Osez Dire Non')</title>
     <script src="https://cdn.tailwindcss.com"></script>
+     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- ✅ SwiperJS --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+
 </head>
 <body class="bg-pink-50 text-gray-800 font-sans">
 

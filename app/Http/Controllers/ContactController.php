@@ -34,5 +34,6 @@ class ContactController extends Controller
 
         // ✅ Redirection avec message
         return redirect()->route('home')->with('success', 'Merci pour votre message !');
-    }
+
+}
 }

@@ -89,6 +89,10 @@
                class="block text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition">
                 ⬅ Retour à l’accueil
             </a>
+            <form method="POST" action="{{ route('logout') }}" class="text-center">
+                    @csrf
+                    <button type="submit" class="mt-2 text-sm text-gray-300 hover:text-white">🚪 Déconnexion</button>
+                </form>
         </div>
         
     </aside>

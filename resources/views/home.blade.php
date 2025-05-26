@@ -3,12 +3,45 @@
 @section('title', 'Osez dire Non')
 
 @section('content')
-
+@if (session('success'))
+    <div class="bg-green-200 text-green-800 p-4 rounded mb-6 text-center">
+        {{ session('success') }}
+    </div>
+@endif
 {{-- ✅ HERO avec titre --}}
-<div class="text-center py-5 bg-pink-50 shadow-sm mb-5">
-    <h1 class="text-4xl font-serif text-pink-700 font-bold">Osez Dire Non</h1>
-    <p class="text-gray-600 mt-2 text-sm">Le blog qui vous donne la parole</p>
+
+
+<div class="bg-pink-50 p-6 rounded-xl  text-center max-w-3xl mx-auto mt-8">
+
+    
+
+    <!-- Titre + sous-titre -->
+    <div class="text-center mt-10">
+    <h1 class="text-5xl md:text-6xl font-extrabold text-pink-700 tracking-wide mb-2">
+        Osez Dire Non
+    </h1>
+    <p class="text-gray-900 text-lg font-medium italic mb-4">
+        Le blog qui vous donne la parole
+    </p>
 </div>
+
+     
+   
+
+
+
+<!-- Image ronde -->
+    <img src="{{ asset('images/tiktok.png') }}"
+         alt="Vidéo TikTok"
+         class="rounded-full shadow-md w-56 h-56 object-cover mx-auto mb-4">
+    <!-- Lien vidéo -->
+    <a href="https://www.tiktok.com/@thedailyswile/video/7197471042485488902?is_from_webapp=1" target="_blank"
+       class="text-pink-600 underline text-sm inline-flex items-center gap-1 hover:text-pink-800">
+        🎬  Voir la vidéo inspirante sur TikTok
+    </a>
+
+</div>
+
 
 {{-- 🔍 Barre de recherche par catégorie --}}
 <div class="bg-white rounded-lg shadow p-4 mb-10 max-w-4xl mx-auto">

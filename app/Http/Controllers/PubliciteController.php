@@ -100,27 +100,4 @@ class PubliciteController extends Controller
     }
 
     
-    
-//    // ✅ Méthode de renouvellement propre
-//    public function renouveler($id)
-// {
-//     $pub = Publicite::findOrFail($id);
-
-//     // Ne pas modifier la date de création
-//     $ancienneFin = $pub->date_fin ? Carbon::parse($pub->date_fin) : now();
-
-//     // Date de référence = soit date_fin si elle est future, soit aujourd’hui
-//     $dateReference = $ancienneFin->isFuture() ? $ancienneFin : now();
-
-//     // On renouvelle pour +30 jours
-//     $pub->date_fin = $dateReference->copy()->addDays(30);
-
-//     // ❗ Ne pas toucher à created_at ! Laravel le met automatiquement mais ne le modifie pas à l’update
-
-//     $pub->save();
-
-//     return redirect()
-//         ->route('admin.publicites.index')
-//         ->with('success', '✅ Publicité renouvelée jusqu’au ' . $pub->date_fin->format('d/m/Y'));
-// }
 }

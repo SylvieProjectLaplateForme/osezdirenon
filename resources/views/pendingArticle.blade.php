@@ -3,8 +3,9 @@
 @section('title', 'Articles en attente')
 
 @section('content')
+ <h1 class="text-3xl font-bold mb-6">📄 Articles en attente de validation</h1>
 @if ($articles->isEmpty())
-    <p>Aucun article en attente.</p>
+    <P>Aucun article en attente.</P>
 @else
     <ul class="space-y-4">
         @foreach ($articles as $article)
@@ -18,4 +19,8 @@
         @endforeach
     </ul>
 @endif
+<div class="mt-8">
+        <a href="{{ route('admin.dashboard') }}" class="text-blue-600 hover:underline">← Retour au dashboard</a>
+    </div>
+
 @endsection

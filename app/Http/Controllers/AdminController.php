@@ -83,11 +83,12 @@ class AdminController extends Controller
         return view('admin.articles.index', compact('articles'));
     }
 
+    
     public function articlesEnAttente()
-    {
-        $articles = Article::where('is_approved', false)->latest()->paginate(15);
-        return view('admin.articles.index', compact('articles'));
-    }
+{
+    $articles = Article::where('is_approved', false)->with('user')->latest()->get();
+    return view('pendingArticle', compact('articles'));
+}
 
     public function showArticle($id)
     {
@@ -100,6 +101,60 @@ class AdminController extends Controller
         $categories = Category::all();
         return view('admin.articles.create', compact('categories'));
     }
+    public function editArticle($id)
+{
+    $article = Article::findOrFail($id);
+
+    // Vérifie que l'admin est bien l’auteur
+    if ($article->user_id !== auth()->id()) {
+        abort(403, 'Vous n’avez pas le droit de modifier cet article.');
+    }
+
+    $categories = Category::all();
+    return view('admin.articles.edit', compact('article', 'categories'));
+}
+public function updateArticle(Request $request, $id)
+{
+    $article = Article::findOrFail($id);
+
+    // ✅ Vérifie que l’admin est bien l’auteur
+    if ($article->user_id !== auth()->id()) {
+        abort(403, 'Action non autorisée.');
+    }
+
+    $validated = $request->validate([
+        'title' => 'required|max:255',
+        'content' => 'required',
+        'category_id' => 'required|exists:categories,id',
+        'image' => 'nullable|image|max:2048',
+    ]);
+
+    // Gérer l’image si changée
+    if ($request->hasFile('image')) {
+        if ($article->image) {
+            \Storage::disk('public')->delete($article->image);
+        }
+        $article->image = $request->file('image')->store('articles', 'public');
+    }
+
+    $article->update([
+        'title' => $validated['title'],
+        'content' => $validated['content'],
+        'category_id' => $validated['category_id'],
+    ]);
+
+    return redirect()->route('admin.articles.index')->with('success', 'Article mis à jour avec succès.');
+}
+
+public function mesArticles()
+{
+    $articles = Article::where('user_id', auth()->id())
+        ->with('category')
+        ->latest()
+        ->paginate(10);
+
+    return view('admin.articles.mes-articles', compact('articles'));
+}
 
     public function storeArticle(Request $request)
     {
@@ -138,16 +193,36 @@ class AdminController extends Controller
         $article->is_approved = true;
         $article->save();
 
-        return redirect()->route('admin.articles.index')->with('success', 'Article validé.');
+        return redirect()->route('admin.articles.index')->with('success', 'Article supprimé : "' . $article->title . '"');
+
     }
 
+    // public function deleteArticle($id)
+    // {
+    //     $article = Article::findOrFail($id);
+    //     $article->delete();
+
+    //     return redirect()->route('admin.articles.index')->with('success', 'Article supprimé.');
+    // }
     public function deleteArticle($id)
-    {
-        $article = Article::findOrFail($id);
-        $article->delete();
+{
+    $article = Article::findOrFail($id);
+    $titre = $article->title; // ✅  titre avant suppression
+    $article->delete();
 
-        return redirect()->route('admin.articles.index')->with('success', 'Article supprimé.');
-    }
+    return redirect()->route('admin.articles.index')
+        ->with('success', 'Article supprimé : "' . $titre . '"');
+}
+
+public function commentairesEnAttente()
+{
+    $commentaires = Comment::with('article', 'user')
+        ->where('is_approved', false)
+        ->latest()
+        ->get();
+
+    return view('commentPending', compact('commentaires'));
+}
 
     public function deleteComment($id)
     {
@@ -166,22 +241,7 @@ public function publicitesEnAttente()
     $publicites = Publicite::where('is_approved', false)->latest()->paginate(15);
     return view('admin.publicites.attente', compact('publicites'));
 }
-// public function validerPublicite($id)
-// {
-//     $publicite = Publicite::findOrFail($id);
 
-//     $publicite->is_approved = true;
-
-//     // Si aucune date de validité n’existe encore, on la crée :
-//     if (!$publicite->valid_until) {
-//         $debut = $publicite->date_debut ?? now();
-//         $publicite->valid_until = Carbon::parse($debut)->addDays(30);
-//     }
-
-//     $publicite->save();
-
-//     return redirect()->back()->with('success', '✅ Publicité validée avec succès jusqu’au ' . $publicite->valid_until->format('d/m/Y'));
-// }
 public function validerPublicite($id)
 {
     $publicite = Publicite::findOrFail($id);

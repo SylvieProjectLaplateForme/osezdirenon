@@ -3,7 +3,7 @@
 @section('title', 'Commentaires à valider')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-6">Commentaires en attente de validation</h1>
+    <h1 class="text-3xl font-bold mb-6"> 🕒 Commentaires en attente de validation</h1>
 
     @if(session('success'))
         <div class="bg-green-200 text-green-800 p-3 rounded mb-6">
@@ -57,4 +57,7 @@
     @else
         <p>Aucun commentaire en attente de validation.</p>
     @endif
+    <div class="mt-8">
+        <a href="{{ route('admin.dashboard') }}" class="text-blue-600 hover:underline">← Retour au dashboard</a>
+    </div>
 @endsection

@@ -45,8 +45,9 @@ public function success(Request $request)
     $id = $request->id;
     $publicite = Publicite::findOrFail($id);
 
-    // ✅ Marquer la pub comme payée
+    // ✅ Marquer la pub comme payée et active
     $publicite->paid = true;
+    $publicite->is_active = true;
 
     // ✅ Définir la date de début à aujourd’hui et date de fin à +30 jours
     $publicite->date_debut = now();
@@ -59,7 +60,7 @@ public function success(Request $request)
         'publicite_id' => $publicite->id,
         'amount' => 150.00,
         'payment_method' => 'card',
-        'payment_last4' => '4242',
+        'payment_last4' => '4242',//mode stripe test
         'stripe_payment_id' => 'manual_entry',
         'paid_at' => now(),
         'status' => 'paid',
@@ -67,6 +68,7 @@ public function success(Request $request)
 
     return view('stripe.success', compact('publicite'));
 }
+
 
 public function cancel()
     {

@@ -44,12 +44,22 @@ class EditeurController extends Controller
     ));
 }
 
+// public function mesArticles()
+// {
+//     $articles = Article::where('user_id', auth()->id())->latest()->paginate(10); // ✅
+
+//     return view('editeur.articles.index', compact('articles'));
+// }
 public function mesArticles()
 {
-    $articles = Article::where('user_id', auth()->id())->latest()->paginate(10); // ✅
+    $articles = Article::where('user_id', auth()->id())
+        ->with('category')
+        ->latest()
+        ->get();
 
-    return view('editeur.articles.index', compact('articles'));
+    return view('editeur.articles.mesArticles', compact('articles'));
 }
+
 
 
     // Articles en attente
@@ -62,15 +72,7 @@ public function mesArticles()
 
         return view('editeur.articles.enAttente', compact('articlesEnAttente'));
     }
-    //pour voir article en attente de validation
-//     public function showArticle($id)
-// {
-//     $article = Article::where('id', $id)
-//         ->where('user_id', auth()->id())
-//         ->firstOrFail();
-
-//     return view('editeur.articles.show', compact('article'));
-// }
+    
 public function showArticle($id)
 {
     $article = Article::findOrFail($id);
@@ -93,6 +95,21 @@ public function showArticle($id)
         $categories = Category::all();
         return view('editeur.articleCreate', compact('categories'));
     }
+    // ✅ Supprimer un article si non validé
+public function destroyArticle($id)
+{
+    $article = Article::where('id', $id)
+        ->where('user_id', auth()->id())
+        ->where('is_approved', false)
+        ->firstOrFail();
+
+    $article->delete();
+     $title = $article->title;
+
+
+    return redirect()->route('editeur.articles.mes')->with('success', "L’article \"$title\" a été supprimé avec succès.");
+}
+
 
     // ✅ Affiche le formulaire de création d’une publicité
     public function createPub()
@@ -126,7 +143,8 @@ public function showArticle($id)
 public function mesPaiements()
 {
     $paiements = Paiement::where('user_id', auth()->id())->latest()->get();
-    return view('editeur.paiements.index', compact('paiements'));
+     $totalPaiements = $paiements->sum('amount');
+    return view('editeur.paiements.index', compact('paiements','totalPaiements'));
 }
 
 

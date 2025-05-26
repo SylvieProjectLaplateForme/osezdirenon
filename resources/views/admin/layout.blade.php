@@ -40,6 +40,11 @@
                 <a href="{{ route('admin.articles.valides') }}" class="{{ request()->routeIs('admin.articles.valides') ? 'bg-gray-800' : '' }} block py-2 pl-8 hover:bg-gray-800 rounded">✔ Validés</a>
                 <a href="{{ route('admin.articles.attente') }}" class="{{ request()->routeIs('admin.articles.attente') ? 'bg-gray-800' : '' }} block py-2 pl-8 hover:bg-gray-800 rounded">⏳ En attente</a>
                 <a href="{{ route('admin.articles.create') }}" class="{{ request()->routeIs('admin.articles.create') ? 'bg-gray-800' : '' }} block py-2 pl-4 hover:bg-gray-800 rounded">✍️ Créer un article</a>
+                <!-- Lien vers mes articles -->
+<a href="{{ route('admin.articles.mes') }}"
+       class="{{ request()->routeIs('admin.articles.mes') ? 'bg-gray-800' : '' }} block py-2 pl-4 hover:bg-gray-800 rounded">
+        📝 Mes articles
+    </a>
             </div>
 
             {{-- Publicités --}}
@@ -94,6 +99,22 @@
             sidebar.classList.remove('hidden');
         });
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteForms = document.querySelectorAll('.form-delete');
+
+        deleteForms.forEach(form => {
+            form.addEventListener('submit', function (e) {
+                const confirmation = confirm('⚠️ Voulez-vous vraiment supprimer cet article ? Cette action est irréversible.');
+                if (!confirmation) {
+                    e.preventDefault(); // Stoppe l’envoi du formulaire
+                }
+            });
+        });
+    });
+</script>
+
+    
 
 </body>
 </html>
