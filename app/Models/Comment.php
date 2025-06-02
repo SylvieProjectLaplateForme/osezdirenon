@@ -10,14 +10,18 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'article_id',
-        'author', // Ton champ s'appelle "author" dans ta base
-        'content',
-        'is_approved',
+    'content',
+    'user_id',
+    'article_id',
+    'is_approved',
     ];
 
     public function article()
     {
         return $this->belongsTo(Article::class);
     }
+    public function user()
+{
+    return $this->belongsTo(\App\Models\User::class);
+}
 }

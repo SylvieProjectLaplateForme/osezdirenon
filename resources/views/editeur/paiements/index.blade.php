@@ -80,21 +80,7 @@
                             <td class="px-4 py-2">{{ ucfirst($paiement->payment_method ?? 'N/A') }}</td>
                             <td class="px-4 py-2">{{ $paiement->payment_last4 ?? '----' }}</td>
                             <td class="px-4 py-2">{{ $paiement->paid_at ? $paiement->paid_at->format('d/m/Y') : 'Non payé' }}</td>
-                            {{-- <td class="px-4 py-2"> --}}
-                                {{-- @if($paiement->status === 'payé')
-                                    <span class="text-green-600 font-semibold">✅ Payé</span>
-                                {{-- @else
-                                    <span class="text-red-600 font-semibold">❌ En attente</span>
-                                @endif --}}
-                            {{-- </td> --}}
-                            {{-- <td class="px-4 py-2">
-                                @if($paiement->stripe_payment_id)
-                                    <a href="https://dashboard.stripe.com/payments/{{ $paiement->stripe_payment_id }}"
-                                       target="_blank" class="text-blue-600 underline">Voir reçu</a>
-                                @else
-                                    —
-                                @endif --}}
-                            {{-- </td> --}} 
+                            
                         </tr>
                     @endforeach
                 </tbody>

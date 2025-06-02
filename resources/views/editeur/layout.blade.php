@@ -50,6 +50,10 @@
             </a>
         </div>
 
+        <a href="{{ route('editeur.commentaires.index') }}" class="block py-2 pl-8 hover:bg-gray-800 rounded">
+    🗨️ Mes commentaires
+</a>
+
         {{-- Publicités --}}
         <div>
             <h3 class="uppercase text-gray-400 text-xs mb-2">Mes publicités</h3>

@@ -111,19 +111,32 @@
         document.getElementById('mobile-menu').classList.toggle('hidden');
     });
 </script>
-<!-- 🔒 Bandeau RGPD -->
 
-<div id="cookieConsentCard" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 shadow-xl rounded-xl max-w-md w-[95%] md:w-[420px] z-50 p-4 text-center space-y-3">
-    <h3 class="text-lg font-semibold text-pink-600">Confidentialité & Cookies 🍪</h3>
-    <p class="text-sm text-gray-600">
-        Ce site utilise des cookies pour améliorer votre expérience. En poursuivant, vous acceptez notre 
-        <a href="{{ route('confidentialite') }}" class="text-pink-600 underline hover:text-pink-700">politique de confidentialité</a>.
+
+
+</div>
+
+
+<!-- 🔒 Bandeau RGPD responsive -->
+<div id="cookieConsentBox"
+     class="fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-black text-white border border-gray-700 shadow-2xl rounded-xl w-[95%] max-w-3xl z-50 p-6 md:p-8 text-center md:text-left space-y-4">
+
+    <h3 class="text-lg md:text-xl font-bold">🍪 Confidentialité & Cookies</h3>
+
+    <p class="text-sm md:text-base leading-relaxed">
+        Ce site utilise des cookies pour améliorer votre expérience. En poursuivant votre navigation, vous acceptez notre
+        <a href="{{ route('confidentialite') }}" class="text-pink-500 underline hover:text-pink-400">
+            politique de confidentialité
+        </a>.
     </p>
-    <div class="flex justify-center space-x-4">
-        <button id="acceptCookies" class="bg-pink-600 text-white text-sm px-4 py-2 rounded hover:bg-pink-700 transition">
+
+    <div class="flex flex-col sm:flex-row justify-center md:justify-end gap-3">
+        <button id="acceptCookies"
+                class="bg-pink-600 text-white text-sm px-6 py-2 rounded hover:bg-pink-700 transition">
             J'accepte
         </button>
-        <button id="rejectCookies" class="bg-gray-200 text-gray-700 text-sm px-4 py-2 rounded hover:bg-gray-300 transition">
+        <button id="rejectCookies"
+                class="bg-white text-black text-sm px-6 py-2 rounded hover:bg-gray-200 transition">
             Je refuse
         </button>
     </div>
@@ -132,28 +145,20 @@
 <!-- 🧠 Script RGPD -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const banner = document.getElementById('cookieConsentCard');
+        const banner = document.getElementById('cookieConsentBox');
         const acceptBtn = document.getElementById('acceptCookies');
         const rejectBtn = document.getElementById('rejectCookies');
 
-        // Vérifie si déjà traité
         if (localStorage.getItem('cookieConsent') === 'accepted' || localStorage.getItem('cookieConsent') === 'rejected') {
             banner.style.display = 'none';
         }
 
-        // Accepter
-        acceptBtn.addEventListener('click', () => {
-            localStorage.setItem('cookieConsent', 'accepted');
+        const handleConsent = (value) => {
+            localStorage.setItem('cookieConsent', value);
             banner.style.display = 'none';
-        });
+        };
 
-        // Refuser
-        rejectBtn.addEventListener('click', () => {
-            localStorage.setItem('cookieConsent', 'rejected');
-            banner.style.display = 'none';
-        });
+        acceptBtn?.addEventListener('click', () => handleConsent('accepted'));
+        rejectBtn?.addEventListener('click', () => handleConsent('rejected'));
     });
 </script>
-
-</body>
-</html>

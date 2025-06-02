@@ -110,6 +110,38 @@ public function destroyArticle($id)
     return redirect()->route('editeur.articles.mes')->with('success', "L’article \"$title\" a été supprimé avec succès.");
 }
 
+//commentaires
+
+public function commentairesEnAttente()
+{
+    // Récupère tous les commentaires en attente sur les articles de l’éditeur connecté
+    $commentaires = Comment::where('is_approved', false)
+        ->whereHas('article', function ($query) {
+            $query->where('user_id', Auth::id());
+        })
+        ->with('article')
+        ->latest()
+        ->get();
+
+    return view('editeur.commentaires.enAttente', compact('commentaires'));
+}
+public function commentairesIndex()
+{
+    $enAttente = Comment::where('user_id', Auth::id())
+        ->where('is_approved', false)
+        ->with('article')
+        ->latest()
+        ->get();
+
+    $valides = Comment::where('user_id', Auth::id())
+        ->where('is_approved', true)
+        ->with('article')
+        ->latest()
+        ->get();
+
+    return view('editeur.commentaires.index', compact('enAttente', 'valides'));
+}
+
 
     // ✅ Affiche le formulaire de création d’une publicité
     public function createPub()

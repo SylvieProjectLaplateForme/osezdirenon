@@ -22,7 +22,14 @@ Route::get('/article/{slug}', [ArticleController::class, 'show'])->name('article
 // Route::view('/contact', 'contact')->name('contact');
 // Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
+// Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
+Route::post('/articles/{article}/comment', [CommentController::class, 'store'])
+    ->middleware('auth')
+    ->name('comment.store');
+    
+// Route::get('/publicites/creer', [PubliciteController::class, 'create'])
+//     ->middleware('auth')
+//     ->name('createPub');
 
 Route::view('/apropos', 'apropos')->name('apropos');
 Route::view('/cgu', 'cgu')->name('cgu');
@@ -32,6 +39,13 @@ Route::get('/plan-du-site', function () {
     return view('planSite', compact('categories'));
 })->name('plan');
 
+// Redirection vers login si non connecté avec message
+Route::get('/publicites/creer', function () {
+    if (!auth()->check()) {
+        return redirect()->route('login')->with('message', '⚠️ Vous devez être connecté pour proposer une publicité.');
+    }
+    return app(PubliciteController::class)->create();
+})->name('createPub');
 
 // Route::post('/contact', [ContactController::class, 'envoyer'])->name('contact.envoyer');
 Route::get('/contact', [ContactController::class, 'afficher'])->name('contact');
@@ -79,6 +93,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/commentaires-en-attente', [AdminController::class, 'commentairesEnAttente'])->name('comments.pending');
     Route::put('/commentaires/{id}/valider', [AdminController::class, 'validateComment'])->name('comments.validate');
     Route::delete('/commentaires/{id}', [AdminController::class, 'deleteComment'])->name('comments.destroy');
+    Route::get('/commentaires', [AdminController::class, 'commentairesIndex'])->name('commentaires.index');
 
     // PUBLICITES
     Route::get('/gestion-publicites', [AdminController::class, 'publicites'])->name('publicites.index');
@@ -113,6 +128,9 @@ Route::middleware(['auth', 'role:editeur'])->prefix('editeur')->name('editeur.')
     Route::get('/articles/{id}', [EditeurController::class, 'showArticle'])->name('articles.show');
     Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
     Route::put('/articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
+//COMMENTAIRES
+    Route::get('/commentaires-en-attente', [EditeurController::class, 'commentairesEnAttente'])->name('commentaires.enAttente');
+    Route::get('/commentaires', [EditeurController::class, 'commentairesIndex'])->name('commentaires.index');
 
     // ✅ PUBLICITÉS
     Route::get('/publicites', [PubliciteController::class, 'mesPublicites'])->name('publicites.index');
@@ -125,6 +143,7 @@ Route::middleware(['auth', 'role:editeur'])->prefix('editeur')->name('editeur.')
     // ✅ PAIEMENTS
     Route::get('/paiements', [EditeurController::class, 'mesPaiements'])->name('paiements.index');
 });
+
 
 // =====================
 // 🌍 5. Publicités ouvertes à tous
@@ -145,8 +164,4 @@ Route::get('/payer-success', [StripeController::class, 'success'])->name('stripe
 Route::get('/payer-cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 
-//bandeau RGPD
-// Route::post('/cookie-consent', function () {
-//     session(['cookie_consent' => true]);
-//     return back();
-// })->name('cookie.consent');
+

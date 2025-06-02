@@ -54,7 +54,7 @@ class ArticleController extends Controller
     // ✅ Voir un article public
     public function show($slug)
     {
-        $article = Article::with(['category', 'user', 'comments'])
+        $article = Article::with(['category', 'user', 'comments.user'])
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -64,7 +64,7 @@ class ArticleController extends Controller
             ->take(4)
             ->get();
 
-        return view('editeur.articles.show', compact('article', 'similaires'));
+        return view('article', compact('article', 'similaires'));
     }
 
     // ✅ Formulaire de création (éditeur)

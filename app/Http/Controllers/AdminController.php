@@ -197,13 +197,8 @@ public function mesArticles()
 
     }
 
-    // public function deleteArticle($id)
-    // {
-    //     $article = Article::findOrFail($id);
-    //     $article->delete();
 
-    //     return redirect()->route('admin.articles.index')->with('success', 'Article supprimé.');
-    // }
+    
     public function deleteArticle($id)
 {
     $article = Article::findOrFail($id);
@@ -213,15 +208,39 @@ public function mesArticles()
     return redirect()->route('admin.articles.index')
         ->with('success', 'Article supprimé : "' . $titre . '"');
 }
-
-public function commentairesEnAttente()
+public function commentairesIndex()
 {
-    $commentaires = Comment::with('article', 'user')
-        ->where('is_approved', false)
+    $enAttente = Comment::where('is_approved', false)
+        ->with(['article', 'user']) // pour le titre d’article + nom de l’auteur
         ->latest()
         ->get();
 
-    return view('commentPending', compact('commentaires'));
+    $valides = Comment::where('is_approved', true)
+        ->with(['article', 'user'])
+        ->latest()
+        ->get();
+
+    return view('commentairesIndex', compact('enAttente', 'valides'));
+}
+
+public function commentairesEnAttente()
+{
+   $commentaires = Comment::where('is_approved', false)
+    ->with(['user', 'article']) // important pour éviter les erreurs
+    ->latest()
+    ->get();
+
+return view('commentPending', compact('commentaires'));
+}
+public function validateComment($id)
+{
+    $comment = Comment::with('article')->findOrFail($id);
+    $comment->is_approved = true;
+    $comment->save();
+// ajout du nom article du commentaire validé
+    $articleTitle = $comment->article->title ?? 'article inconnu';
+
+    return redirect()->back()->with('success', "✅ Commentaire validé avec succès pour l'article « $articleTitle ».");
 }
 
     public function deleteComment($id)
@@ -231,6 +250,8 @@ public function commentairesEnAttente()
 
         return back()->with('success', 'Commentaire supprimé.');
     }
+
+    
     public function publicites()
 {
     $publicites = Publicite::with('user')->latest()->paginate(15);

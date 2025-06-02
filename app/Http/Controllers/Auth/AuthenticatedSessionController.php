@@ -3,24 +3,33 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User; // ✅ à ajouter
 use Illuminate\Support\Facades\Session;
-use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Affiche la page de connexion.
      */
-    public function create()
+    public function create(Request $request)
     {
+        // 🔐 Stocker l’URL de redirection si précisée
+        if ($request->has('redirect')) {
+            session(['url.intended' => $request->query('redirect')]);
+        }
+
+        // ✅ Afficher un message si besoin
+        if ($request->has('message') && $request->query('message') === 'connect_pub') {
+            session()->flash('message_pub', '⚠️ Vous devez être connecté pour proposer une publicité.');
+        }
+
         return view('auth.login');
     }
 
     /**
-     * Gère la soumission du formulaire de connexion.
+     * Soumission du formulaire de connexion
      */
     public function store(Request $request)
     {
@@ -28,32 +37,52 @@ class AuthenticatedSessionController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-    
-        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+
+        $email = $request->input('email');
+
+        // ✅ Vérifie si l'utilisateur existe
+        $userExists = User::where('email', $email)->exists();
+
+        if (!$userExists) {
             return back()->withErrors([
-                'email' => 'Identifiants incorrects.',
+                'email' => 'Aucun compte ne correspond à cette adresse email.',
             ])->onlyInput('email');
         }
-    
-        $request->session()->regenerate();
-    
-        $user = Auth::user();
-    
-        
-        if ($user->role->name === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->role->name === 'editeur') {
-            return redirect()->route('editeur.dashboard');
-        }
-    
-        //  Sinon, redirection par défaut
-        // return redirect()->intended(RouteServiceProvider::HOME); erreur breeze defaut donc il faut changer
-        return redirect('/'); // ou '/admin/dashboard' si tu veux forcer une destination
 
+        // ✅ Tentative d’authentification
+        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+            return back()->withErrors([
+                'email' => 'Mot de passe incorrect.',
+            ])->onlyInput('email');
+        }
+
+        $request->session()->regenerate();
+
+        // ✅ Priorité à l’URL en session si elle existe
+        if (session()->has('url.intended')) {
+            return redirect()->intended();
+        }
+
+        // ✅ Sinon, redirection selon le rôle
+        return redirect()->to($this->redirectTo(Auth::user()));
     }
 
     /**
-     * Gère la déconnexion.
+     * Détermine la redirection selon le rôle
+     */
+    public function redirectTo($user)
+    {
+        if ($user->role->name === 'admin') {
+            return route('admin.dashboard');
+        } elseif ($user->role->name === 'editeur') {
+            return route('editeur.dashboard');
+        }
+
+        return '/';
+    }
+
+    /**
+     * Déconnexion
      */
     public function destroy(Request $request)
     {

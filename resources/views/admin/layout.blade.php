@@ -41,10 +41,13 @@
                 <a href="{{ route('admin.articles.attente') }}" class="{{ request()->routeIs('admin.articles.attente') ? 'bg-gray-800' : '' }} block py-2 pl-8 hover:bg-gray-800 rounded">⏳ En attente</a>
                 <a href="{{ route('admin.articles.create') }}" class="{{ request()->routeIs('admin.articles.create') ? 'bg-gray-800' : '' }} block py-2 pl-4 hover:bg-gray-800 rounded">✍️ Créer un article</a>
                 <!-- Lien vers mes articles -->
-<a href="{{ route('admin.articles.mes') }}"
-       class="{{ request()->routeIs('admin.articles.mes') ? 'bg-gray-800' : '' }} block py-2 pl-4 hover:bg-gray-800 rounded">
-        📝 Mes articles
-    </a>
+                <a href="{{ route('admin.articles.mes') }}" class="{{ request()->routeIs('admin.articles.mes') ? 'bg-gray-800' : '' }} block py-2 pl-4 hover:bg-gray-800 rounded"> 📝 Mes articles
+                </a>
+    {{-- 🗨️ Commentaires --}}
+
+                <a href="{{ route('admin.commentaires.index') }}" class="block py-2 pl-4 hover:bg-gray-800 rounded">🗨️ <span class="ml-2">Tous les commentaires</span>
+                 </a>
+
             </div>
 
             {{-- Publicités --}}
