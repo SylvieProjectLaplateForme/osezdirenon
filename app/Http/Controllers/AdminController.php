@@ -268,6 +268,8 @@ public function validerPublicite($id)
     $publicite = Publicite::findOrFail($id);
     $publicite->is_approved = true;
     $publicite->save();
+    $publicite->user->notify(new \App\Notifications\PubliciteValidee($publicite));
+
 
     return redirect()->back()->with('success', 'Publicité validée avec succès. Paiement en attente.');
 }

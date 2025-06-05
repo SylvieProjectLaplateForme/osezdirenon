@@ -18,7 +18,7 @@ class Paiement extends Model
         'amount',
         'payment_method',
         'payment_last4',
-        'stripe_payment_id',
+        
         'paid_at',
         'status',
     ];

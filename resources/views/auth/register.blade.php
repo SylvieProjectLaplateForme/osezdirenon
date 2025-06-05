@@ -1,16 +1,18 @@
 <x-guest-layout>
 
-    
-    @if ($errors->any())
-    <div class="mb-4 text-sm text-red-600 bg-red-100 border border-red-400 p-4 rounded">
-        <ul class="list-disc list-inside">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
 
+        {{-- ✅ Messages d'erreurs --}}
+        @if ($errors->any())
+            <div class="mb-4 text-sm text-red-600 bg-red-100 border border-red-400 p-4 rounded">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <!-- Nom -->
         <div>

@@ -8,6 +8,29 @@
         {{ session('success') }}
     </div>
 @endif
+@if(auth()->user()->notifications->count())
+    <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded mb-6 shadow">
+        <h3 class="font-semibold mb-2">📢 Notifications</h3>
+        <ul class="list-disc list-inside text-sm">
+            @foreach(auth()->user()->notifications as $notification)
+                <li class="mb-1">
+                    {{ $notification->data['message'] ?? 'Notification' }}
+                    {{-- 🔗 lien possible vers la publicité validée --}}
+                    @if(isset($notification->data['publicite_id']))
+                        <a href="{{ route('editeur.publicites.index') }}" class="text-blue-600 underline text-sm">(voir)</a>
+                    @endif
+                </li>
+            @endforeach
+        </ul>
+        <form action="{{ route('notifications.clear') }}" method="POST" class="mt-3 text-right">
+            @csrf
+            <button type="submit" class="text-xs text-gray-500 hover:underline">
+                Tout marquer comme lu
+            </button>
+        </form>
+    </div>
+@endif
+
 <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold">Bienvenue, {{ Auth::user()->name }}</h1>
 </div>

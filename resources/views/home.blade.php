@@ -80,17 +80,20 @@
                class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 group">
                 
                 <!-- Image -->
-                <div class="relative overflow-hidden">
-                    <img 
-                        src="{{ asset($article->image ? 'storage/' . $article->image : 'storage/articles/default.jpg') }}" 
-                        alt="{{ $article->title }}" 
-                        class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
-                    >
-                    <!-- Badge catégorie -->
-                    <div class="absolute top-2 left-2 bg-white bg-opacity-80 px-3 py-1 text-xs font-semibold rounded-full {{ $article->category->color_class }}">
-                        {{ $article->category->name }}
-                    </div>
-                </div>
+                <!-- Image -->
+<div class="relative overflow-hidden">
+    <x-article-image 
+        :image="$article->image" 
+        :alt="$article->title" 
+        class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110" 
+    />
+    
+    <!-- Badge catégorie -->
+    <div class="absolute top-2 left-2 bg-white bg-opacity-80 px-3 py-1 text-xs font-semibold rounded-full {{ $article->category->color_class }}">
+        {{ $article->category->name }}
+    </div>
+</div>
+
 
                 <!-- Contenu -->
                 <div class="p-5 flex flex-col flex-1">

@@ -13,6 +13,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\StripeWebhookController;
 
+// route pour notification pub
+Route::post('/notifications/clear', function () {
+    auth()->user()->notifications->markAsRead();
+    return back();
+})->middleware(['auth'])->name('notifications.clear');
 // =====================
 // 🔓 1. Routes publiques (non connectées)
 // =====================
