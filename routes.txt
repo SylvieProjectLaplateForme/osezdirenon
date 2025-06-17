@@ -1,0 +1,91 @@
+
+  GET|HEAD  / ........................................................ home › HomeController@index
+  GET|HEAD  admin/admin/statistiques/paiements admin.paiements.stats › AdminController@statistiqu…
+  GET|HEAD  admin/articles .................. admin.articles.index › AdminController@articlesIndex
+  POST      admin/articles ................... admin.articles.store › AdminController@storeArticle
+  GET|HEAD  admin/articles-supprimes admin.articles.supprimes › AdminController@articlesSupprimes
+  GET|HEAD  admin/articles/create .......... admin.articles.create › AdminController@createArticle
+  GET|HEAD  admin/articles/en-attente . admin.articles.attente › AdminController@articlesEnAttente
+  GET|HEAD  admin/articles/valides ...... admin.articles.valides › AdminController@articlesValides
+  PUT       admin/articles/{id} ............ admin.articles.update › AdminController@updateArticle
+  GET|HEAD  admin/articles/{id} ................ admin.articles.show › AdminController@showArticle
+  DELETE    admin/articles/{id} ........... admin.articles.destroy › AdminController@deleteArticle
+  GET|HEAD  admin/articles/{id}/edit ........... admin.articles.edit › AdminController@editArticle
+  PUT       admin/articles/{id}/restaurer admin.articles.restaurer › AdminController@restaurerArt…
+  PUT       admin/articles/{id}/valider . admin.articles.validate › AdminController@validerArticle
+  GET|HEAD  admin/commentaires ...... admin.commentaires.index › AdminController@commentairesIndex
+  GET|HEAD  admin/commentaires-en-attente admin.comments.pending › AdminController@commentairesEn…
+  DELETE    admin/commentaires/{id} ....... admin.comments.destroy › AdminController@deleteComment
+  PUT       admin/commentaires/{id}/valider admin.comments.validate › AdminController@validateCom…
+  GET|HEAD  admin/dashboard/{filter?} ................ admin.dashboard › AdminController@dashboard
+  GET|HEAD  admin/editeurs .................. admin.editeurs.index › AdminController@listeEditeurs
+  GET|HEAD  admin/gestion-publicites ......... admin.publicites.index › AdminController@publicites
+  GET|HEAD  admin/mes-articles .................. admin.articles.mes › AdminController@mesArticles
+  GET|HEAD  admin/profil ............................. admin.profil.index › ProfilController@index
+  GET|HEAD  admin/profil/{id} .......................... admin.profil.show › ProfilController@show
+  PUT       admin/profil/{id} ...................... admin.profil.update › ProfilController@update
+  GET|HEAD  admin/profil/{id}/edit ..................... admin.profil.edit › ProfilController@edit
+  PUT       admin/profil/{id}/toggle ......... admin.profil.toggle › ProfilController@toggleActive
+  GET|HEAD  admin/publicites/attente admin.publicites.attente › AdminController@publicitesEnAtten…
+  GET|HEAD  admin/publicites/{id} .......... admin.publicites.show › AdminController@showPublicite
+  DELETE    admin/publicites/{id} .. admin.publicites.destroy › AdminController@supprimerPublicite
+  PUT       admin/publicites/{id}/renouveler admin.publicites.renouveler › PubliciteController@re…
+  PUT       admin/publicites/{id}/valider admin.publicites.valider › AdminController@validerPubli…
+  GET|HEAD  apropos ...................................................................... apropos
+  GET|HEAD  article/{slug} ................................. article.show › ArticleController@show
+  POST      articles/{article}/comment ................... comment.store › CommentController@store
+  GET|HEAD  cgu .............................................................................. cgu
+  GET|HEAD  confidentialite ...................................................... confidentialite
+  GET|HEAD  confirm-password .......... password.confirm › Auth\ConfirmablePasswordController@show
+  POST      confirm-password ............................ Auth\ConfirmablePasswordController@store
+  GET|HEAD  contact ......................................... contact › ContactController@afficher
+  POST      contact .................................. contact.envoyer › ContactController@envoyer
+  GET|HEAD  editeur/articles .............. editeur.articles.index › EditeurController@mesArticles
+  POST      editeur/articles .................... editeur.articles.store › ArticleController@store
+  GET|HEAD  editeur/articles/create ........... editeur.articles.create › EditeurController@create
+  GET|HEAD  editeur/articles/en-attente editeur.articles.enAttente › EditeurController@articlesEn…
+  DELETE    editeur/articles/{id} .... editeur.articles.destroy › EditeurController@destroyArticle
+  GET|HEAD  editeur/articles/{id} .......... editeur.articles.show › EditeurController@showArticle
+  PUT       editeur/articles/{id} ............. editeur.articles.update › ArticleController@update
+  GET|HEAD  editeur/articles/{id}/edit ............ editeur.articles.edit › ArticleController@edit
+  GET|HEAD  editeur/commentaires editeur.commentaires.index › EditeurController@commentairesIndex
+  GET|HEAD  editeur/commentaires-en-attente editeur.commentaires.enAttente › EditeurController@co…
+  GET|HEAD  editeur/dashboard .................... editeur.dashboard › EditeurController@dashboard
+  GET|HEAD  editeur/mes-articles ............ editeur.articles.mes › EditeurController@mesArticles
+  GET|HEAD  editeur/paiements ........... editeur.paiements.index › EditeurController@mesPaiements
+  GET|HEAD  editeur/profile ........................ editeur.profile.edit › ProfileController@edit
+  PATCH     editeur/profile .................... editeur.profile.update › ProfileController@update
+  DELETE    editeur/profile .................. editeur.profile.destroy › ProfileController@destroy
+  GET|HEAD  editeur/publicites ...... editeur.publicites.index › PubliciteController@mesPublicites
+  POST      editeur/publicites .............. editeur.publicites.store › PubliciteController@store
+  GET|HEAD  editeur/publicites/a-payer editeur.publicites.a_payer › PubliciteController@enAttente…
+  GET|HEAD  editeur/publicites/attente editeur.publicites.enAttente › PubliciteController@enAtten…
+  GET|HEAD  editeur/publicites/create ..... editeur.publicites.create › PubliciteController@create
+  GET|HEAD  editeur/publicites/payees editeur.publicites.payees › EditeurController@publicitesPay…
+  POST      email/verification-notification verification.send › Auth\EmailVerificationNotificatio…
+  GET|HEAD  forgot-password ........... password.request › Auth\PasswordResetLinkController@create
+  POST      forgot-password .............. password.email › Auth\PasswordResetLinkController@store
+  GET|HEAD  login ............................. login › Auth\AuthenticatedSessionController@create
+  POST      login ...................................... Auth\AuthenticatedSessionController@store
+  POST      logout .......................... logout › Auth\AuthenticatedSessionController@destroy
+  POST      notifications/clear .............................................. notifications.clear
+  PUT       password ............................ password.update › Auth\PasswordController@update
+  GET|HEAD  payer-cancel ................................. stripe.cancel › StripeController@cancel
+  GET|HEAD  payer-success .............................. stripe.success › StripeController@success
+  GET|HEAD  plan-du-site .................................................................... plan
+  GET|HEAD  publicites .............. publicites.publiques › PubliciteController@afficherPubliques
+  POST      publicites ............................... publicite.store › PubliciteController@store
+  GET|HEAD  publicites/creer .............................. createPub › PubliciteController@create
+  GET|HEAD  register ............................. register › Auth\RegisteredUserController@create
+  POST      register ......................................... Auth\RegisteredUserController@store
+  POST      reset-password ..................... password.store › Auth\NewPasswordController@store
+  GET|HEAD  reset-password/{token} ............ password.reset › Auth\NewPasswordController@create
+  GET|HEAD  storage/{path} ......................................................... storage.local
+  POST      stripe/payer/{id} ........................ stripe.checkout › StripeController@checkout
+  POST      stripe/webhook ........................................ StripeWebhookController@handle
+  GET|HEAD  up ................................................................................... 
+  GET|HEAD  verify-email ............ verification.notice › Auth\EmailVerificationPromptController
+  GET|HEAD  verify-email/{id}/{hash} ............ verification.verify › Auth\VerifyEmailController
+
+                                                                               Showing [87] routes
+

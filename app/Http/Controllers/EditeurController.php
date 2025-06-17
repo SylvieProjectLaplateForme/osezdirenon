@@ -93,8 +93,10 @@ public function showArticle($id)
     public function create()
     {
         $categories = Category::all();
-        return view('editeur.articleCreate', compact('categories'));
+        // return view('editeur.articleCreate', compact('categories'));modif du 17/6
+        return view('editeur.articles.create', compact('categories'));
     }
+    
     // ✅ Supprimer un article si non validé
 public function destroyArticle($id)
 {
@@ -146,7 +148,7 @@ public function commentairesIndex()
     // ✅ Affiche le formulaire de création d’une publicité
     public function createPub()
 {
-    return view('editeur.publicites.pubCreate'); //  bien placé
+    return view('editeur.publicites.pubCreate'); 
 }
 
 

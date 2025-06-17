@@ -193,7 +193,7 @@ public function mesArticles()
         $article->is_approved = true;
         $article->save();
 
-        return redirect()->route('admin.articles.index')->with('success', 'Article supprimé : "' . $article->title . '"');
+        return redirect()->route('admin.articles.index')->with('success', 'Article validé : "' . $article->title . '"');
 
     }
 
@@ -208,6 +208,22 @@ public function mesArticles()
     return redirect()->route('admin.articles.index')
         ->with('success', 'Article supprimé : "' . $titre . '"');
 }
+public function articlesSupprimes()
+{
+    $articles = Article::onlyTrashed()->latest()->get();
+    return view('admin.articles.supprimes', compact('articles'));
+}
+
+public function restaurerArticle($id)
+{
+    $article = Article::withTrashed()->findOrFail($id);
+    $article->restore();
+
+    return redirect()->route('admin.articles.supprimes')->with('success', 'Article restauré avec succès.');
+}
+
+
+
 public function commentairesIndex()
 {
     $enAttente = Comment::where('is_approved', false)

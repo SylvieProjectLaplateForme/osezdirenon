@@ -12,7 +12,11 @@ class CommentController extends Controller
 {
     $request->validate([
         'content' => 'required|string|max:1000',
+        
     ]);
+if (!$article->is_approved) {
+    abort(403, 'Impossible de commenter un article non validé.');
+}
 
     Comment::create([
         'content' => $request->content,

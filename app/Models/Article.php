@@ -43,7 +43,7 @@ class Article extends Model
     }
 
     /**
-     * ✅ L’article est rédigé par un utilisateur (éditeur)
+     * ✅ L’article est rédigé par un utilisateur (lien éditeur)
      */
     public function user()
     {

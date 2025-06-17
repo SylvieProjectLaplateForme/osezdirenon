@@ -1,4 +1,5 @@
 @if ($publicites->count())
+<section aria-labelledby="pubs-heading">
     <h2 class="text-center text-lg font-bold text-pink-600 mb-6">
         💗 Publicités partenaires
         <span class="relative group ml-2 inline-block">
@@ -8,7 +9,6 @@
             <span
                 class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-56 px-3 py-2 text-white bg-pink-600 text-xs rounded shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 text-center">
                 Publicités validées et payées<br>
-
                 @auth
                     <a href="{{ route('editeur.publicites.create') }}" class="underline text-pink-200 hover:text-white">
                         Créer la vôtre 💖
@@ -20,14 +20,10 @@
                     </a>
 
                 @endauth
-
-
-
             </span>
-
         </span>
     </h2>
-
+</section>
     {{-- Swiper CSS --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
@@ -36,7 +32,9 @@
             @foreach ($publicites as $pub)
                 <div class="swiper-slide">
                     <a href="{{ $pub->lien }}" target="_blank"
-                        class="block p-4 bg-pink-100 hover:bg-pink-200 rounded-xl shadow text-center">
+   aria-label="Visiter la publicité : {{ $pub->titre }}"
+   class="block p-4 bg-pink-100 hover:bg-pink-200 rounded-xl shadow text-center">
+
                         @if ($pub->image)
                             <img src="{{ asset('storage/' . $pub->image) }}" alt="{{ $pub->titre }}"
                                 class="h-32 mx-auto object-contain mb-2">

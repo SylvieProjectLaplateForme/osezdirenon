@@ -93,6 +93,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/articles/{id}', [AdminController::class, 'showArticle'])->name('articles.show');
     Route::put('/articles/{id}/valider', [AdminController::class, 'validerArticle'])->name('articles.validate');
     Route::delete('/articles/{id}', [AdminController::class, 'deleteArticle'])->name('articles.destroy');
+    Route::get('/articles-supprimes', [AdminController::class, 'articlesSupprimes'])->name('articles.supprimes');
+    Route::put('/articles/{id}/restaurer', [AdminController::class, 'restaurerArticle'])->name('articles.restaurer');
+
+
 
     // COMMENTAIRES
     Route::get('/commentaires-en-attente', [AdminController::class, 'commentairesEnAttente'])->name('comments.pending');

@@ -3,6 +3,7 @@
 @section('title', 'Commentaires')
 
 @section('content')
+
 <h1 class="text-3xl font-bold mb-6">🛠️ Liste de tous les commentaires</h1>
 
 {{-- EN ATTENTE --}}
@@ -11,8 +12,8 @@
 @if($enAttente->isEmpty())
     <p class="mb-8">Aucun commentaire en attente.</p>
 @else
-    <div class="overflow-x-auto mb-10">
-        <table class="min-w-full bg-white border border-yellow-300 rounded shadow text-sm">
+    <div class="overflow-x-auto text-sm md:text-base rounded shadow mb-6">
+        <table class="min-w-full w-full table-auto border border-gray-300">
             <thead class="bg-yellow-100 text-left">
                 <tr>
                     <th class="px-4 py-2 border-b">Article</th>
@@ -28,6 +29,29 @@
                         <td class="px-4 py-2 border-b">{{ $commentaire->user->name ?? 'Anonyme' }}</td>
                         <td class="px-4 py-2 border-b">{{ $commentaire->content }}</td>
                         <td class="px-4 py-2 border-b">{{ $commentaire->created_at->format('d/m/Y à H:i') }}</td>
+                       <td class="px-4 py-2 space-x-2">
+    {{-- ✅ Valider --}}
+    <form method="POST" action="{{ route('admin.comments.validate', $commentaire->id) }}" class="inline">
+        @csrf
+        @method('PUT')
+        <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+            ✅ Valider
+        </button>
+    </form>
+
+    {{-- 🗑️ Supprimer --}}
+    <form method="POST" action="{{ route('admin.comments.destroy', $commentaire->id) }}" class="inline" onsubmit="return confirm('Supprimer ce commentaire ?')">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+            🗑️ Supprimer
+        </button>
+    </form>
+</td>
+
+   
+</td>
+
                     </tr>
                 @endforeach
             </tbody>
