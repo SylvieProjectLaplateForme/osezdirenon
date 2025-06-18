@@ -23,7 +23,7 @@ class PubliciteController extends Controller
         $validated = $request->validate([
             'titre' => 'required|string|max:255',
             'lien' => 'required|url',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'date_debut' => 'nullable|date',
             // 'date_fin' => 'nullable|date|after_or_equal:date_debut', car obligatoire 1 mois
             

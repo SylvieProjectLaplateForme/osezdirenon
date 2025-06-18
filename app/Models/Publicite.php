@@ -15,9 +15,9 @@ class Publicite extends Model
         'image',
         'date_debut',
         'date_fin',
-        'is_approved', // ✅ à ajouter
-        'paid',        // ✅ à ajouter
-        'user_id',     // ✅ à ajouter
+        'is_approved', 
+        'paid',        
+        'user_id',     
     ];
     
 

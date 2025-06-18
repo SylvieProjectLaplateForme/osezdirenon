@@ -72,7 +72,7 @@
                 Rejoignez-nous et devenez éditeur sur Osez Dire Non.
             </a>
         </div>
-
+<p>** Gisèle Halim, avocate, militante féministe, femme politique</p>
     </div>
 </section>
 @endsection

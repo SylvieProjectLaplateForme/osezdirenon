@@ -1,43 +1,72 @@
-# Osez Dire Non  README Complet
+# Blog : Osez Dire Non  
 
-##  Introduction
+## 🎯 Introduction
 
-"Osez Dire Non" est un blog participatif qui permet aux utilisateurs dexprimer leurs experiences sur des sujets du quotidien comme le travail, la famille ou lecole.  
-Le site inclut un systeme de roles (editeur/admin), un espace publicitaire payant, et une moderation des contenus.
+**"Osez Dire Non"** est un blog participatif, éducatif et engagé, conçu pour offrir un espace d’expression libre à celles et ceux qui souhaitent témoigner, sensibiliser ou conseiller sur des sujets souvent passés sous silence : pression sociale, abus de pouvoir, inégalités, discriminations, etc.
 
----
-
-##  Conception technique
-
-- Modele conceptuel (MCD), logique (MLD) et physique (MPD)
-- Diagramme UML des entites et des cas dusage
-- Base de donnees SQLite avec Seeders et Migrations Laravel
+Le site inclut un **système de rôles** (éditeur/admin), un **espace publicitaire payant**, et une **modération des contenus**.  
+Chaque contribution est modérée avec soin avant publication afin de garantir un cadre respectueux, constructif et bienveillant.
 
 ---
 
-##  Architecture Laravel
+## 📁 Guide d’installation – Local (WAMP / SQLite)
+
+1. **Installer [WAMP](https://www.wampserver.com/)**  
+2. **Installer [Composer](https://getcomposer.org/)**  
+3. **Créer projet Laravel avec Breeze et Vite**
+```bash
+composer create-project laravel/laravel osezdirenon
+cd osezdirenon
+composer require laravel/breeze --dev
+php artisan breeze:install blade
+npm install && npm run dev
+```
+
+4. **Configurer SQLite dans `.env`**
+```
+DB_CONNECTION=sqlite
+DB_DATABASE=./database/database.sqlite
+```
+
+5. **Créer la base et lancer le site**
+```bash
+touch database/database.sqlite
+php artisan migrate --seed
+php artisan serve
+```
+
+---
+
+## 🧱 Conception technique
+
+- Modèle conceptuel (MCD), logique (MLD) et physique (MPD)
+- Diagramme UML des entités et des cas d’usage
+- Base de données SQLite avec Seeders et Migrations Laravel
+
+---
+
+## 🏗️ Architecture Laravel
 
 - MVC clair :
-  - **Models** : Article, Comment, User, Publicite, Paiement, Category
-  - **Controllers** : separes par role (admin, editeur, public, Stripe)
+  - **Models** : Article, Comment, User, Publicite, Paiement, Category, ContactMessage
+  - **Controllers** : séparés par rôle (admin, éditeur, public, Stripe)
   - **Views** :
     - `resources/views/admin/...`
     - `resources/views/editeur/...`
     - `resources/views/auth/...`
     - `resources/views/contact.blade.php`, `home.blade.php`...
 
-- Routes protegees par middleware :
+- Routes protégées par middleware :
   - `role:admin`, `role:editeur`, `auth`
-  - Groupees dans `routes/web.php`
+  - Groupées dans `routes/web.php`
 
 ---
 
-##  Authentification et redirection par role
+## 🔐 Authentification et redirection par rôle
 
 Utilisation de **Laravel Breeze** pour tous les utilisateurs via le formulaire `/login`.
 
-Redirection personnalisee selon le role dans `AuthenticatedSessionController` :
-
+Redirection personnalisée selon le rôle dans `AuthenticatedSessionController` :
 ```php
 public function redirectTo($user)
 {
@@ -50,167 +79,108 @@ public function redirectTo($user)
 }
 ```
 
--  Lediteur peut sinscrire via `/register` (Breeze)
--  Ladministrateur est cree en base, pas de formulaire dinscription
+- L’éditeur peut s’inscrire via `/register` (Breeze)
+- L’administrateur est créé en base, pas de formulaire d’inscription
 
 ---
 
-##  Vues Blade et Breeze
+## 🧩 Vues Blade et Breeze
 
-- Organisation par role :
+- Organisation par rôle :
   - `admin/` : dashboard, validation, statistiques
   - `editeur/` : articles, pubs, commentaires, profil
-- Breeze utilise pour les vues `auth/` : login, register, mot de passe oublie
-- Layouts separes (`layout.blade.php`, `admin.layout.blade.php`, `editeur.layout.blade.php`)
+- Breeze utilisé pour les vues `auth/` : login, register, mot de passe oublié
+- Layouts séparés (`layout.blade.php`, `admin.layout.blade.php`, `editeur.layout.blade.php`)
 
 ---
 
-##  Erreur rencontree et corrigee
+## 💡 Intégration Vite.js
 
-Vue de creation d'article mal placee :
-
--  `resources/views/editeur/articleCreate.blade.php`
--  Corrige : `resources/views/editeur/articles/create.blade.php`
--  Mise a jour du controleur :
-```php
-return view('editeur.articles.create');
-```
+Le projet utilise **Vite** comme bundler JavaScript et CSS via Laravel Breeze Blade.
+- Compilation CSS/JS avec : `npm run dev`
+- Hot Reload via `npm run dev`
+- TailwindCSS inclus via Vite
 
 ---
 
-##  Bonnes pratiques Laravel respectees
+## 🎯 RGPD & Bandeau cookies
 
-- Auth unique avec redirection selon role
-- Routes organisees par middleware
-- Vues et controleurs separes par responsabilite
-- Composants Blade reutilisables
-- Admin sans inscription publique
-- Validation et upload proteges
-
----
-
-##  Tous les controleurs Laravel utilises
-
-| Controleur                     | Role principal                                                                 |
-|-------------------------------|--------------------------------------------------------------------------------|
-| `AdminController`             | Dashboard Admin, validation articles/publicites, statistiques                  |
-| `EditeurController`           | Dashboard Editeur, creation articles/publicites, moderation, commentaires      |
-| `ArticleController`           | Creation, modification, upload image, affichage public                         |
-| `PubliciteController`         | Validation des pubs, acces publicites actives cote admin                       |
-| `CommentController`           | Creation, affichage, validation des commentaires                               |
-| `ContactController`           | Traitement du formulaire de contact vers Mailtrap                             |
-| `CategoryController`          | Filtrage des articles par categorie                                            |
-| `PaiementController`          | Affichage des paiements pour lediteur                                         |
-| `StripeController`            | Redirection vers Stripe, gestion du paiement dune pub                         |
-| `StripeWebhookController`     | Reception des webhooks Stripe (paiement reussi ou echoue)                      |
-| `ProfileController`           | Modification du profil editeur avec Breeze (nom, email)                        |
-| `ProfilController` *(admin)*  | Acces au profil admin (non via Breeze)                                         |
-| `HomeController`              | Page daccueil (articles + publicites defilantes)                              |
-| `AuthenticatedSessionController` | Connexion/deconnexion personnalisee avec redirection par role           |
-| `RegisteredUserController`    | Inscription dun editeur via Laravel Breeze                                    |
-
-
-
-
----
-
-
-
-# 🔧 Guide d’installation – Environnement de développement
-
-Ce projet Laravel a été développé et testé localement sous Windows avec les outils suivants :
-
----
-
-## 🧰 Outils nécessaires
-
-| Outil                | Version recommandée       | Description                            |
-|---------------------|---------------------------|----------------------------------------|
-| WAMP Server          | PHP 8.x, Apache 2.4       | Serveur local (Apache + PHP + MySQL)   |
-| PHP                  | 8.1 ou supérieur           | Requis pour Laravel                    |
-| Composer             | 2.x                        | Gestionnaire de dépendances PHP        |
-| Laravel              | 10.x                       | Framework principal du projet          |
-| Laravel Breeze       | 1.x                        | Système d’authentification              |
-| SQLite               | (fourni avec Laravel)      | Base de données locale                 |
-| Visual Studio Code   | Dernière version           | Éditeur de code                        |
-| Git                  | Dernière version           | (optionnel) gestion de version         |
-
----
-
-## ⚙️ Étapes d'installation
-
-1. **Installer WAMP Server**  
-   [https://www.wampserver.com/](https://www.wampserver.com/)  
-   - Lancer le serveur Apache uniquement (MySQL non utilisé ici)
-
-2. **Installer Composer**  
-   [https://getcomposer.org/](https://getcomposer.org/)  
-   Vérifier dans le terminal :
-   ```bash
-   composer --version
-   ```
-
-3. **Créer le projet Laravel**
-   ```bash
-   composer create-project laravel/laravel osezdirenon
-   ```
-
-4. **Se placer dans le dossier du projet**
-   ```bash
-   cd osezdirenon
-   ```
-
-5. **Installer Laravel Breeze**
-   ```bash
-   composer require laravel/breeze --dev
-   php artisan breeze:install blade
-   npm install && npm run dev
-   php artisan migrate
-   ```
-
-6. **Configurer la base SQLite**
-   - Créer le fichier : `database/database.sqlite`
-   - Dans `.env` :
-     ```
-     DB_CONNECTION=sqlite
-     DB_DATABASE=/chemin/vers/database.sqlite
-     ```
-
-7. **Lancer le serveur local**
-   ```bash
-   php artisan serve
-   ```
-
----
-
-## 📁 Structure du projet
-
-- `/app` → contrôleurs, modèles
-- `/resources/views` → vues Blade
-- `/routes/web.php` → routes Laravel
-- `/database/` → migrations, seeders, base SQLite
-- `/public` → fichiers accessibles publiquement (images, JS compilé)
+Le site affiche un **bandeau RGPD** informatif en bas de page à la première visite.
+- Fonctionne avec `localStorage`
+- Disparaît au clic sur "Accepter"
+- Aucune collecte de données personnelles
 
 ---
 
 ## 📦 Dépendances principales
 
-- `laravel/framework`
-- `laravel/breeze`
-- `tailwindcss`
-- `swiper` (carrousel de publicités)
-- `stripe/stripe-php`
+- Laravel 12
+- Laravel Breeze (Blade)
+- Tailwind CSS
+- Vite.js
+- SQLite
+- Stripe PHP SDK
+- Swiper.js
 
 ---
 
-## 📝 Astuce
+## 📚 Tous les contrôleurs Laravel utilisés
 
-Pensez à exécuter régulièrement :
+| Contrôleur                     | Rôle principal                                                                 |
+|-------------------------------|--------------------------------------------------------------------------------|
+| `AdminController`             | Dashboard Admin, validation articles/publicités, statistiques                  |
+| `EditeurController`           | Dashboard Éditeur, création articles/publicités, modération, commentaires      |
+| `ArticleController`           | Création, modification, upload image, affichage public                         |
+| `PubliciteController`         | Validation des pubs, accès publicités actives côté admin                       |
+| `CommentController`           | Création, affichage, validation des commentaires                               |
+| `ContactController`           | Traitement du formulaire de contact vers Mailtrap                             |
+| `CategoryController`          | Filtrage des articles par catégorie                                            |
+| `PaiementController`          | Affichage des paiements pour l’éditeur                                         |
+| `StripeController`            | Redirection vers Stripe, gestion du paiement d’une pub                         |
+| `StripeWebhookController`     | Réception des webhooks Stripe : mise à jour `paiement`                         |
+| `ProfileController`           | Modification du profil éditeur avec Breeze                                     |
+| `ProfilController` *(admin)*  | Accès au profil admin                                          |
+| `HomeController`              | Page d’accueil (articles + publicités défilantes)                             |
+| `AuthenticatedSessionController` | Connexion/déconnexion personnalisée avec redirection par rôle           |
+| `RegisteredUserController`    | Inscription d’un éditeur via Laravel Breeze                                    |
+
+---
+
+## 🧩 Déploiement du projet via GitHub
+
+### 🔧 Créer un dépôt GitHub
+
+1. Aller sur [GitHub](https://github.com)
+2. Créer un dépôt `osezdirenon`
+3. Ne pas initialiser avec README
+
+### 🔄 Relier à VS Code :
+ C:\Users\Utilisateur\Desktop\blog>
 ```bash
-php artisan migrate:fresh --seed
-npm run dev
+
+git init
+git remote add origin https://github.com/SylvieProjectLaplateForme/osezdirenon.git
+git add .
+git commit -m "Initial commit"
+git push -u origin main
 ```
 
 ---
 
-Ce guide est compatible avec l’environnement de développement utilisé pour "Osez Dire Non".
+## 🧩 Clonage du projet Laravel "Osez Dire Non"
+
+```bash
+git clone https://github.com/SylvieProjectLaplateForme/osezdirenon.git
+cd osezdirenon
+composer install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate --seed
+npm install && npm run dev
+php artisan serve
+```
+
+---
+
+👉 Le site est prêt à l’emploi sur `http://127.0.0.1:8000`
