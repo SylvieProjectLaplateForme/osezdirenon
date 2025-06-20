@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\Paiement;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 
@@ -69,6 +70,45 @@ class AdminController extends Controller
 
     return view('admin.editeurs.index', compact('editeurs'));
 }
+
+
+
+public function exportEditeurs(): StreamedResponse
+{
+    $editeurs = User::with('role')->whereHas('role', function ($query) {
+        $query->where('name', 'editeur'); // 👈 on filtre sur le rôle
+    })->get();
+
+    $headers = [
+        'Content-type' => 'text/csv',
+        'Content-Disposition' => 'attachment; filename=editeurs.csv',
+        'Pragma' => 'no-cache',
+        'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+        'Expires' => '0'
+    ];
+
+    $columns = ['ID', 'Nom', 'Email', 'Rôle', 'Créé le'];
+
+    $callback = function () use ($editeurs, $columns) {
+        $handle = fopen('php://output', 'w');
+        fputcsv($handle, $columns);
+
+        foreach ($editeurs as $user) {
+            fputcsv($handle, [
+                $user->id,
+                $user->name,
+                $user->email,
+                $user->role->name ?? '—', // 👈 rôle depuis la relation
+                $user->created_at->format('Y-m-d H:i'),
+            ]);
+        }
+
+        fclose($handle);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
+
 
     // ✅ Liste articles
     public function articlesIndex()
@@ -236,7 +276,7 @@ public function commentairesIndex()
         ->latest()
         ->get();
 
-    return view('commentairesIndex', compact('enAttente', 'valides'));
+    return view('admin.commentaires.index', compact('enAttente', 'valides'));
 }
 
 public function commentairesEnAttente()
@@ -246,7 +286,7 @@ public function commentairesEnAttente()
     ->latest()
     ->get();
 
-return view('commentPending', compact('commentaires'));
+return view('admin.commentaires.pending', compact('commentaires'));
 }
 public function validateComment($id)
 {

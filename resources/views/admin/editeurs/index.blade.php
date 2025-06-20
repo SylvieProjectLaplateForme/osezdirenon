@@ -5,7 +5,15 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold text-pink-600 mb-6">👥 Liste des éditeurs</h1>
-
+{{-- ✅ Bouton d’export CSV --}}
+    <div class="mb-6">
+        <form method="GET" action="{{ route('admin.editeurs.export') }}">
+            <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded shadow">
+                ⬇️ Exporter la liste au format CSV
+            </button>
+        </form>
+    </div>
     {{-- ✅ TABLEAU pour desktop --}}
     <div class="hidden md:block overflow-x-auto">
         <table class="w-full bg-white shadow-md rounded-lg overflow-hidden">

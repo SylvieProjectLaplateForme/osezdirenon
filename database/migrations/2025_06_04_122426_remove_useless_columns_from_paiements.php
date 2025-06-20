@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::table('paiements', function (Blueprint $table) {
             $table->dropColumn([
                 'stripe_payment_id',
-                'receipt_url'
+                // 'receipt_url'
             ]);
         });
     }
@@ -19,7 +19,7 @@ return new class extends Migration {
     {
         Schema::table('paiements', function (Blueprint $table) {
             $table->string('stripe_payment_id')->nullable();
-            $table->string('receipt_url')->nullable();
+            // $table->string('receipt_url')->nullable();
         });
     }
 };

@@ -32,7 +32,7 @@ class StripeWebhookController extends Controller
                 $paiement->update([
                     'status' => 'paid',
                     'paid_at' => now(),
-                    'stripe_receipt_url' => $session->receipt_url ?? null,
+                    // 'stripe_receipt_url' => $session->receipt_url ?? null,
                 ]);
             }
         }

@@ -15,6 +15,7 @@ return new class extends Migration
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('publicite_id')->nullable()->constrained()->onDelete('set null');
+        $table->string('stripe_payment_id')->nullable(); // 🔹 colonne manquante
         $table->decimal('amount', 8, 2);
         $table->enum('status', ['paid', 'unpaid'])->default('unpaid');
         $table->timestamp('paid_at')->nullable();

@@ -12,9 +12,10 @@ class CheckRole
     {
         $user = Auth::user();
 
-        if (!$user) {
-            abort(403, 'Non authentifié.');
-        }
+        // 💡 sécurisation : vérifie si le rôle existe
+    if (!$user || !$user->role || $user->role->name !== $role) {
+        abort(403);
+    }
 
         // Vérifie le rôle (par nom depuis la table roles)
         if ($role === 'admin' && $user->role->name !== 'admin') {

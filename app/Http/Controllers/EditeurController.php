@@ -148,7 +148,7 @@ public function commentairesIndex()
     // ✅ Affiche le formulaire de création d’une publicité
     public function createPub()
 {
-    return view('editeur.publicites.pubCreate'); 
+    return view('editeur.publicites.createPub'); 
 }
 
 

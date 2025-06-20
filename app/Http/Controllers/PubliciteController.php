@@ -12,7 +12,7 @@ class PubliciteController extends Controller
     // ✅ Affiche le formulaire de création (éditeur)
     public function create()
     {
-        return view('createPub');
+        return view('editeur.publicites.createPub');
     }
 
     // ✅ Enregistre une publicité (éditeur)
@@ -39,7 +39,7 @@ class PubliciteController extends Controller
 
         Publicite::create($validated);
 
-        return redirect()->back()->with('success', 'Publicité créée !');
+        return redirect()->back()->with('success', 'Publicité créée en attente de validation par administrateur !');
     }
 
     // ✅ Liste des publicités de l’éditeur

@@ -80,6 +80,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // EDITEURS
     Route::get('/editeurs', [AdminController::class, 'listeEditeurs'])->name('editeurs.index');
+    Route::get('/editeurs/export', [AdminController::class, 'exportEditeurs'])->name('editeurs.export');
 
     // ARTICLES
     Route::get('/mes-articles', [AdminController::class, 'mesArticles'])->name('articles.mes');
@@ -115,6 +116,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Statistiques Paiements
     Route::get('/admin/statistiques/paiements', [AdminController::class, 'statistiquesPaiements'])->name('paiements.stats');
 });
+
 
 /// =====================
 // ✍️ 4. Routes ÉDITEUR
@@ -172,5 +174,19 @@ Route::post('/stripe/payer/{id}', [StripeController::class, 'checkout'])->name('
 Route::get('/payer-success', [StripeController::class, 'success'])->name('stripe.success');
 Route::get('/payer-cancel', [StripeController::class, 'cancel'])->name('stripe.cancel');
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
+
+// =====================
+// pour test Larvel seulement route /profile miroir vers /editeur/profile pour une compatibilité Breeze
+//=======================
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', function () {
+        return redirect()->route('editeur.profile.edit');
+    })->name('profile.edit');
+
+    Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
 
 
