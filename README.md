@@ -242,7 +242,7 @@ Elle utilise des composants Blade dynamiques avec pagination et Swiper.js pour l
 ---
 ### 📢 Page contact et visuel sur Mailtrap  
 
-![contact par email](captures/connexion_contact.gif)
+![contact par email](captures/envoi_message_contact.gif)
 
 ![visuel mailtrap message](captures/email_mailtrap.gif)
 
