@@ -236,20 +236,22 @@ Elle utilise des composants Blade dynamiques avec pagination et Swiper.js pour l
 
 - Ces animations illustrent le bon fonctionnement du site sur desktop  :
 ---
-### 🏠 Page d’accueil et  connexion administrateur
+### 🏠 Page d’accueil et connexion administrateur  
 ![connexion administrateur](captures/connexion_administreur.gif)
+
 ---
-### 📢page contact et visuel sur mailtrap
+### 📢 Page contact et visuel sur Mailtrap  
 
 ![contact par email](captures/connexion_contact.gif)
----
+
 ![visuel mailtrap message](captures/email_reçu.gif)
+
 ---
 
-### 📃page création article
+### 📃 Page création d’article  
 ![création article](captures/creation_article_éditeur.gif)
----
 
+---
 
 
 
