@@ -168,7 +168,7 @@ CREATE TABLE paiements (
 
 ---
 
-## 🏗️ Architecture Laravel
+### 🏗️ Architecture Laravel
 clair :
   - **Models** : Article, Comment, User, Publicite, Paiement, Category, ContactMessage
   - **Controllers** : séparés par rôle (admin, éditeur, public, Stripe)
@@ -184,7 +184,7 @@ clair :
 - Fichier : routes/web.php
 ---
 
-## 🔐 Authentification et redirection par rôle
+### 🔐 Authentification et redirection par rôle
 
 Utilisation de **Laravel Breeze** pour tous les utilisateurs via le formulaire `/login`.
 
@@ -215,8 +215,41 @@ public function redirectTo($user)
 - Layouts séparés (`layout.blade.php`, `admin.layout.blade.php`, `editeur.layout.blade.php`)
 
 ---
+### 🖼️ Présentation visuelle des pages (Figma)
 
-## 💡 Intégration Vite.js
+Pour préparer l’interface utilisateur, j’ai réalisé deux maquettes sur Figma en version **desktop** et **mobile** :
+
+# 🔹 Page statique HTML / CSS (sans données dynamiques)
+
+Cette page est un prototype statique conçu pour tester la structure, les couleurs et la responsivité avec **Flexbox et Grid**.
+
+![Page statique desktop et mobile](captures/PAGE%20STATIQUE%20DESKTOP%20ET%20MOBILE.png)
+
+# 🔸 Page dynamique d’accueil (avec données Laravel)
+
+La page d’accueil affiche les **articles validés** et les **publicités actives**, grâce à un contrôleur `HomeController`.  
+Elle utilise des composants Blade dynamiques avec pagination et Swiper.js pour le carrousel.
+
+![Accueil connectée desktop et mobile](captures/accueil%20connecte%20desktopmobile.png)
+
+## 🎬 Démonstrations animées (GIF)
+
+- Ces animations illustrent le bon fonctionnement du site sur desktop  :
+### 🏠 Page d’accueil et  connexion administrateur
+![connexion administrateur](captures/connexion_administreur.gif)
+
+### 📢page contact et visuel sur mailtrap
+
+![contact par email](captures/connexion_contact.gif)
+![visuel mailtrap message](captures/email_reçu.gif)
+
+### 📃page création article
+![création article](captures/creation_article_éditeur.gif)
+
+
+
+
+### 💡 Intégration Vite.js
 
 Le projet utilise **Vite** comme bundler JavaScript et CSS via Laravel Breeze Blade.
 - Compilation CSS/JS avec : `npm run dev`
@@ -225,7 +258,7 @@ Le projet utilise **Vite** comme bundler JavaScript et CSS via Laravel Breeze Bl
 
 ---
 
-## 🎯 RGPD & Bandeau cookies
+### 🎯 RGPD & Bandeau cookies
 
 Le site affiche un **bandeau RGPD** informatif en bas de page à la première visite.
 - Fonctionne avec `localStorage`
@@ -234,7 +267,7 @@ Le site affiche un **bandeau RGPD** informatif en bas de page à la première vi
 
 ---
 
-## 📦 Dépendances principales
+### 📦 Dépendances principales
 
 - Laravel 12
 - Laravel Breeze (Blade)
@@ -246,7 +279,7 @@ Le site affiche un **bandeau RGPD** informatif en bas de page à la première vi
 
 ---
 
-## 📚 Tous les contrôleurs Laravel utilisés
+### 📚 Tous les contrôleurs Laravel utilisés
 
 | Contrôleur                     | Rôle principal                                                                 |
 |-------------------------------|--------------------------------------------------------------------------------|
@@ -268,15 +301,15 @@ Le site affiche un **bandeau RGPD** informatif en bas de page à la première vi
 
 ---
 
-## 🧩 Déploiement du projet via GitHub
+### 🧩 Déploiement du projet via GitHub
 
-### 🔧 Créer un dépôt GitHub
+## 🔧 Créer un dépôt GitHub
 
 1. Aller sur [GitHub](https://github.com)
 2. Créer un dépôt `osezdirenon`
 3. Ne pas initialiser avec README
 
-### 🔄 Relier à VS Code :
+## 🔄 Relier à VS Code :
  C:\Users\Utilisateur\Desktop\blog>
 ```bash
 
