@@ -37,17 +37,139 @@ php artisan serve
 
 ---
 
-## 🧱 Conception technique
+### 🧱 Conception technique
 
-- Modèle conceptuel (MCD), logique (MLD) et physique (MPD)
+# Modèle conceptuel (MCD): entités clés de mon blog  ainsi que leurs relations. Il permet de structurer les données avant la création physique de la base.
+
+- Relations avec cardinalités (notation Merise) :
+
+- Un **utilisateur** a **un rôle** → N:1 (`users → roles`)
+- Un **article** est rédigé par **un utilisateur** → N:1 (`articles → users`)
+- Un **article** appartient à **une catégorie** → N:1 (`articles → categories`)
+- Un **commentaire** est écrit par **un utilisateur** → N:1 (`comments → users`)
+- Un **commentaire** est associé à **un article** → N:1 (`comments → articles`)
+- Une **publicité** est créée par **un utilisateur** → N:1 (`publicites → users`)
+- Un **paiement** est effectué par **un utilisateur** → N:1 (`paiements → users`)
+- Un **paiement** concerne **une publicité** → 1:1 (`paiements → publicites`)
+
+![Aperçu schema](captures/mcd_odn.png)
+
+
+# logique (MLD): représentation plus technique avec types de données, clés primaires et étrangères.
+![Aperçu schema](captures/mld_odn.png)
+
+ # physique (MPD):
 - Diagramme UML des entités et des cas d’usage
 - Base de données SQLite avec Seeders et Migrations Laravel
+
+- Modèle Physique de Données (extrait SQL):
+
+```sql
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    role_id INTEGER,
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+CREATE TABLE roles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL
+);
+
+CREATE TABLE articles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    slug TEXT NOT NULL,
+    content TEXT,
+    category_id INTEGER,
+    user_id INTEGER,
+    is_approved BOOLEAN DEFAULT false,
+    keywords TEXT,
+    image TEXT,
+    deleted_at TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    content TEXT NOT NULL,
+    article_id INTEGER,
+    user_id INTEGER,
+    FOREIGN KEY (article_id) REFERENCES articles(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE publicites (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    titre TEXT,
+    lien TEXT,
+    image TEXT,
+    is_approved BOOLEAN DEFAULT false,
+    paid BOOLEAN DEFAULT false,
+    user_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE paiements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    montant INTEGER,
+    stripe_id TEXT,
+    valid_until DATE,
+    user_id INTEGER,
+    publicite_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (publicite_id) REFERENCES publicites(id)
+);
+```
+# schéma UML de mon projet Laravel :
+
+- `users` → `roles`  
+  🔁 **Relation :** N:1  
+   *Un utilisateur appartient à un rôle (admin ou éditeur). Un rôle peut avoir plusieurs utilisateurs.*
+
+- `articles` → `users`  
+  🔁 **Relation :** N:1  
+   *Un article est rédigé par un utilisateur. Un utilisateur peut rédiger plusieurs articles.*
+
+- `articles` → `categories`  
+  🔁 **Relation :** N:1  
+   *Un article appartient à une seule catégorie. Une catégorie peut regrouper plusieurs articles.*
+
+- `comments` → `articles`  
+  🔁 **Relation :** N:1  
+   *Un commentaire est lié à un article.*
+
+- `comments` → `users`  
+  🔁 **Relation :** N:1  
+   *Un commentaire est écrit par un utilisateur.*
+
+- `publicites` → `users`  
+  🔁 **Relation :** N:1  
+   *Une publicité est proposée par un utilisateur.*
+
+- `paiements` → `users`  
+  🔁 **Relation :** N:1  
+   *Un paiement est réalisé par un utilisateur.*
+
+- `paiements` → `publicites`  
+  🔁 **Relation :** 1:1  
+   *Chaque paiement est lié à une publicité unique.*
+
 
 ---
 
 ## 🏗️ Architecture Laravel
-
-- MVC clair :
+clair :
   - **Models** : Article, Comment, User, Publicite, Paiement, Category, ContactMessage
   - **Controllers** : séparés par rôle (admin, éditeur, public, Stripe)
   - **Views** :
@@ -56,10 +178,10 @@ php artisan serve
     - `resources/views/auth/...`
     - `resources/views/contact.blade.php`, `home.blade.php`...
 
-- Routes protégées par middleware :
-  - `role:admin`, `role:editeur`, `auth`
-  - Groupées dans `routes/web.php`
+- Routes protégées :
 
+- Middleware : auth, role:admin, role:editeur
+- Fichier : routes/web.php
 ---
 
 ## 🔐 Authentification et redirection par rôle
