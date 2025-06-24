@@ -41,15 +41,22 @@ php artisan serve
 
 # Modèle conceptuel (MCD): entités clés de mon blog  ainsi que leurs relations. Il permet de structurer les données avant la création physique de la base.
 
-- Relations avec cardinalités (notation Merise) :
+# Relations avec cardinalités (notation Merise)
 
-- Un **utilisateur** a **un rôle** → N:1 (`users → roles`)
-- Un **article** est rédigé par **un utilisateur** → N:1 (`articles → users`)
+## ➤ Relations partant de `USERS`
+
+- Un **utilisateur** possède **un rôle** → 1:1 (`users → roles`)
+- Un **utilisateur** rédige **plusieurs articles** → 1:N (`users → articles`)
+- Un **utilisateur** écrit **plusieurs commentaires** → 1:N (`users → commentaires`)
+- Un **utilisateur** propose **plusieurs publicités** → 1:N (`users → publicites`)
+- Un **utilisateur** effectue **plusieurs paiements** → 1:N (`users → paiements`)
+- Un **utilisateur** envoie **plusieurs messages** → 0:N (`users → messages`)
+
+## ➤ Relations entre autres entités
+
 - Un **article** appartient à **une catégorie** → N:1 (`articles → categories`)
-- Un **commentaire** est écrit par **un utilisateur** → N:1 (`comments → users`)
-- Un **commentaire** est associé à **un article** → N:1 (`comments → articles`)
-- Une **publicité** est créée par **un utilisateur** → N:1 (`publicites → users`)
-- Un **paiement** est effectué par **un utilisateur** → N:1 (`paiements → users`)
+- Un **article** reçoit **plusieurs commentaires** → 1:N (`articles → commentaires`)
+- Une **publicité** est liée à **un paiement** → 0:1 (`publicites → paiements`)
 - Un **paiement** concerne **une publicité** → 1:1 (`paiements → publicites`)
 
 ![Aperçu schema](captures/mcd_odn.png)
