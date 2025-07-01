@@ -28,9 +28,12 @@ DB_CONNECTION=sqlite
 DB_DATABASE=./database/database.sqlite
 ```
 
-5. **Créer la base et lancer le site**
+5. **Créer la base et lancer le site sous windows**
 ```bash
-touch database/database.sqlite
+1/Créer manuellement le fichier database.sqlite dans dossier : C:\Users\Utilisateur\Desktop\blog\database\database.sqlite
+ou 
+C:\Users\Utilisateur\Desktop\blog> type nul > database\database.sqlite
+
 php artisan migrate --seed
 php artisan serve
 ```

@@ -47,8 +47,11 @@
                 <a href="{{ route('admin.articles.valides') }}"
                     class="{{ request()->routeIs('admin.articles.valides') ? 'bg-gray-800' : '' }} block py-2 pl-8 hover:bg-gray-800 rounded">✔
                     Validés</a>
-                <a href="{{ route('admin.articles.attente') }}"
+                {{-- <a href="{{ route('admin.articles.attente') }}"
                     class="{{ request()->routeIs('admin.articles.attente') ? 'bg-gray-800' : '' }} block py-2 pl-8 hover:bg-gray-800 rounded">⏳
+                    En attente</a> --}}
+                    <a href="{{ route('admin.articles.pending') }}"
+                    class="{{ request()->routeIs('admin.articles.pending') ? 'bg-gray-800' : '' }} block py-2 pl-8 hover:bg-gray-800 rounded">⏳
                     En attente</a>
                 <a href="{{ route('admin.articles.supprimes') }}"
                     class= "{{ request()->routeIS('admin.articles.supprimes') ? 'bg-gray-800' : '' }} block py-2 pl-4 hover:bg-gray-800 rounded">

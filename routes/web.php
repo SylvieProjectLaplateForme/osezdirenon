@@ -88,7 +88,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/articles/{id}', [AdminController::class, 'updateArticle'])->name('articles.update');
     Route::get('/articles', [AdminController::class, 'articlesIndex'])->name('articles.index');
     Route::get('/articles/valides', [AdminController::class, 'articlesValides'])->name('articles.valides');
-    Route::get('/articles/en-attente', [AdminController::class, 'articlesEnAttente'])->name('articles.attente');
+    // Route::get('/articles/en-attente', [AdminController::class, 'articlesEnAttente'])->name('articles.attente');
+    Route::get('/articles/en-attente', [AdminController::class, 'articlesEnAttente'])->name('articles.pending');
+    
     Route::get('/articles/create', [AdminController::class, 'createArticle'])->name('articles.create');
     Route::post('/articles', [AdminController::class, 'storeArticle'])->name('articles.store');
     Route::get('/articles/{id}', [AdminController::class, 'showArticle'])->name('articles.show');

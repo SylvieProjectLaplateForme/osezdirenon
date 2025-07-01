@@ -6,10 +6,11 @@ use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Services\ArticleService;
+use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
+    // ✅ Accueil avec liste des articles filtrés
     public function index(Request $request)
     {
         $query = Article::query()->where('is_approved', true);
@@ -31,6 +32,7 @@ class ArticleController extends Controller
         return view('home', compact('articles', 'categories'));
     }
 
+    // ✅ Page d’un article
     public function show($slug)
     {
         $article = Article::with(['category', 'user', 'comments.user'])
@@ -46,18 +48,47 @@ class ArticleController extends Controller
         return view('article', compact('article', 'similaires'));
     }
 
+    // ✅ Formulaire de création
     public function create()
     {
         $categories = Category::all();
         return view('editeur.articles.create', compact('categories'));
     }
 
-    public function store(Request $request, ArticleService $service)
+    //
+    public function store(Request $request)
     {
-        $service->createArticle($request);
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('articles', 'public');
+        }
+
+        $slug = Str::slug($validated['title']);
+        if (Article::where('slug', $slug)->exists()) {
+            $slug .= '-' . uniqid();
+        }
+
+        Article::create([
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+            'slug' => $slug,
+            'category_id' => $validated['category_id'],
+            'user_id' => Auth::id(),
+            'is_approved' => false,
+            'image' => $imagePath,
+        ]);
+
         return redirect()->route('editeur.dashboard')->with('success', 'Article envoyé pour validation.');
     }
 
+    // ✅ Formulaire d’édition
     public function edit($id)
     {
         $article = Article::where('id', $id)
@@ -69,14 +100,30 @@ class ArticleController extends Controller
         return view('editeur.articles.edit', compact('article', 'categories'));
     }
 
-    public function update(Request $request, $id, ArticleService $service)
+    // ✅ Mise à jour sans ArticleService
+    public function update(Request $request, $id)
     {
         $article = Article::where('id', $id)
             ->where('user_id', Auth::id())
             ->where('is_approved', false)
             ->firstOrFail();
 
-        $service->updateArticle($request, $article);
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $article->image = $request->file('image')->store('articles', 'public');
+        }
+
+        $article->title = $validated['title'];
+        $article->content = $validated['content'];
+        $article->category_id = $validated['category_id'];
+        $article->save();
+
         return redirect()->route('editeur.dashboard')->with('success', 'Article modifié avec succès.');
     }
 }

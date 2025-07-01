@@ -127,7 +127,7 @@ public function exportEditeurs(): StreamedResponse
     public function articlesEnAttente()
 {
     $articles = Article::where('is_approved', false)->with('user')->latest()->get();
-    return view('pendingArticle', compact('articles'));
+    return view('admin.articles.pending', compact('articles'));
 }
 
     public function showArticle($id)

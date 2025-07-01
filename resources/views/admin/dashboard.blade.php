@@ -25,7 +25,8 @@
     <div class="bg-white rounded shadow p-4 text-center">
         <h2 class="text-lg font-semibold">En attente</h2>
         <p class="text-2xl font-semibold">{{ $attente }}</p>
-        <a href="{{ route('admin.articles.attente', ['filter' => 'attente']) }}" class="text-blue-500 hover:underline">Voir</a>
+        {{-- <a href="{{ route('admin.articles.attente', ['filter' => 'attente']) }}" class="text-blue-500 hover:underline">Voir</a> --}}
+    <a href="{{ route('admin.articles.pending', ['filter' => 'attente']) }}" class="text-blue-500 hover:underline">Voir</a>
     </div>
     
 <!-- Carte toutes les publicités -->
