@@ -166,7 +166,8 @@ public function updateArticle(Request $request, $id)
         'title' => 'required|max:255',
         'content' => 'required',
         'category_id' => 'required|exists:categories,id',
-        'image' => 'nullable|image|max:2048',
+        // 'image' => 'nullable|image|max:2048',
+        'image'=>$imagePath,
     ]);
 
     // Gérer l’image si changée
@@ -176,6 +177,10 @@ public function updateArticle(Request $request, $id)
         }
         $article->image = $request->file('image')->store('articles', 'public');
     }
+    else {
+    // Si aucune image n'est envoyée, utilise l'image par défaut
+    $imagePath = 'articles/default.jpg'; // 📌 Cette image doit être dans /public/articles/
+}
 
     $article->update([
         'title' => $validated['title'],
@@ -202,12 +207,17 @@ public function mesArticles()
             'title' => 'required|max:255',
             'content' => 'required',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|max:2048',
+            // 'image' => 'nullable|image|max:2048',
+            'image'=>$imagePath,
         ]);
 
-        $imagePath = $request->hasFile('image')
-            ? $request->file('image')->store('articles', 'public')
-            : null;
+        if ($request->hasFile('image')) {
+    $imagePath = $request->file('image')->store('articles', 'public');
+} else {
+    // Si aucune image n'est envoyée, utilise l'image par défaut
+    $imagePath = 'articles/default.jpg'; // 📌 Cette image doit être dans /public/articles/
+}
+
 
         $slug = Str::slug($request->title);
         if (Article::where('slug', $slug)->exists()) {

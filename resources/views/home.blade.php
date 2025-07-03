@@ -81,11 +81,11 @@
                class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 group min-h-[450px]">
 
                 {{-- Image avec badge catégorie --}}
-                <div class="relative overflow-hidden">
+                <div class="relative aspect-[16/9] overflow-hidden">
                     <x-article-image 
                         :image="$article->image" 
                         :alt="$article->title" 
-                        class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110" 
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                     />
                     <div class="absolute top-2 left-2 bg-white bg-opacity-80 px-3 py-1 text-xs font-semibold rounded-full {{ $article->category->color_class }}">
                         {{ $article->category->name }}
@@ -137,5 +137,6 @@
 @else
     <p class="text-center text-gray-500">Aucun article trouvé.</p>
 @endif
+
 
 @endsection

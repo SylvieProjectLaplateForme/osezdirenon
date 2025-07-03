@@ -23,7 +23,7 @@ npm install && npm run dev
 ```
 
 4. **Configurer SQLite dans `.env`**
-```
+```bash
 DB_CONNECTION=sqlite
 DB_DATABASE=./database/database.sqlite
 ```
@@ -42,143 +42,82 @@ php artisan serve
 
 ### 🧱 Conception technique
 
-# Modèle conceptuel (MCD): entités clés de mon blog  ainsi que leurs relations. Il permet de structurer les données avant la création physique de la base.
+## Modèle conceptuel (MCD): 
 
-# Relations avec cardinalités (notation Merise)
+# Relations entre les entités avec cardinalités (notation Merise) 
 
-## ➤ Relations partant de `USERS`
+Ce document présente les relations entre les différentes entités du projet, avec les verbes de relation, les cardinalités, et l’explication du sens N → 1.
 
-- Un **utilisateur** possède **un rôle** → 1:1 (`users → roles`)
-- Un **utilisateur** rédige **plusieurs articles** → 1:N (`users → articles`)
-- Un **utilisateur** écrit **plusieurs commentaires** → 1:N (`users → commentaires`)
-- Un **utilisateur** propose **plusieurs publicités** → 1:N (`users → publicites`)
-- Un **utilisateur** effectue **plusieurs paiements** → 1:N (`users → paiements`)
-- Un **utilisateur** envoie **plusieurs messages** → 0:N (`users → messages`)
+## 🔄 Relations Eloquent et base de données
 
-## ➤ Relations entre autres entités
+### 1. Article → User
+- **Verbe** : est rédigé par
+- **Cardinalité** : (0,N) → (1,1)
+- **Explication** : Un article appartient à un seul utilisateur (FK dans `articles.user_id`). Un utilisateur peut rédiger plusieurs articles.
 
-- Un **article** appartient à **une catégorie** → N:1 (`articles → categories`)
-- Un **article** reçoit **plusieurs commentaires** → 1:N (`articles → commentaires`)
-- Une **publicité** est liée à **un paiement** → 0:1 (`publicites → paiements`)
-- Un **paiement** concerne **une publicité** → 1:1 (`paiements → publicites`)
+### 2. Article → Catégorie
+- **Verbe** : appartient à
+- **Cardinalité** : (0,N) → (1,1)
+- **Explication** : Un article appartient à une seule catégorie. Une catégorie peut contenir plusieurs articles (FK : `articles.category_id`).
 
-![Aperçu schema](captures/mcd_odn.png)
+### 3. Commentaire → Article
+- **Verbe** : concerne
+- **Cardinalité** : (0,N) → (1,1)
+- **Explication** : Un commentaire est lié à un seul article. Un article peut avoir plusieurs commentaires.
+
+### 4. Commentaire → User
+- **Verbe** : est rédigé par
+- **Cardinalité** : (0,N) → (1,1)
+- **Explication** : Un commentaire est rédigé par un seul utilisateur. Un utilisateur peut écrire plusieurs commentaires.
+
+### 5. Publicité → User
+- **Verbe** : est proposée par
+- **Cardinalité** : (0,N) → (1,1)
+- **Explication** : Une publicité est proposée par un utilisateur. Un utilisateur peut soumettre plusieurs publicités.
+
+### 6. Paiement → Publicité
+- **Verbe** : est lié à
+- **Cardinalité** : (1,1) → (1,1)
+- **Explication** : Chaque publicité peut être associée à un paiement. Relation 1:1 (clé étrangère dans `paiements.publicite_id`).
+
+## ✅ Résumé : Relations & Foreign Keys
+
+| Entité source | Relation          | Entité cible | Clé étrangère dans... |
+|---------------|-------------------|---------------|-------------------------|
+| Article       | est rédigé par     | User          | `articles.user_id`     |
+| Article       | appartient à       | Catégorie     | `articles.category_id` |
+| Commentaire   | est rédigé par     | User          | `commentaires.user_id` |
+| Commentaire   | concerne           | Article       | `commentaires.article_id` |
+| Publicité     | est proposée par   | User          | `publicites.user_id`   |
+| Paiement      | est lié à          | Publicité     | `paiements.publicite_id` |
+
+👉 **Astuce** : on part toujours du côté (N) vers (1), car le côté "N" porte la clé étrangère.
+
+---
+
+🛠️ Ce modèle sert à construire mes migrations, relations Eloquent (`belongsTo`, `hasMany`) et à bien structurer ma base de données.
+
+
+![Aperçu schema](captures/mcd.png)
 
 
 # logique (MLD): représentation plus technique avec types de données, clés primaires et étrangères.
 ![Aperçu schema](captures/mld_odn.png)
 
- # physique (MPD):
-- Diagramme UML des entités et des cas d’usage
-- Base de données SQLite avec Seeders et Migrations Laravel
 
+ # physique (MPD):
+
+- Base de données SQLite avec Seeders et Migrations Laravel
 - Modèle Physique de Données (extrait SQL):
 
-```sql
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    role_id INTEGER,
-    FOREIGN KEY (role_id) REFERENCES roles(id)
-);
-
-CREATE TABLE roles (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
-);
-
-CREATE TABLE categories (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    slug TEXT NOT NULL
-);
-
-CREATE TABLE articles (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    slug TEXT NOT NULL,
-    content TEXT,
-    category_id INTEGER,
-    user_id INTEGER,
-    is_approved BOOLEAN DEFAULT false,
-    keywords TEXT,
-    image TEXT,
-    deleted_at TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(id),
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
-CREATE TABLE comments (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    content TEXT NOT NULL,
-    article_id INTEGER,
-    user_id INTEGER,
-    FOREIGN KEY (article_id) REFERENCES articles(id),
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
-CREATE TABLE publicites (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    titre TEXT,
-    lien TEXT,
-    image TEXT,
-    is_approved BOOLEAN DEFAULT false,
-    paid BOOLEAN DEFAULT false,
-    user_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
-CREATE TABLE paiements (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    montant INTEGER,
-    stripe_id TEXT,
-    valid_until DATE,
-    user_id INTEGER,
-    publicite_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (publicite_id) REFERENCES publicites(id)
-);
-```
-# schéma UML de mon projet Laravel :
-
-- `users` → `roles`  
-  🔁 **Relation :** N:1  
-   *Un utilisateur appartient à un rôle (admin ou éditeur). Un rôle peut avoir plusieurs utilisateurs.*
-
-- `articles` → `users`  
-  🔁 **Relation :** N:1  
-   *Un article est rédigé par un utilisateur. Un utilisateur peut rédiger plusieurs articles.*
-
-- `articles` → `categories`  
-  🔁 **Relation :** N:1  
-   *Un article appartient à une seule catégorie. Une catégorie peut regrouper plusieurs articles.*
-
-- `comments` → `articles`  
-  🔁 **Relation :** N:1  
-   *Un commentaire est lié à un article.*
-
-- `comments` → `users`  
-  🔁 **Relation :** N:1  
-   *Un commentaire est écrit par un utilisateur.*
-
-- `publicites` → `users`  
-  🔁 **Relation :** N:1  
-   *Une publicité est proposée par un utilisateur.*
-
-- `paiements` → `users`  
-  🔁 **Relation :** N:1  
-   *Un paiement est réalisé par un utilisateur.*
-
-- `paiements` → `publicites`  
-  🔁 **Relation :** 1:1  
-   *Chaque paiement est lié à une publicité unique.*
-
+![Aperçu schema](captures/mpd.png)
 
 ---
 
 ### 🏗️ Architecture Laravel
+---
+![Aperçu schema](captures/mvc.png)
+---
 clair :
   - **Models** : Article, Comment, User, Publicite, Paiement, Category, ContactMessage
   - **Controllers** : séparés par rôle (admin, éditeur, public, Stripe)
@@ -233,7 +172,12 @@ Pour préparer l’interface utilisateur, j’ai réalisé deux maquettes sur Fi
 
 Cette page est un prototype statique conçu pour tester la structure, les couleurs et la responsivité avec **Flexbox et Grid**.
 
-![Page statique desktop et mobile](captures/PAGE%20STATIQUE%20DESKTOP%20ET%20MOBILE.png)
+### Version desktop
+![Page statique desktop ](captures/page_statique.png)
+
+### Version Mobile
+![Page statique desktop ](captures/page_statique_mobile.png)
+
 
 # 🔸 Page dynamique d’accueil (avec données Laravel)
 
@@ -346,7 +290,7 @@ cd osezdirenon
 composer install
 cp .env.example .env
 php artisan key:generate
-touch database/database.sqlite
+database/database.sqlite
 php artisan migrate --seed
 npm install && npm run dev
 php artisan serve

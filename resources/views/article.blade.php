@@ -27,12 +27,18 @@
                     {{ $article->created_at->format('d/m/Y') }}
                 </p>
 
-                {{-- Image --}}
+                {{-- Image
                 @if ($article->image)
                     <div class="mb-6">
                         <x-article-image :image="$article->image" :alt="$article->title" class="w-full rounded-lg shadow" />
                     </div>
-                @endif
+                @endif --}}
+                {{-- Image (même si vide) --}}
+                <div class="mb-6">
+                    <x-article-image :image="$article->image"
+                 :alt="$article->title"
+                 class="w-full h-64 object-cover rounded-t-xl" />
+
 
                 {{-- Contenu --}}
                 <div class="prose max-w-none bg-white p-6 rounded shadow mb-10">

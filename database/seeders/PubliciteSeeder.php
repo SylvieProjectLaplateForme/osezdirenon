@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Publicite;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -10,56 +11,62 @@ class PubliciteSeeder extends Seeder
 {
     public function run(): void
     {
+        // Récupère un utilisateur existant (éditeur)
+        $user = User::where('role_id', 2)->first(); // 2 = rôle éditeur par convention
+
+        if (!$user) {
+            echo "⚠️ Aucun éditeur trouvé. Seeder annulé.\n";
+            return;
+        }
+
         Publicite::create([
-            'titre' => 'Un billet pour Cannes !',
-            'lien' => 'https://monsite.com/cookies',
-            'image' => 'publicites/cinema.jpg',
-            'is_active' => true,
-            'date_debut' => now()->subDays(5),
-            'date_fin' => now()->addDays(5),
+            'titre' => 'Découvrez nos astuces bien-être !',
+            'lien' => 'https://bienetre.example.com',
+            'image' => 'publicites/astuces-bien-etre.jpg',
+            'is_approved' => true,
+                'paid' => true,
+                'paid_at' => now()->subDays(rand(1, 10)),
+                'date_debut' => now()->subDays(rand(1, 5)),
+                'date_fin' => Carbon::now()->addDays(30),
+                'user_id' => $user->id,
+
         ]);
 
         Publicite::create([
-            'titre' => 'Club de yoga pour tous',
-            'lien' => 'https://www.yogaflowcannes.com/r',
-            'image' => 'publicites/yoga.jpg',
-            'is_active' => true,
-            'date_debut' => now()->subDays(2),
-            'date_fin' => now()->addWeek(),
-        ]);
+            'titre' => 'Coaching de carrière personnalisé',
+            'lien' => 'https://coaching.example.com',
+            'image' => 'publicites/coaching-carriere.jpg',
+            'is_approved' => true,
+                'paid' => true,
+                'paid_at' => now()->subDays(rand(1, 10)),
+                'date_debut' => now()->subDays(rand(1, 5)),
+                'date_fin' => Carbon::now()->addDays(30),
+                'user_id' => $user->id,
 
-        Publicite::create([
-            'titre' => 'Participez à notre randonnée mensuelle',
-            'lien' => 'https://www.ffrandonnee.fr/adherer/randopass/le-randopass-pour-tous-les-amoureux-de-la-rando',
-            'image' => 'publicites/randonnées.jpg',
-            'is_active' => true,
-            'date_debut' => now()->subDay(),
-            'date_fin' => now()->addDays(3),
         ]);
+        Publicite::create([
+            'titre' => ' Coaching de carrière personnalisé',
+            'lien' => 'https://coaching.example.com',
+            'image' => 'publicites/coaching-carriere.jpg',
+            'is_approved' => true,
+                'paid' => true,
+                'paid_at' => now()->subDays(rand(1, 10)),
+                'date_debut' => now()->subDays(rand(1, 5)),
+                'date_fin' => Carbon::now()->addDays(30),
+                'user_id' => $user->id,
 
-        Publicite::create([
-            'titre' => 'Voyage entre amis',
-            'lien' => 'https://www.lesaventureurs.com/explorer/voyager-en-groupe?utm_source=google&date=0705&code=70eafe06&utm_medium=cpc+sem&gad_source=1&gbraid=0AAAAADGaPqagTlk5JA8Ue_QLkpU6u2vgt&gclid=CjwKCAjwwqfABhBcEiwAZJjC3hSOpxdPJFe9QMnOL0iJ9cYcNdiygBbzMRG8IE9ecVjd4U-HWqWR4xoCLaMQAvD_BwE',
-            'image' => 'publicites/voyage.webp',
-            'is_active' => true,
-            'date_debut' => now()->subDay(),
-            'date_fin' => now()->addDays(3),
         ]);
         Publicite::create([
-            'titre' => 'Cours informatique',
-            'lien' => 'https://laplateforme.io/',
-            'image' => 'publicites/info.jpeg',
-            'is_active' => true,
-            'date_debut' => now()->subDay(),
-            'date_fin' => now()->addDays(3),
-        ]);
-        Publicite::create([
-            'titre' => 'Les pieds sur terre',
-            'lien' => 'https://www.radiofrance.fr/franceculture/podcasts/les-pieds-sur-terre',
-            'image' => 'publicites/podcast.jpg',
-            'is_active' => true,
-            'date_debut' => now()->subDay(),
-            'date_fin' => now()->addDays(3),
+            'titre' => '💼 Coaching de carrière personnalisé',
+            'lien' => 'https://coaching.example.com',
+            'image' => 'publicites/coaching-carriere.jpg',
+            'is_approved' => true,
+                'paid' => true,
+                'paid_at' => now()->subDays(rand(1, 10)),
+                'date_debut' => now()->subDays(rand(1, 5)),
+                'date_fin' => Carbon::now()->addDays(30),
+                'user_id' => $user->id,
+
         ]);
     }
 }

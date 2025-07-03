@@ -65,10 +65,13 @@ class ArticleController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('articles', 'public');
-        }
+    $imagePath = $request->file('image')->store('articles', 'public');
+} else {
+    // Image par défaut si aucune image n’est envoyée
+    $imagePath = 'articles/default.jpg';
+}
+
 
         $slug = Str::slug($validated['title']);
         if (Article::where('slug', $slug)->exists()) {
@@ -82,6 +85,7 @@ class ArticleController extends Controller
             'category_id' => $validated['category_id'],
             'user_id' => Auth::id(),
             'is_approved' => false,
+            'keywords' => $request->keywords ?? '',
             'image' => $imagePath,
         ]);
 
