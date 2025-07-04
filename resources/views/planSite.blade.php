@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Plan du site n')
+@section('title', 'Plan du site ')
 
 @section('content')
 <div class="max-w-6xl mx-auto px-4 py-10">
@@ -33,7 +33,7 @@
             <ul class="space-y-1">
                 <li><a href="{{ route('home') }}" class="hover:underline">Accueil</a></li>
                 <li><a href="{{ route('contact') }}" class="hover:underline">Contact</a></li>
-                <li><a href="{{ route('publicites.publiques') }}" class="hover:underline">Publicités</a></li>
+                
             </ul>
         </div>
 

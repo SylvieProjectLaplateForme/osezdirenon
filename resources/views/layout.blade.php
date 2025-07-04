@@ -126,9 +126,10 @@
         });
     </script>
 
+    
     {{-- 🔒 Bandeau RGPD responsive --}}
     <div id="cookieConsentBox"
-        class="fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-black text-white border border-gray-700 shadow-2xl rounded-xl w-[95%] max-w-3xl z-50 p-6 md:p-8 text-center md:text-left space-y-4">
+         class="invisible opacity-0 transition-opacity duration-500 fixed bottom-12 left-1/2 transform -translate-x-1/2 bg-black text-white border border-gray-700 shadow-2xl rounded-xl w-[95%] max-w-3xl z-50 p-6 md:p-8 text-center md:text-left space-y-4">
         <h3 class="text-lg md:text-xl font-bold">🍪 Confidentialité & Cookies</h3>
         <p class="text-sm md:text-base leading-relaxed">
             Ce site utilise des cookies pour améliorer votre expérience. En poursuivant votre navigation, vous acceptez
@@ -139,11 +140,11 @@
         </p>
         <div class="flex flex-col sm:flex-row justify-center md:justify-end gap-3">
             <button id="acceptCookies"
-                class="bg-pink-600 text-white text-sm px-6 py-2 rounded hover:bg-pink-700 transition">
+                    class="bg-pink-600 text-white text-sm px-6 py-2 rounded hover:bg-pink-700 transition">
                 J'accepte
             </button>
             <button id="rejectCookies"
-                class="bg-white text-black text-sm px-6 py-2 rounded hover:bg-gray-200 transition">
+                    class="bg-white text-black text-sm px-6 py-2 rounded hover:bg-gray-200 transition">
                 Je refuse
             </button>
         </div>
@@ -156,13 +157,20 @@
             const acceptBtn = document.getElementById('acceptCookies');
             const rejectBtn = document.getElementById('rejectCookies');
 
-            if (localStorage.getItem('cookieConsent') === 'accepted' || localStorage.getItem('cookieConsent') === 'rejected') {
-                banner.style.display = 'none';
+            const consent = localStorage.getItem('cookieConsent');
+
+            if (consent === 'accepted' || consent === 'rejected') {
+                // ne rien faire
+            } else {
+                banner.classList.remove('invisible', 'opacity-0');
+                banner.classList.add('opacity-100');
             }
 
             const handleConsent = (value) => {
                 localStorage.setItem('cookieConsent', value);
-                banner.style.display = 'none';
+                banner.classList.remove('opacity-100');
+                banner.classList.add('opacity-0');
+                setTimeout(() => banner.classList.add('invisible'), 500);
             };
 
             acceptBtn?.addEventListener('click', () => handleConsent('accepted'));

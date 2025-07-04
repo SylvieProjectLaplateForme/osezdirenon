@@ -1,25 +1,23 @@
-@extends('layouts.app')
+@extends('layout')
+
+@section('title', 'Publicités')
 
 @section('content')
-<div class="max-w-6xl mx-auto py-8 px-4">
-    <h1 class="text-3xl font-bold mb-6">Nos publicités en ligne</h1>
+    <h1 class="text-2xl font-bold mb-4">Publicités</h1>
 
-    @if($publicites->count())
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            @foreach($publicites as $pub)
-                <div class="bg-white p-4 shadow rounded">
-                    <h2 class="text-xl font-semibold mb-2">{{ $pub->titre }}</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        @forelse ($publicites as $pub)
+            <div class="bg-white p-4 shadow rounded">
+                <h2 class="font-semibold">{{ $pub->titre }}</h2>
+                <p>{{ $pub->description }}</p>
+                @if ($pub->lien)
+                    <a href="{{ $pub->lien }}" class="text-blue-500 underline" target="_blank">Voir la publicité</a>
+                @endif
+            </div>
+        @empty
+            <p>Aucune publicité disponible pour le moment.</p>
+        @endforelse
+    </div>
+@endsection
 
-                    @if($pub->image)
-                        <img src="{{ asset('storage/' . $pub->image) }}" alt="{{ $pub->titre }}" class="w-full h-48 object-cover rounded mb-3">
-                    @endif
-
-                    <a href="{{ $pub->lien }}" target="_blank" class="text-blue-600 underline">Visiter le site</a>
-                </div>
-            @endforeach
-        </div>
-    @else
-        <p class="text-gray-600">Aucune publicité active pour le moment.</p>
-    @endif
-</div>
 @endsection

@@ -39,6 +39,9 @@ Route::post('/articles/{article}/comment', [CommentController::class, 'store'])
 Route::view('/apropos', 'apropos')->name('apropos');
 Route::view('/cgu', 'cgu')->name('cgu');
 Route::view('/confidentialite', 'confidentialite')->name('confidentialite');
+// Route::get('/confidentialite', function () {
+//     return view('confidentialite');
+// })->name('confidentialite');
 Route::get('/plan-du-site', function () {
     $categories = \App\Models\Category::all();
     return view('planSite', compact('categories'));
