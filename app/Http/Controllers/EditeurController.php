@@ -44,12 +44,6 @@ class EditeurController extends Controller
     ));
 }
 
-// public function mesArticles()
-// {
-//     $articles = Article::where('user_id', auth()->id())->latest()->paginate(10); // ✅
-
-//     return view('editeur.articles.index', compact('articles'));
-// }
 public function mesArticles()
 {
     $articles = Article::where('user_id', auth()->id())

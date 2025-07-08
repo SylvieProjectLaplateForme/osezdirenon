@@ -80,7 +80,7 @@ class ArticleController extends Controller
 
         Article::create([
             'title' => $validated['title'],
-            'content' => $validated['content'],
+            'content' => strip_tags($validated['content'], '<p><br><strong><em><ul><ol><li><a>'),
             'slug' => $slug,
             'category_id' => $validated['category_id'],
             'user_id' => Auth::id(),

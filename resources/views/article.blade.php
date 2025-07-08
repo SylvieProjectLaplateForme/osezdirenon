@@ -27,22 +27,12 @@
                     {{ $article->created_at->format('d/m/Y') }}
                 </p>
 
-                {{-- Image
-                @if ($article->image)
-                    <div class="mb-6">
-                        <x-article-image :image="$article->image" :alt="$article->title" class="w-full rounded-lg shadow" />
-                    </div>
-                @endif --}}
-                {{-- Image (même si vide) --}}
-                <div class="mb-6">
-                    <x-article-image :image="$article->image"
-                 :alt="$article->title"
-                 class="w-full h-64 object-cover rounded-t-xl" />
+                {{-- Image de l’article --}}
+                <x-article-image :image="$article->image" :alt="$article->title" class="w-full h-64 object-cover rounded-t-xl" />
 
-
-                {{-- Contenu --}}
+                {{-- Contenu de l’article --}}
                 <div class="prose max-w-none bg-white p-6 rounded shadow mb-10">
-                    {!! strip_tags($article->content, '<p><br><strong><em><ul><ol><li><a>') !!}
+                    {!! nl2br(e($article->content)) !!}
                 </div>
 
                 {{-- 💬 Commentaires --}}
@@ -64,7 +54,6 @@
                     @endforelse
                 </div>
 
-
                 {{-- ✍️ Formulaire de commentaire --}}
                 @if (isset($article) && $article instanceof \App\Models\Article && $article->is_approved)
                     <div class="bg-white p-6 rounded shadow">
@@ -76,7 +65,7 @@
                                 <div class="mb-4">
                                     <label for="content" class="block text-sm font-medium text-gray-700">Message</label>
                                     <textarea name="content" id="content" rows="4"
-                                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required></textarea>
+                                              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" required></textarea>
                                 </div>
                                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                                     Envoyer
@@ -85,13 +74,11 @@
                         @else
                             <p class="text-gray-600">
                                 Veuillez <a href="{{ route('login', ['redirect' => request()->fullUrl()]) }}"
-                                    class="text-pink-500 underline">vous connecter</a> pour laisser un commentaire.
+                                            class="text-pink-500 underline">vous connecter</a> pour laisser un commentaire.
                             </p>
                         @endauth
                     </div>
                 @endif
-
-
             </div>
 
             {{-- 📚 Colonne secondaire : articles similaires --}}
@@ -103,7 +90,7 @@
                         @foreach ($similaires as $similaire)
                             <div class="mb-4 border-b pb-4">
                                 <x-article-image :image="$similaire->image" :alt="$similaire->title"
-                                    class="rounded w-full h-32 object-cover mb-2" />
+                                                 class="rounded w-full h-32 object-cover mb-2" />
 
                                 <p class="text-xs text-pink-500 font-medium mb-1">
                                     {{ $similaire->category->name ?? 'Non catégorisé' }} |
@@ -111,7 +98,7 @@
                                 </p>
 
                                 <a href="{{ route('article.show', $similaire->slug) }}"
-                                    class="text-sm font-semibold text-gray-800 hover:text-pink-600 block">
+                                   class="text-sm font-semibold text-gray-800 hover:text-pink-600 block">
                                     {{ $similaire->title }}
                                 </a>
                             </div>
@@ -119,6 +106,7 @@
                     </div>
                 @endif
             </aside>
+
         </div>
     </div>
 @endsection

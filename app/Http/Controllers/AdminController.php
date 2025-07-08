@@ -178,8 +178,8 @@ public function updateArticle(Request $request, $id)
         $article->image = $request->file('image')->store('articles', 'public');
     }
     else {
-    // Si aucune image n'est envoyée, utilise l'image par défaut
-    $imagePath = 'articles/default.jpg'; // 📌 Cette image doit être dans /public/articles/
+    // Si aucune image n'est envoyée
+    $imagePath = 'articles/default.jpg'; 
 }
 
     $article->update([
